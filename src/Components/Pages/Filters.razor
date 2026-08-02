@@ -1,0 +1,167 @@
+@page "/filters/blocklists"
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+<PageTitle>Listes de blocage DNS - OnyxFilter</PageTitle>
+
+<h1 class="page-title">Listes de blocage DNS</h1>
+<p class="text-body-secondary">OnyxFilter bloquera les domaines correspondant aux listes de blocage.</p>
+
+<div class="settings-page">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-12">
+
+            <div class="card mb-4 table-card">
+                <div class="card-body">
+                    <p class="mb-0">
+                        OnyxFilter comprend les règles basiques de blocage ainsi que la syntaxe des fichiers hosts.
+                    </p>
+
+                    <hr />
+
+                    @if (Lists.Count == 0)
+                    {
+                        <p class="text-body-secondary mb-0">Aucune liste de blocage configurée pour le moment.</p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive mb-3">
+                            <table class="table align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Activé</th>
+                                        <th>Nom</th>
+                                        <th>URL de la liste</th>
+                                        <th>Nombre des règles</th>
+                                        <th>Dernière mise à jour</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (FilterListEntry entry in PagedLists)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <input class="form-check-input" type="checkbox" checked="@entry.Enabled" @onchange="e => ToggleEnabledAsync(entry, e)" />
+                                            </td>
+                                            <td>@entry.Name</td>
+                                            <td class="filter-list-url" title="@entry.Url">@entry.Url</td>
+                                            <td title="@(GetStatus(entry)?.LastError)">@FormatRuleCount(GetStatus(entry))</td>
+                                            <td>@FormatLastUpdated(GetStatus(entry))</td>
+                                            <td>
+                                                <div class="filter-list-actions">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary" title="Modifier" @onclick="() => OpenEditDialog(entry)">
+                                                        <icon class="filter-list-icon icon-edit" aria-hidden="true"></icon>
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" title="Supprimer" @onclick="() => RequestDelete(entry)">
+                                                        <icon class="filter-list-icon icon-trash" aria-hidden="true"></icon>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="pagination-bar">
+                            <button type="button" class="btn btn-outline-secondary" disabled="@(CurrentPage <= 1)" @onclick="GoToPreviousPage">Précédent</button>
+
+                            <div class="pagination-bar-center">
+                                <span>Page @CurrentPage / @TotalPages</span>
+
+                                <select class="form-select form-select-sm" style="width:auto;" value="@PageSize" @onchange="OnPageSizeChanged">
+                                    @foreach (int option in PageSizeOptions)
+                                    {
+                                        <option value="@option">@option lignes</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <button type="button" class="btn btn-outline-secondary" disabled="@(CurrentPage >= TotalPages)" @onclick="GoToNextPage">Suivant</button>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mb-4">
+                <button type="button" class="btn btn-success" @onclick="OpenAddDialog">Ajouter liste de blocage</button>
+                <button type="button" class="btn btn-primary" @onclick="RefreshNowAsync" disabled="@IsRefreshing">
+                    @(IsRefreshing ? "Mise à jour en cours..." : "Vérifier les mises à jour")
+                </button>
+            </div>
+            <p class="form-text">
+                Le blocage n'est appliqué que si « Bloquez les domaines à l'aide des filtres et fichiers hosts » est activé
+                dans les <a href="/settings/general">Paramètres généraux</a>, et selon le « Mode de blocage » choisi dans
+                les <a href="/settings/dns">Paramètres DNS</a>. L'intervalle de mise à jour automatique se règle aussi dans
+                les Paramètres généraux.
+            </p>
+        </div>    
+    </div>
+
+    @if (!string.IsNullOrEmpty(StatusMessage))
+    {
+        <div class="alert @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mb-4">@StatusMessage</div>
+    }
+
+    
+</div>
+
+@if (ShowDialog)
+{
+    <div class="modal-backdrop-static" @onclick="CloseDialog"></div>
+
+    <div class="modal-static">
+        <div class="card" style="width: 32rem; max-width: 90vw;">
+            <div class="card-body">
+                <h2 class="card-title fs-5">@(IsEditMode ? "Modifier la liste de blocage" : "Ajouter une liste de blocage")</h2>
+
+                <div class="mb-3">
+                    <label class="form-label" for="dialog-list-name">Nom</label>
+                    <input id="dialog-list-name" type="text" class="form-control" @bind="DialogName" @bind:event="oninput" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="dialog-list-url">URL</label>
+                    <input id="dialog-list-url" type="text" class="form-control" placeholder="https://..." @bind="DialogUrl" @bind:event="oninput" />
+                </div>
+
+                @if (!string.IsNullOrEmpty(DialogError))
+                {
+                    <div class="alert alert-danger py-2 mb-3">@DialogError</div>
+                }
+            </div>
+            <div class="card-footer">
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-success" @onclick="SaveDialogAsync" disabled="@IsSavingDialog">
+                        @(IsSavingDialog ? "Téléchargement..." : "Enregistrer")
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDialog" disabled="@IsSavingDialog">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (ShowDeleteConfirm && EntryPendingDeletion is not null)
+{
+    <div class="modal-backdrop-static" @onclick="CancelDelete"></div>
+
+    <div class="modal-static">
+        <div class="card" style="width: 28rem; max-width: 90vw;">
+            <div class="card-body">
+                <h2 class="card-title fs-5">Supprimer la liste de blocage</h2>
+                <p class="mb-0">
+                    Voulez-vous vraiment supprimer « @EntryPendingDeletion.Name » ? Cette action ne peut pas être
+                    annulée.
+                </p>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeleteAsync">Supprimer</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

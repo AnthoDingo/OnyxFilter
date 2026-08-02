@@ -1,0 +1,277 @@
+@page "/"
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+<PageTitle>Tableau de bord - OnyxFilter</PageTitle>
+
+<div class="dashboard-header">
+    <h1>Tableau de bord</h1>
+
+    <div class="dashboard-actions">
+        <div class="protection-dropdown">
+            <div class="btn-protection-group">
+                <button type="button" class="btn-protection-main" @onclick="ToggleProtection">
+                    @(ProtectionEnabled ? "Désactiver la protection" : "Activer la protection")
+                </button>
+                @if (ProtectionEnabled)
+                {
+                    <button type="button" class="btn-protection-chevron" @onclick="ToggleProtectionMenu" aria-label="Choisir une durée">
+                        <span class="chevron @(IsProtectionMenuOpen ? "chevron-open" : "")" aria-hidden="true">▾</span>
+                    </button>
+                }
+            </div>
+
+            @if (ProtectionEnabled && IsProtectionMenuOpen)
+            {
+                <ul class="protection-menu">
+                    @foreach (ProtectionDisableOption option in DisableOptions)
+                    {
+                        <li>
+                            <button type="button" class="protection-menu-item" @onclick="() => DisableProtectionUntil(option.ComputeUntil())">
+                                @option.Label
+                            </button>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+        <button type="button" class="btn-refresh" @onclick="RefreshStatisticsAsync">
+            Actualiser les statistiques
+        </button>
+        <label class="auto-refresh-toggle" title="Rafraîchit automatiquement les statistiques toutes les 5 secondes">
+            <input type="checkbox" class="auto-refresh-input" checked="@AutoRefreshEnabled" @onchange="OnAutoRefreshChanged" />
+            <span class="auto-refresh-slider" aria-hidden="true"></span>
+            <span class="auto-refresh-label">Rafraîchissement auto</span>
+        </label>
+    </div>
+</div>
+
+@if (!ProtectionEnabled && ProtectionDisabledUntil is not null)
+{
+    <p class="protection-status">Protection désactivée jusqu'à @ProtectionDisabledUntil.Value.ToString("HH:mm")</p>
+}
+
+<div class="dashboard-grid">
+    <StatCard Value="DnsQueriesCount"
+              Label="Requêtes DNS"
+              Accent="StatCardAccent.Neutral"
+              Shape="SparklineShape.Spike"
+              Series="DnsQueriesHourly" />
+
+    <StatCard Value="BlockedByFiltersCount"
+              PercentageText="@BlockedByFiltersPercentText"
+              Label="Bloqué par Filtres"
+              Accent="StatCardAccent.Orange"
+              Shape="SparklineShape.Spike"
+              Series="BlockedByFiltersHourly" />
+
+    <StatCard Value="MalwareBlockedCount"
+              PercentageText="@MalwareBlockedPercentText"
+              Label="Tentative de malware/hameçonnage bloquée"
+              Accent="StatCardAccent.Orange"
+              Shape="SparklineShape.Flat" />
+
+    <StatCard Value="AdultContentBlockedCount"
+              PercentageText="@AdultContentBlockedPercentText"
+              Label="Sites à contenu adulte bloqués"
+              Accent="StatCardAccent.Purple"
+              Shape="SparklineShape.Flat" />
+</div>
+
+<div class="dashboard-panels">
+    <DashboardPanel Title="Statistiques générales" Subtitle="pendant les dernières 24 heures" OnRefresh="RefreshGeneralStatsAsync">
+        <ul class="stat-list">
+            <li>
+                <span class="stat-list-label">
+                    Requêtes DNS
+                    <span class="info-icon" title="Nombre total de requêtes DNS traitées.">?</span>
+                </span>
+                <span class="stat-list-value">@GeneralStatsDnsQueries</span>
+            </li>
+            <li>
+                <span class="stat-list-label">
+                    Bloqué par Filtres
+                    <span class="info-icon" title="Requêtes bloquées par les listes de filtres.">?</span>
+                </span>
+                <span class="stat-list-value">@GeneralStatsBlockedByFilters</span>
+            </li>
+            <li>
+                <span class="stat-list-label">
+                    Tentative de malware/hameçonnage bloquée
+                    <span class="info-icon" title="Requêtes bloquées par la protection malware/hameçonnage.">?</span>
+                </span>
+                <span class="stat-list-value">@GeneralStatsMalwareBlocked</span>
+            </li>
+            <li>
+                <span class="stat-list-label">
+                    Sites à contenu adulte bloqués
+                    <span class="info-icon" title="Requêtes bloquées par le filtre de contenu adulte.">?</span>
+                </span>
+                <span class="stat-list-value">@GeneralStatsAdultBlocked</span>
+            </li>
+            <li>
+                <span class="stat-list-label">
+                    Recherche sécurisée forcée
+                    <span class="info-icon" title="Requêtes redirigées vers la recherche sécurisée.">?</span>
+                </span>
+                <span class="stat-list-value">@GeneralStatsSafeSearchEnforced</span>
+            </li>
+            <li>
+                <span class="stat-list-label">
+                    Temps moyen de traitement
+                    <span class="info-icon" title="Temps moyen de traitement d'une requête DNS.">?</span>
+                </span>
+                <span class="stat-list-value">@GeneralStatsAverageProcessingTimeMs ms</span>
+            </li>
+        </ul>
+    </DashboardPanel>
+
+    <DashboardPanel Title="Meilleurs clients" Subtitle="pendant les dernières 24 heures" OnRefresh="RefreshTopClientsAsync">
+        <table class="clients-table">
+            <thead>
+                <tr>
+                    <th>Client</th>
+                    <th>Nombre de requêtes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (TopClients.Count == 0)
+                {
+                    <tr>
+                        <td colspan="2" class="clients-table-empty">Aucune donnée pour le moment.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (TopClientEntry client in TopClients)
+                    {
+                        <tr>
+                            <td>@client.Client</td>
+                            <td>@client.RequestCount</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </DashboardPanel>
+</div>
+
+<div class="dashboard-panels">
+    <DashboardPanel Title="Domaines les plus recherchés" Subtitle="pendant les dernières 24 heures" OnRefresh="RefreshTopSearchedDomainsAsync">
+        <table class="clients-table">
+            <thead>
+                <tr>
+                    <th>Domaine</th>
+                    <th>Nombre de requêtes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (TopSearchedDomains.Count == 0)
+                {
+                    <tr>
+                        <td colspan="2" class="clients-table-empty">Aucune donnée pour le moment.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (TopDomainEntry entry in TopSearchedDomains)
+                    {
+                        <tr>
+                            <td>@entry.Domain</td>
+                            <td>@entry.RequestCount</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </DashboardPanel>
+
+    <DashboardPanel Title="Les domaines les plus fréquemment bloqués" Subtitle="pendant les dernières 24 heures" OnRefresh="RefreshTopBlockedDomainsAsync">
+        <table class="clients-table">
+            <thead>
+                <tr>
+                    <th>Domaine</th>
+                    <th>Nombre de requêtes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (TopBlockedDomains.Count == 0)
+                {
+                    <tr>
+                        <td colspan="2" class="clients-table-empty">Aucune donnée pour le moment.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (TopDomainEntry entry in TopBlockedDomains)
+                    {
+                        <tr>
+                            <td>@entry.Domain</td>
+                            <td>@entry.RequestCount</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </DashboardPanel>
+</div>
+
+<div class="dashboard-panels">
+    <DashboardPanel Title="Top amonts" Subtitle="pendant les dernières 24 heures" OnRefresh="RefreshTopUpstreamsAsync">
+        <table class="clients-table">
+            <thead>
+                <tr>
+                    <th>Amont</th>
+                    <th>Nombre de requêtes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (TopUpstreams.Count == 0)
+                {
+                    <tr>
+                        <td colspan="2" class="clients-table-empty">Aucune donnée pour le moment.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (UpstreamEntry entry in TopUpstreams)
+                    {
+                        <tr>
+                            <td>@entry.Upstream</td>
+                            <td>@entry.RequestCount</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </DashboardPanel>
+
+    <DashboardPanel Title="Temps de réponse moyen en amont" Subtitle="pendant les dernières 24 heures" OnRefresh="RefreshUpstreamResponseTimesAsync">
+        <table class="clients-table">
+            <thead>
+                <tr>
+                    <th>Amont</th>
+                    <th>Temps de réponse</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (UpstreamResponseTimes.Count == 0)
+                {
+                    <tr>
+                        <td colspan="2" class="clients-table-empty">Aucune donnée pour le moment.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (UpstreamResponseTimeEntry entry in UpstreamResponseTimes)
+                    {
+                        <tr>
+                            <td>@entry.Upstream</td>
+                            <td>@entry.ResponseTimeMs ms</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </DashboardPanel>
+</div>

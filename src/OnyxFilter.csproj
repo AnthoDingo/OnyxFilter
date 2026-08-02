@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+
+    <!-- Empreinte mémoire minimale (cible : serveur avec 2 Go de RAM, ex. Raspberry Pi 3+) -->
+    <!-- Le GC serveur (activé par défaut par le SDK Web) réserve un segment de tas par cœur logique :
+         sur une machine à plusieurs cœurs, ceci gonfle la mémoire résidente bien au-delà des besoins
+         réels d'OnyxFilter (charge faible, un seul processus, pas de gros débit HTTP). Le GC "station
+         de travail" garde un tas unique, dimensionné sur l'usage réel. -->
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <!-- Le GC concurrent ("en arrière-plan") conserve une copie supplémentaire de la génération 2
+         pendant le marquage pour ne pas bloquer les threads applicatifs : de la mémoire en plus pour
+         des pauses plus courtes. Ici on privilégie la mémoire : les pauses du GC non concurrent restent
+         largement sous les délais d'attente DNS, même avec le tas de cette taille. -->
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <!-- Rend la mémoire au système d'exploitation dès que possible après un GC, plutôt que de la garder
+         réservée "au cas où" (défaut du SDK, mais explicité ici pour ne pas dépendre d'un changement de
+         défaut futur). -->
+    <RetainVMGarbageCollection>false</RetainVMGarbageCollection>
+
+    <!-- Fonctionnalités non utilisées par OnyxFilter, désactivées pour réduire encore l'empreinte : -->
+    <EventSourceSupport>false</EventSourceSupport>
+    <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+    <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+    <UseNativeHttpHandler>true</UseNativeHttpHandler>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\" />
+    <Folder Include="DbContexts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Catalogue des services pour "Services bloqués" (/filters/blocked-services), repris de
+         AdguardTeam/HostlistsRegistry (assets/services.json) : incorporé dans l'assembly pour rester
+         disponible quel que soit le répertoire de travail au démarrage. -->
+    <EmbeddedResource Include="Data\BlockedServices\blocked-services.json" />
+  </ItemGroup>
+
+</Project>
