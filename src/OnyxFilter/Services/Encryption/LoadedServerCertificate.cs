@@ -18,25 +18,12 @@ public sealed class LoadedServerCertificate : IDisposable
         this.leafCertificate = leafCertificate;
         this.intermediateCertificates = intermediateCertificates;
         Context = SslStreamCertificateContext.Create(leafCertificate, intermediateCertificates, offline: true);
+        Summary = CertificateSummary.FromCertificate(leafCertificate);
     }
 
     public SslStreamCertificateContext Context { get; }
 
-    public string Subject
-    {
-        get
-        {
-            return leafCertificate.Subject;
-        }
-    }
-
-    public DateTime NotAfterUtc
-    {
-        get
-        {
-            return leafCertificate.NotAfter.ToUniversalTime();
-        }
-    }
+    public CertificateSummary Summary { get; }
 
     public void Dispose()
     {

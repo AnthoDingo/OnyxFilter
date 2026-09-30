@@ -28,4 +28,7 @@ public sealed class EncryptionSettingsData
     public string PrivateKeyFilePath { get; set; } = string.Empty;
 
     public string PrivateKeyContent { get; set; } = string.Empty;
+
+    // Activé, il remplace le certificat et la clé ci-dessus.
+    public LetsEncryptSettingsData LetsEncrypt { get; set; } = new LetsEncryptSettingsData();
 }
