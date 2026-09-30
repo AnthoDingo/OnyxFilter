@@ -1,6 +1,7 @@
 @page "/"
 @attribute [Authorize]
 @rendermode InteractiveServer
+@using OnyxFilter.Services.Statistics
 
 <PageTitle>Vue d'ensemble · OnyxFilter</PageTitle>
 
@@ -154,13 +155,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (UpstreamRow row in Upstreams)
+                        @foreach (DnsStatisticsUpstreamSummary row in Upstreams)
                         {
                             <tr>
                                 <td class="upstream-name" title="@row.Upstream">@row.Upstream</td>
                                 <td>@(row.RequestCount is long count ? FormatCount(count) : "—")</td>
                                 <td>
-                                    @if (row.ResponseTimeMs is int latency)
+                                    @if (row.AverageResponseTimeMs is int latency)
                                     {
                                         <span class="latency @(latency < 50 ? "latency-fast" : latency < 150 ? "latency-mid" : "latency-slow")">@latency ms</span>
                                     }

@@ -20,4 +20,6 @@ public sealed class AppLocalSettings
     public BlockedServicesSettingsData BlockedServices { get; set; } = new BlockedServicesSettingsData();
 
     public ClientsSettingsData Clients { get; set; } = new ClientsSettingsData();
+
+    public ApiSettingsData Api { get; set; } = new ApiSettingsData();
 }

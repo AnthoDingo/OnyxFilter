@@ -84,16 +84,7 @@ public partial class Home : ComponentBase, IDisposable
     private List<RankItem> TopBlockedDomains { get; } = new List<RankItem>();
 
     // Panneau « Serveurs en amont » : volume de requêtes et latence moyenne réunis par serveur.
-    private sealed class UpstreamRow
-    {
-        public string Upstream { get; init; } = string.Empty;
-
-        public long? RequestCount { get; set; }
-
-        public int? ResponseTimeMs { get; set; }
-    }
-
-    private List<UpstreamRow> Upstreams { get; } = new List<UpstreamRow>();
+    private IReadOnlyList<DnsStatisticsUpstreamSummary> Upstreams { get; set; } = Array.Empty<DnsStatisticsUpstreamSummary>();
 
     private DateTime LastRefreshedAt { get; set; } = DateTime.Now;
 
@@ -169,29 +160,7 @@ public partial class Home : ComponentBase, IDisposable
         FillRanking(TopSearchedDomains, snapshot.TopSearchedDomains);
         FillRanking(TopBlockedDomains, snapshot.TopBlockedDomains);
 
-        Upstreams.Clear();
-        Dictionary<string, UpstreamRow> rowsByUpstream = new Dictionary<string, UpstreamRow>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (DnsStatisticsEntry entry in snapshot.TopUpstreams)
-        {
-            UpstreamRow row = new UpstreamRow { Upstream = entry.Label, RequestCount = entry.Count };
-            rowsByUpstream[entry.Label] = row;
-            Upstreams.Add(row);
-        }
-
-        foreach (DnsStatisticsResponseTimeEntry entry in snapshot.UpstreamResponseTimes)
-        {
-            if (rowsByUpstream.TryGetValue(entry.Upstream, out UpstreamRow? existing))
-            {
-                existing.ResponseTimeMs = entry.AverageResponseTimeMs;
-            }
-            else
-            {
-                UpstreamRow row = new UpstreamRow { Upstream = entry.Upstream, ResponseTimeMs = entry.AverageResponseTimeMs };
-                rowsByUpstream[entry.Upstream] = row;
-                Upstreams.Add(row);
-            }
-        }
+        Upstreams = snapshot.BuildUpstreamSummaries();
 
         HourlySeries.Clear();
         HourlySeries.AddRange(snapshot.HourlySeries);

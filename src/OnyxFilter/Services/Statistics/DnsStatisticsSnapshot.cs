@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OnyxFilter.Services.Statistics;
 
@@ -61,4 +62,36 @@ public sealed class DnsStatisticsSnapshot
     // pour les graphiques du tableau de bord (Home.razor / ActivityChart). Toujours exactement 24 points,
     // zéro-remplis pour les heures sans tranche persistée.
     public IReadOnlyList<DnsStatisticsHourlyPoint> HourlySeries { get; }
+
+    // Réunit TopUpstreams (volumes) et UpstreamResponseTimes (latences) par serveur, dans l'ordre du
+    // classement des volumes, suivi des serveurs qui n'ont qu'une mesure de latence. Utilisé par le panneau
+    // « Serveurs en amont » de la vue d'ensemble et par l'API (/api/v1/stats).
+    public IReadOnlyList<DnsStatisticsUpstreamSummary> BuildUpstreamSummaries()
+    {
+        Dictionary<string, int> latencies = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        foreach (DnsStatisticsResponseTimeEntry entry in UpstreamResponseTimes)
+        {
+            latencies[entry.Upstream] = entry.AverageResponseTimeMs;
+        }
+
+        List<DnsStatisticsUpstreamSummary> summaries = new List<DnsStatisticsUpstreamSummary>();
+        HashSet<string> seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (DnsStatisticsEntry entry in TopUpstreams)
+        {
+            if (seen.Add(entry.Label))
+            {
+                int? latency = latencies.TryGetValue(entry.Label, out int value) ? value : null;
+                summaries.Add(new DnsStatisticsUpstreamSummary(entry.Label, entry.Count, latency));
+            }
+        }
+
+        foreach (DnsStatisticsResponseTimeEntry entry in UpstreamResponseTimes.Where(entry => !seen.Contains(entry.Upstream)))
+        {
+            seen.Add(entry.Upstream);
+            summaries.Add(new DnsStatisticsUpstreamSummary(entry.Upstream, null, entry.AverageResponseTimeMs));
+        }
+
+        return summaries;
+    }
 }

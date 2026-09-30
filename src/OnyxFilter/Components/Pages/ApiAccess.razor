@@ -1,0 +1,213 @@
+@page "/settings/api"
+@attribute [Authorize]
+@rendermode InteractiveServer
+@using OnyxFilter.Services.Api
+
+<PageTitle>Accès API · OnyxFilter</PageTitle>
+
+<header class="page-header">
+    <div class="page-heading">
+        <p class="page-eyebrow">Configuration</p>
+        <h1 class="page-title">Accès API</h1>
+        <p class="page-lead">
+            Pilotez OnyxFilter depuis vos scripts ou votre domotique : suspension temporaire du filtrage,
+            statistiques d'usage et journal des requêtes.
+        </p>
+    </div>
+</header>
+
+@if (!string.IsNullOrEmpty(StatusMessage))
+{
+    <div class="alert page-status @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
+}
+
+<div class="settings-sections">
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Jetons d'accès</h2>
+            <p class="settings-intro-text">
+                Chaque jeton donne un accès complet à l'API. Sa valeur n'est affichée qu'une fois, à la création :
+                conservez-la en lieu sûr et révoquez le jeton s'il a pu fuiter.
+            </p>
+        </div>
+
+        <div class="card settings-panel">
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <label class="setting-label" for="new-token-name">Nouveau jeton</label>
+                    <p class="setting-help">Un nom pour savoir qui l'utilise (ex. « Home Assistant »).</p>
+                </div>
+                <div class="setting-nested token-create">
+                    <input id="new-token-name" type="text" class="form-control" maxlength="@ApiTokenService.MaxNameLength" placeholder="Nom du jeton" @bind="NewTokenName" @bind:event="oninput" />
+                    <button type="button" class="btn btn-primary" @onclick="CreateTokenAsync" disabled="@(IsCreating || string.IsNullOrWhiteSpace(NewTokenName))">
+                        <Icon Name="plus" />Créer
+                    </button>
+                </div>
+
+                @if (CreatedToken is not null)
+                {
+                    <div class="setting-nested token-reveal" role="status">
+                        <p class="token-reveal-title">
+                            <Icon Name="key" />Jeton « @CreatedTokenName » créé. Copiez-le maintenant, il ne sera plus affiché.
+                        </p>
+                        <div class="token-reveal-value">
+                            <input type="text" class="form-control font-monospace" readonly value="@CreatedToken" aria-label="Valeur du jeton" onfocus="this.select()" />
+                            <button type="button" class="btn btn-secondary" @onclick="CopyTokenAsync">@(TokenCopied ? "Copié" : "Copier")</button>
+                            <button type="button" class="btn btn-outline-secondary" @onclick="DismissCreatedToken">Masquer</button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @if (Tokens.Count == 0)
+            {
+                <p class="empty-state mb-0">
+                    <span class="empty-state-title">Aucun jeton</span>
+                    L'API reste inaccessible tant qu'aucun jeton n'a été créé.
+                </p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table align-middle token-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Jeton</th>
+                                <th scope="col">Créé le</th>
+                                <th scope="col"><span class="visually-hidden">Actions</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (OnyxFilter.Models.Settings.ApiTokenEntry token in Tokens)
+                            {
+                                <tr>
+                                    <td class="fw-semibold">@token.Name</td>
+                                    <td class="mono text-body-secondary">@(token.Prefix)…</td>
+                                    <td class="text-body-secondary">@FormatCreatedAt(token.CreatedUtc)</td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => RequestRevoke(token)">Révoquer</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Référence</h2>
+            <p class="settings-intro-text">
+                Réponses en JSON, dates en UTC (ISO 8601). Le jeton se transmet dans l'en-tête
+                <code>Authorization: Bearer …</code> ou <code>X-Api-Key</code>. Hors de votre réseau local,
+                n'utilisez l'API qu'en HTTPS : le jeton accompagne chaque requête.
+            </p>
+        </div>
+
+        <div class="card settings-panel">
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <span class="setting-label">Adresse de base</span>
+                </div>
+                <div class="setting-nested">
+                    <code class="api-base">@ApiBaseUrl</code>
+                </div>
+            </div>
+
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <span class="setting-label">Points d'accès</span>
+                </div>
+                <div class="setting-nested">
+                    <dl class="endpoint-list">
+                        <div class="endpoint">
+                            <dt><span class="http-method http-get">GET</span><code>/protection</code></dt>
+                            <dd>État du filtrage : <code>enabled</code>, <code>disabledUntil</code>, <code>remainingSeconds</code>.</dd>
+                        </div>
+                        <div class="endpoint">
+                            <dt><span class="http-method http-post">POST</span><code>/protection/disable</code></dt>
+                            <dd>
+                                Suspend le filtrage. Corps JSON optionnel : <code>{"durationSeconds": 600}</code> ou
+                                <code>{"until": "2026-01-01T08:00:00Z"}</code> (aussi acceptés dans l'adresse :
+                                <code>?durationSeconds=600</code>). Sans durée, jusqu'à réactivation.
+                            </dd>
+                        </div>
+                        <div class="endpoint">
+                            <dt><span class="http-method http-post">POST</span><code>/protection/enable</code></dt>
+                            <dd>Réactive immédiatement le filtrage et annule toute reprise programmée.</dd>
+                        </div>
+                        <div class="endpoint">
+                            <dt><span class="http-method http-get">GET</span><code>/stats</code></dt>
+                            <dd>
+                                Usage sur 24 heures glissantes : volumes (total, bloquées, autorisées, taux), temps de
+                                traitement, domaines et clients les plus actifs, serveurs en amont, série horaire.
+                            </dd>
+                        </div>
+                        <div class="endpoint">
+                            <dt><span class="http-method http-get">GET</span><code>/querylog</code></dt>
+                            <dd>
+                                Journal, du plus récent au plus ancien. Paramètres : <code>limit</code> (1 à 500, 50 par
+                                défaut), <code>offset</code>, <code>search</code> (domaine ou client), <code>reason</code>
+                                (<code>Resolved</code>, <code>Cached</code>, <code>Rewritten</code>, <code>SafeSearch</code>,
+                                <code>CustomRule</code>, <code>Filtered</code>, <code>BlockedService</code>,
+                                <code>SecurityThreat</code>, <code>ParentalControl</code>).
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <span class="setting-label">Exemples</span>
+                    <p class="setting-help">Avec le jeton dans la variable d'environnement <code>ONYX_TOKEN</code>.</p>
+                </div>
+                <div class="setting-nested">
+                    <pre class="code-block"><span class="code-comment"># Suspendre le filtrage pendant 10 minutes</span>
+curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" \
+     -H "Content-Type: application/json" -d '{"durationSeconds": 600}' \
+     @ApiBaseUrl/protection/disable
+
+<span class="code-comment"># Le réactiver</span>
+curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" @ApiBaseUrl/protection/enable
+
+<span class="code-comment"># Statistiques d'usage</span>
+curl -H "Authorization: Bearer $ONYX_TOKEN" @ApiBaseUrl/stats
+
+<span class="code-comment"># 20 dernières requêtes bloquées par une liste</span>
+curl -H "Authorization: Bearer $ONYX_TOKEN" "@ApiBaseUrl/querylog?limit=20&amp;reason=Filtered"</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+@if (TokenPendingRevocation is not null)
+{
+    <div class="modal-backdrop-static" @onclick="CancelRevoke"></div>
+
+    <div class="modal-static" role="alertdialog" aria-modal="true" aria-labelledby="revoke-dialog-title">
+        <div class="card dialog-card">
+            <div class="card-body">
+                <h2 class="dialog-title" id="revoke-dialog-title">Révoquer le jeton ?</h2>
+                <p class="dialog-lead mb-0">
+                    « @TokenPendingRevocation.Name » cessera immédiatement de donner accès à l'API. Les scripts qui
+                    l'utilisent recevront une erreur 401.
+                </p>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelRevoke">Annuler</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmRevokeAsync">Révoquer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

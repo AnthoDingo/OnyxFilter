@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
@@ -15,6 +17,7 @@ using OnyxFilter.Components.Account;
 using OnyxFilter.DbContexts;
 using OnyxFilter.Models;
 using OnyxFilter.Services;
+using OnyxFilter.Services.Api;
 using OnyxFilter.Services.BlockedServices;
 using OnyxFilter.Services.BrowsingSecurity;
 using OnyxFilter.Services.DnsForwarding;
@@ -71,7 +74,19 @@ public class Program
             options.LogoutPath = "/logout";
         });
 
-        builder.Services.AddAuthorization();
+        // API HTTP (/api/v1, voir Services/Api/ApiEndpoints.cs) : authentification par jeton uniquement,
+        // jetons gérés depuis la page « Accès API » (/settings/api). Le cookie de session de l'interface
+        // n'y donne pas accès (pas de requête intersite possible depuis le navigateur d'un administrateur).
+        builder.Services.AddSingleton<IApiTokenService, ApiTokenService>();
+        builder.Services.AddAuthentication()
+            .AddScheme<AuthenticationSchemeOptions, ApiTokenAuthenticationHandler>(ApiTokenAuthenticationHandler.SchemeName, configureOptions: null);
+
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy(ApiEndpoints.PolicyName, policy => policy
+                .AddAuthenticationSchemes(ApiTokenAuthenticationHandler.SchemeName)
+                .RequireAuthenticatedUser());
+        });
 
         // Persistance des pages de paramètres dans appsettings.local.json.
         builder.Services.AddSingleton<ILocalSettingsStore, LocalSettingsStore>();
@@ -188,6 +203,22 @@ public class Program
         }
 
         app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+
+        // Les réponses d'erreur de l'API restent en JSON : pas de substitution par la page HTML ci-dessus.
+        app.Use(async (context, next) =>
+        {
+            if (context.Request.Path.StartsWithSegments("/api"))
+            {
+                IStatusCodePagesFeature? statusCodePages = context.Features.Get<IStatusCodePagesFeature>();
+                if (statusCodePages is not null)
+                {
+                    statusCodePages.Enabled = false;
+                }
+            }
+
+            await next();
+        });
+
         app.UseHttpsRedirection();
 
         app.UseAntiforgery();
@@ -210,6 +241,10 @@ public class Program
         // compte à chaud de chaque enregistrement. Résolution via le même pipeline partagé que le
         // port 53 et le DNS-over-TLS (filtres, cache, amont, statistiques).
         app.MapDnsOverHttps();
+
+        // API HTTP d'automatisation : état et suspension temporaire du filtrage, statistiques d'usage,
+        // journal des requêtes.
+        app.MapOnyxApi();
 
         ApplyMigrations(app);
         EnsureDefaultAdminAccountAsync(app).GetAwaiter().GetResult();

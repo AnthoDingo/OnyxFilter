@@ -1,0 +1,136 @@
+.token-create {
+    display: flex;
+    gap: 0.6rem;
+    max-width: 32rem;
+}
+
+    .token-create .form-control {
+        flex: 1;
+        min-width: 0;
+    }
+
+.token-reveal {
+    padding: 1rem 1.1rem;
+    border: 1px solid color-mix(in srgb, var(--of-accent) 50%, transparent);
+    border-radius: var(--of-radius-sm);
+    background-color: var(--of-accent-soft);
+}
+
+.token-reveal-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--of-text);
+}
+
+    .token-reveal-title ::deep .icon {
+        color: var(--of-accent-text);
+    }
+
+.token-reveal-value {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+    .token-reveal-value .form-control {
+        flex: 1 1 22rem;
+        min-width: 0;
+        background-color: var(--of-surface);
+    }
+
+.token-table {
+    border-top: 1px solid var(--of-line);
+}
+
+    .token-table > :not(caption) > * > *:first-child {
+        padding-left: 1.5rem;
+    }
+
+    .token-table > :not(caption) > * > *:last-child {
+        padding-right: 1.5rem;
+    }
+
+.api-base {
+    display: inline-block;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.85rem;
+    word-break: break-all;
+}
+
+.endpoint-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 0;
+}
+
+.endpoint dt {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-weight: 400;
+}
+
+    .endpoint dt code {
+        font-size: 0.85rem;
+        color: var(--of-text);
+        background: none;
+        padding: 0;
+    }
+
+.endpoint dd {
+    margin: 0.3rem 0 0;
+    padding-left: 3.6rem;
+    color: var(--of-text-2);
+    font-size: 0.84rem;
+    line-height: 1.55;
+}
+
+.http-method {
+    display: inline-block;
+    min-width: 3rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 5px;
+    font-family: var(--of-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.http-get {
+    color: var(--of-info);
+    background-color: var(--of-info-soft);
+}
+
+.http-post {
+    color: var(--of-accent-text);
+    background-color: var(--of-accent-soft);
+}
+
+.code-block {
+    margin: 0;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--of-line);
+    border-radius: var(--of-radius-sm);
+    background-color: var(--of-surface-2);
+    color: var(--of-text);
+    font-family: var(--of-mono);
+    font-size: 0.78rem;
+    line-height: 1.65;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+.code-comment {
+    color: var(--of-text-3);
+}
+
+@media (max-width: 640px) {
+    .endpoint dd {
+        padding-left: 0;
+    }
+}
