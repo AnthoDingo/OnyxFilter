@@ -31,6 +31,10 @@ public sealed record CertificateSummary(
             certificate.Thumbprint);
     }
 
+    // Noms couverts, ou le sujet pour un certificat sans nom alternatif. Les certificats Let's Encrypt récents
+    // n'ont plus de sujet (CN) : seuls les noms alternatifs les identifient.
+    public string DisplayName => DnsNames.Count > 0 ? string.Join(", ", DnsNames) : Subject;
+
     // Vrai si le nom figure dans le certificat, directement ou via un nom générique (« *.exemple.fr »).
     public bool Covers(string domain)
     {

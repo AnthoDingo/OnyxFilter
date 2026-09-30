@@ -217,10 +217,10 @@ public sealed class DnsOverQuicService : BackgroundService
         }
 
         logger.LogInformation(
-            "Service DNS-over-QUIC en écoute sur le port {Port} (certificat : {Subject}, expire le {NotAfterUtc:yyyy-MM-dd} UTC).",
+            "Service DNS-over-QUIC en écoute sur le port {Port} (certificat : {Names}, expire le {NotAfterUtc:yyyy-MM-dd} UTC).",
             port,
-            serverCertificate.Subject,
-            serverCertificate.NotAfterUtc);
+            serverCertificate.Summary.DisplayName,
+            serverCertificate.Summary.NotAfterUtc);
 
         try
         {

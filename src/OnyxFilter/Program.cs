@@ -26,6 +26,8 @@ using OnyxFilter.Services.Api;
 using OnyxFilter.Services.BlockedServices;
 using OnyxFilter.Services.BrowsingSecurity;
 using OnyxFilter.Services.DnsForwarding;
+using OnyxFilter.Services.Encryption;
+using OnyxFilter.Services.Encryption.Acme;
 using OnyxFilter.Services.Filtering;
 using OnyxFilter.Services.ParentalControl;
 using OnyxFilter.Services.Rewrites;
@@ -267,7 +269,24 @@ public class Program
         builder.Services.AddSingleton<IUpdateService, UpdateService>();
         builder.Services.AddHostedService<UpdateCheckBackgroundService>();
 
+        // Certificat Let's Encrypt automatique (« Chiffrement », /settings/encryption) : obtention par défi
+        // HTTP-01, vérification toutes les 12 heures et renouvellement 15 jours avant l'expiration. Annuaires
+        // ACME réglables dans la section « LetsEncrypt » d'appsettings.json (voir LetsEncryptOptions).
+        builder.Services.Configure<LetsEncryptOptions>(builder.Configuration.GetSection(LetsEncryptOptions.SectionName));
+        builder.Services.AddHttpClient(LetsEncryptService.HttpClientName, client =>
+        {
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("OnyxFilter/" + AppVersion.Display);
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
+        builder.Services.AddSingleton<AcmeHttpChallengeStore>();
+        builder.Services.AddSingleton<LetsEncryptService>();
+        builder.Services.AddSingleton<ILetsEncryptService>(serviceProvider => serviceProvider.GetRequiredService<LetsEncryptService>());
+        builder.Services.AddHostedService(serviceProvider => serviceProvider.GetRequiredService<LetsEncryptService>());
+
         WebApplication app = builder.Build();
+
+        // Défis HTTP-01 de Let's Encrypt, avant toute redirection, page d'erreur ou authentification.
+        app.UseAcmeHttpChallenge();
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

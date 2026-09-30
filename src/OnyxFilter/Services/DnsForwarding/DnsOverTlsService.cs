@@ -158,9 +158,9 @@ public sealed class DnsOverTlsService : BackgroundService
         using (serverCertificate)
         {
             logger.LogInformation(
-                "Certificat DNS-over-TLS chargé : {Subject} (expire le {NotAfterUtc:yyyy-MM-dd} UTC).",
-                serverCertificate.Subject,
-                serverCertificate.NotAfterUtc);
+                "Certificat DNS-over-TLS chargé : {Names} (expire le {NotAfterUtc:yyyy-MM-dd} UTC).",
+                serverCertificate.Summary.DisplayName,
+                serverCertificate.Summary.NotAfterUtc);
 
             await RunListenerAsync(encryptionSettings.DnsOverTlsPort, serverCertificate, sessionToken);
         }

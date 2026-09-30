@@ -25,22 +25,6 @@ public sealed class LoadedServerCertificate : IDisposable
 
     public CertificateSummary Summary { get; }
 
-    public string Subject
-    {
-        get
-        {
-            return leafCertificate.Subject;
-        }
-    }
-
-    public DateTime NotAfterUtc
-    {
-        get
-        {
-            return leafCertificate.NotAfter.ToUniversalTime();
-        }
-    }
-
     public void Dispose()
     {
         leafCertificate.Dispose();
