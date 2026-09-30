@@ -6,6 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
 
+    <!-- Version d'une compilation locale. Les versions publiées la remplacent par celle du tag
+         (dotnet publish -p:Version=1.4.0, voir .github/workflows/release.yml) : c'est elle que le
+         système de mise à jour compare aux publications GitHub (Services/Updates). -->
+    <Version>0.0.0-dev</Version>
+
     <!-- Empreinte mémoire minimale (cible : serveur avec 2 Go de RAM, ex. Raspberry Pi 3+) -->
     <!-- Le GC serveur (activé par défaut par le SDK Web) réserve un segment de tas par cœur logique :
          sur une machine à plusieurs cœurs, ceci gonfle la mémoire résidente bien au-delà des besoins
@@ -36,6 +41,10 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.11" />
+    <!-- Intégration systemd (Type=notify, journal) : voir deploy/onyxfilter.service. Sans effet hors systemd. -->
+    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="10.0.11" />
+    <!-- Mise en forme des commandes d'administration (tableaux, couleurs, saisie masquée) : voir Cli/. -->
+    <PackageReference Include="Spectre.Console" Version="0.57.2" />
   </ItemGroup>
 
   <ItemGroup>

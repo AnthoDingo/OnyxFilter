@@ -22,4 +22,6 @@ public sealed class AppLocalSettings
     public ClientsSettingsData Clients { get; set; } = new ClientsSettingsData();
 
     public ApiSettingsData Api { get; set; } = new ApiSettingsData();
+
+    public UpdateSettingsData Updates { get; set; } = new UpdateSettingsData();
 }

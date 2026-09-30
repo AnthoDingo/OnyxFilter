@@ -111,20 +111,6 @@
     background-color: var(--of-accent-soft);
 }
 
-.code-block {
-    margin: 0;
-    padding: 1rem 1.1rem;
-    border: 1px solid var(--of-line);
-    border-radius: var(--of-radius-sm);
-    background-color: var(--of-surface-2);
-    color: var(--of-text);
-    font-family: var(--of-mono);
-    font-size: 0.78rem;
-    line-height: 1.65;
-    overflow-x: auto;
-    white-space: pre;
-}
-
 .code-comment {
     color: var(--of-text-3);
 }

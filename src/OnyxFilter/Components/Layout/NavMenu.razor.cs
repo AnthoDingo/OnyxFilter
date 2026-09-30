@@ -1,9 +1,9 @@
 using System;
-using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using OnyxFilter.Services.Updates;
 
 namespace OnyxFilter.Components.Layout;
 
@@ -16,14 +16,7 @@ public partial class NavMenu : ComponentBase
 
     private string UserInitial => string.IsNullOrEmpty(UserName) ? "?" : UserName.Substring(0, 1).ToUpperInvariant();
 
-    private static string AssemblyVersion
-    {
-        get
-        {
-            Version? version = Assembly.GetExecutingAssembly().GetName().Version;
-            return version is null ? "?" : version.ToString(3);
-        }
-    }
+    private static string AssemblyVersion => AppVersion.Display;
 
     protected override async Task OnInitializedAsync()
     {

@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -12,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using OnyxFilter.Cli;
 using OnyxFilter.Components;
 using OnyxFilter.Components.Account;
 using OnyxFilter.DbContexts;
@@ -27,14 +31,57 @@ using OnyxFilter.Services.Rewrites;
 using OnyxFilter.Services.SafeSearch;
 using OnyxFilter.Services.QueryLog;
 using OnyxFilter.Services.Statistics;
+using OnyxFilter.Services.Updates;
 
 namespace OnyxFilter;
 
 public class Program
 {
-    public static void Main(string[] args)
+    // Point d'entrée unique : serveur (--server) et commandes d'administration (voir Cli/CommandLine.cs).
+    // Sans argument, l'aide est affichée.
+    public static int Main(string[] args)
     {
-        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+        return CommandLine.Run(args);
+    }
+
+    // Lance le serveur (DNS, interface web, API) jusqu'à son arrêt.
+    internal static int RunServer(string[] args, string? dataDirectory)
+    {
+        WebApplication app = BuildWebApplication(args, dataDirectory, commandLineMode: false);
+
+        ApplyMigrations(app);
+        EnsureDefaultAdminAccountAsync(app).GetAwaiter().GetResult();
+
+        app.Run();
+        return 0;
+    }
+
+    // Construit l'application complète (services, pipeline HTTP, points d'accès) sans la démarrer. Les
+    // commandes d'administration s'en servent pour accéder aux mêmes services (base, réglages) que le
+    // serveur, sans ses journaux.
+    internal static WebApplication BuildWebApplication(string[] args, string? dataDirectory, bool commandLineMode)
+    {
+        // Les chemins relatifs (base SQLite, caches) se résolvent depuis le dossier courant : on se place
+        // dans le dossier des données (voir DataDirectory).
+        string contentRoot = DataDirectory.Resolve(dataDirectory);
+        Directory.SetCurrentDirectory(contentRoot);
+
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions
+        {
+            Args = args,
+            ContentRootPath = contentRoot,
+        });
+
+        if (commandLineMode)
+        {
+            // Sortie réservée aux messages des commandes (pas de journaux EF Core ou d'hébergement).
+            builder.Logging.ClearProviders();
+        }
+
+        // Service systemd (deploy/onyxfilter.service, Type=notify) : signale le démarrage effectif à
+        // systemd et adapte le format des journaux. Sans effet lorsque l'application n'est pas lancée par
+        // systemd.
+        builder.Services.AddSystemd();
 
         // Add services to the container.
         builder.Services.AddRazorComponents()
@@ -193,6 +240,21 @@ public class Program
         // Linux) ; sans lui, le service se met en attente avec un avertissement, sans bloquer le reste.
         builder.Services.AddHostedService<DnsOverQuicService>();
 
+        // Mises à jour (« Mises à jour », /settings/updates) : recherche des publications GitHub, puis
+        // installation en un clic de l'archive autonome linux-x64 et redémarrage par systemd. Source et
+        // contraintes réglables dans la section « Updates » d'appsettings.json (voir UpdateOptions).
+        builder.Services.Configure<UpdateOptions>(builder.Configuration.GetSection(UpdateOptions.SectionName));
+        builder.Services.AddHttpClient(GitHubReleaseClient.HttpClientName, client =>
+        {
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("OnyxFilter/" + AppVersion.Display);
+            // Délais gérés par appel (API : 30 s, téléchargement : 20 min).
+            client.Timeout = Timeout.InfiniteTimeSpan;
+        });
+        builder.Services.AddSingleton<GitHubReleaseClient>();
+        builder.Services.AddSingleton<UpdateInstaller>();
+        builder.Services.AddSingleton<IUpdateService, UpdateService>();
+        builder.Services.AddHostedService<UpdateCheckBackgroundService>();
+
         WebApplication app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -246,68 +308,10 @@ public class Program
         // journal des requêtes.
         app.MapOnyxApi();
 
-        ApplyMigrations(app);
-        EnsureDefaultAdminAccountAsync(app).GetAwaiter().GetResult();
-
-        if (ResetPasswordAsync(app, args).GetAwaiter().GetResult())
-        {
-            return;
-        }
-
-        app.Run();
+        return app;
     }
 
-    /// <summary>
-    /// Réinitialise le mot de passe d'un utilisateur si l'argument --reset est présent.
-    /// Retourne true si la commande a été traitée (l'application doit s'arrêter).
-    /// Usage : OnyxFilter --reset &lt;username&gt; &lt;newpassword&gt;
-    /// </summary>
-    private static async Task<bool> ResetPasswordAsync(WebApplication app, string[] args)
-    {
-        int resetIndex = Array.IndexOf(args, "--reset");
-        if (resetIndex < 0)
-        {
-            return false;
-        }
-
-        if (resetIndex + 2 >= args.Length)
-        {
-            Console.Error.WriteLine("Usage : OnyxFilter --reset <username> <newpassword>");
-            return true;
-        }
-
-        string username = args[resetIndex + 1];
-        string newPassword = args[resetIndex + 2];
-
-        using IServiceScope scope = app.Services.CreateScope();
-        UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-        ApplicationUser? user = await userManager.FindByNameAsync(username);
-        if (user is null)
-        {
-            Console.Error.WriteLine($"Erreur : utilisateur '{username}' introuvable.");
-            return true;
-        }
-
-        string resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
-        IdentityResult result = await userManager.ResetPasswordAsync(user, resetToken, newPassword);
-
-        if (result.Succeeded)
-        {
-            Console.WriteLine($"Mot de passe de '{username}' réinitialisé avec succès.");
-        }
-        else
-        {
-            foreach (IdentityError error in result.Errors)
-            {
-                Console.Error.WriteLine($"Erreur : {error.Description}");
-            }
-        }
-
-        return true;
-    }
-
-    private static void ApplyMigrations(WebApplication app)
+    internal static void ApplyMigrations(WebApplication app)
     {
         using IServiceScope scope = app.Services.CreateScope();
         AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();

@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "OnyxTool": {
-      "commandName": "Project",
-      "commandLineArgs": "user:list"
-    }
-  }
-}
