@@ -6,8 +6,9 @@ using OnyxFilter.Models.Settings;
 namespace OnyxFilter.Services.Encryption;
 
 // Charge le certificat serveur configuré dans la page "Paramètres de chiffrement"
-// (/settings/encryption), pour les services chiffrés (DNS-over-TLS, et à terme HTTPS/DNS-over-QUIC).
-// Formats acceptés :
+// (/settings/encryption), pour les services chiffrés (DNS-over-TLS, DNS-over-QUIC).
+// Certificat Let's Encrypt activé : fichiers tenus à jour par LetsEncryptService (ManagedCertificateFiles),
+// les champs de certificat et de clé sont alors ignorés. Sinon, formats acceptés :
 //  - PEM : certificat (fichier ou contenu collé) + clé privée (fichier ou contenu collé). Si le champ
 //    de clé privée est vide, la clé est recherchée dans le PEM du certificat (fichier combiné, ex.
 //    "fullchain + clé"). Les certificats supplémentaires du PEM sont envoyés comme chaîne intermédiaire.
@@ -26,12 +27,31 @@ public static class ServerCertificateLoader
             ? X509KeyStorageFlags.DefaultKeySet
             : X509KeyStorageFlags.EphemeralKeySet;
 
+        if (settings.LetsEncrypt.Enabled)
+        {
+            return LoadManagedCertificate(storageFlags);
+        }
+
         if (IsPkcs12File(settings))
         {
             return LoadFromPkcs12File(settings.CertificateFilePath, storageFlags);
         }
 
         return LoadFromPem(settings, storageFlags);
+    }
+
+    private static LoadedServerCertificate LoadManagedCertificate(X509KeyStorageFlags storageFlags)
+    {
+        if (!File.Exists(ManagedCertificateFiles.CertificatePath) || !File.Exists(ManagedCertificateFiles.PrivateKeyPath))
+        {
+            throw new InvalidOperationException(
+                "Certificat Let's Encrypt pas encore obtenu : son état est affiché dans la page /settings/encryption.");
+        }
+
+        return LoadFromPem(
+            File.ReadAllText(ManagedCertificateFiles.CertificatePath),
+            File.ReadAllText(ManagedCertificateFiles.PrivateKeyPath),
+            storageFlags);
     }
 
     private static bool IsPkcs12File(EncryptionSettingsData settings)
@@ -120,6 +140,11 @@ public static class ServerCertificateLoader
                 "Aucune clé privée configurée : renseignez le chemin ou le contenu de la clé privée dans les paramètres de chiffrement.");
         }
 
+        return LoadFromPem(certificatePem, privateKeyPem, storageFlags);
+    }
+
+    private static LoadedServerCertificate LoadFromPem(string certificatePem, string privateKeyPem, X509KeyStorageFlags storageFlags)
+    {
         X509Certificate2 leafWithKey;
 
         try

@@ -18,9 +18,12 @@ public sealed class LoadedServerCertificate : IDisposable
         this.leafCertificate = leafCertificate;
         this.intermediateCertificates = intermediateCertificates;
         Context = SslStreamCertificateContext.Create(leafCertificate, intermediateCertificates, offline: true);
+        Summary = CertificateSummary.FromCertificate(leafCertificate);
     }
 
     public SslStreamCertificateContext Context { get; }
+
+    public CertificateSummary Summary { get; }
 
     public string Subject
     {
