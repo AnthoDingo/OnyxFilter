@@ -180,16 +180,15 @@ public sealed class DnsOverTlsService : BackgroundService
 
         // Options TLS partagées par toutes les connexions de la session : certificat pré-assemblé
         // (chaîne incluse) et protocoles restreints à TLS 1.2/1.3 (exigence de RFC 7858 : TLS >= 1.2).
+        // Pas d'exigence ALPN : la RFC 7858 ne définit pas d'identifiant ALPN pour DNS-over-TLS,
+        // et la plupart des clients (Android « DNS privé », iOS, systemd-resolved…) n'en envoient
+        // pas. Exiger "dot" ferait échouer la poignée de main TLS avec ces clients.
         SslServerAuthenticationOptions tlsOptions = new SslServerAuthenticationOptions
         {
             ServerCertificateContext = serverCertificate.Context,
             EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13,
             ClientCertificateRequired = false,
             CertificateRevocationCheckMode = System.Security.Cryptography.X509Certificates.X509RevocationMode.NoCheck,
-            ApplicationProtocols = new System.Collections.Generic.List<SslApplicationProtocol>
-            {
-                new SslApplicationProtocol("dot"),
-            },
         };
 
         try
