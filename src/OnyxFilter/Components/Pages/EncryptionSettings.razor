@@ -1,6 +1,7 @@
 @page "/settings/encryption"
 @attribute [Authorize]
 @rendermode InteractiveServer
+@using OnyxFilter.Services.Encryption
 
 <PageTitle>Chiffrement · OnyxFilter</PageTitle>
 
@@ -18,7 +19,8 @@
         <div class="settings-intro">
             <h2 class="settings-intro-title">Protocoles</h2>
             <p class="settings-intro-text">
-                Activez le chiffrement puis fournissez un certificat valide pour le nom du serveur.
+                Activez le chiffrement puis fournissez un certificat valide pour le nom du serveur, ou laissez
+                Let's Encrypt s'en charger (section suivante).
             </p>
         </div>
 
@@ -98,90 +100,105 @@
 
             <h3 class="setting-group-title">Certificat et clé</h3>
 
-            <div class="setting setting-stacked">
-                <div class="setting-text">
-                    <span class="setting-label">Chaîne de certificats</span>
-                    <p class="setting-help">
-                        Certificat valide pour votre domaine, par exemple obtenu gratuitement auprès de
-                        <a href="https://letsencrypt.org" target="_blank" rel="noopener noreferrer">Let's Encrypt</a>.
+            @if (LetsEncryptEnabled)
+            {
+                <div class="setting setting-stacked">
+                    <p class="setting-help mb-0">
+                        Le certificat Let's Encrypt (section suivante) remplace le certificat et la clé fournis à la
+                        main, conservés pour le cas où vous le désactiveriez.
                     </p>
                 </div>
-                <div class="setting-nested">
-                    <div class="segmented mb-3" role="radiogroup" aria-label="Source du certificat">
-                        <input class="btn-check" type="radio" name="certificate-source" id="cert-source-path" checked="@(CertificateSource == CertificateInputSource.FilePath)" @onchange="() => SetCertificateSource(CertificateInputSource.FilePath)" />
-                        <label class="segmented-option" for="cert-source-path">Chemin du fichier</label>
-                        <input class="btn-check" type="radio" name="certificate-source" id="cert-source-paste" checked="@(CertificateSource == CertificateInputSource.PastedContent)" @onchange="() => SetCertificateSource(CertificateInputSource.PastedContent)" />
-                        <label class="segmented-option" for="cert-source-paste">Contenu PEM</label>
+            }
+            else
+            {
+                <div class="setting setting-stacked">
+                    <div class="setting-text">
+                        <span class="setting-label">Chaîne de certificats</span>
+                        <p class="setting-help">
+                            Certificat valide pour votre domaine (PEM, ou PKCS#12 sans mot de passe). Les certificats
+                            intermédiaires du fichier sont envoyés aux appareils.
+                        </p>
                     </div>
-
-                    @if (CertificateSource == CertificateInputSource.FilePath)
-                    {
-                        <input type="text"
-                               class="form-control font-monospace"
-                               aria-label="Chemin du fichier de certificats"
-                               placeholder="/etc/letsencrypt/live/dns.exemple.fr/fullchain.pem"
-                               @bind="CertificateFilePath"
-                               @bind:event="oninput" />
-                    }
-                    else
-                    {
-                        <textarea class="form-control font-monospace"
-                                  rows="4"
-                                  aria-label="Contenu du certificat"
-                                  placeholder="-----BEGIN CERTIFICATE-----"
-                                  @bind="CertificateContent"
-                                  @bind:event="oninput"></textarea>
-                    }
-
-                    @if (!string.IsNullOrWhiteSpace(CertificateFilePath) || !string.IsNullOrWhiteSpace(CertificateContent))
-                    {
-                        <div class="alert alert-secondary mt-3 mb-0">
-                            La validation du certificat sera disponible une fois le moteur de chiffrement branché.
+                    <div class="setting-nested">
+                        <div class="segmented mb-3" role="radiogroup" aria-label="Source du certificat">
+                            <input class="btn-check" type="radio" name="certificate-source" id="cert-source-path" checked="@(CertificateSource == CertificateInputSource.FilePath)" @onchange="() => SetCertificateSource(CertificateInputSource.FilePath)" />
+                            <label class="segmented-option" for="cert-source-path">Chemin du fichier</label>
+                            <input class="btn-check" type="radio" name="certificate-source" id="cert-source-paste" checked="@(CertificateSource == CertificateInputSource.PastedContent)" @onchange="() => SetCertificateSource(CertificateInputSource.PastedContent)" />
+                            <label class="segmented-option" for="cert-source-paste">Contenu PEM</label>
                         </div>
-                    }
-                </div>
-            </div>
 
-            <div class="setting setting-stacked">
-                <div class="setting-text">
-                    <span class="setting-label">Clé privée</span>
-                    <p class="setting-help">Clé associée au certificat ci-dessus.</p>
-                </div>
-                <div class="setting-nested">
-                    <div class="segmented mb-3" role="radiogroup" aria-label="Source de la clé privée">
-                        <input class="btn-check" type="radio" name="private-key-source" id="key-source-path" checked="@(PrivateKeySource == CertificateInputSource.FilePath)" @onchange="() => SetPrivateKeySource(CertificateInputSource.FilePath)" />
-                        <label class="segmented-option" for="key-source-path">Chemin du fichier</label>
-                        <input class="btn-check" type="radio" name="private-key-source" id="key-source-paste" checked="@(PrivateKeySource == CertificateInputSource.PastedContent)" @onchange="() => SetPrivateKeySource(CertificateInputSource.PastedContent)" />
-                        <label class="segmented-option" for="key-source-paste">Contenu PEM</label>
+                        @if (CertificateSource == CertificateInputSource.FilePath)
+                        {
+                            <input type="text"
+                                   class="form-control font-monospace"
+                                   aria-label="Chemin du fichier de certificats"
+                                   placeholder="/etc/letsencrypt/live/dns.exemple.fr/fullchain.pem"
+                                   @bind="CertificateFilePath"
+                                   @bind:event="oninput" />
+                        }
+                        else
+                        {
+                            <textarea class="form-control font-monospace"
+                                      rows="4"
+                                      aria-label="Contenu du certificat"
+                                      placeholder="-----BEGIN CERTIFICATE-----"
+                                      @bind="CertificateContent"
+                                      @bind:event="oninput"></textarea>
+                        }
+
                     </div>
-
-                    @if (PrivateKeySource == CertificateInputSource.FilePath)
-                    {
-                        <input type="text"
-                               class="form-control font-monospace"
-                               aria-label="Chemin du fichier de clé privée"
-                               placeholder="/etc/letsencrypt/live/dns.exemple.fr/privkey.pem"
-                               @bind="PrivateKeyFilePath"
-                               @bind:event="oninput" />
-                    }
-                    else
-                    {
-                        <textarea class="form-control font-monospace"
-                                  rows="4"
-                                  aria-label="Contenu de la clé privée"
-                                  placeholder="-----BEGIN PRIVATE KEY-----"
-                                  @bind="PrivateKeyContent"
-                                  @bind:event="oninput"></textarea>
-                    }
-
-                    @if (!string.IsNullOrWhiteSpace(PrivateKeyFilePath) || !string.IsNullOrWhiteSpace(PrivateKeyContent))
-                    {
-                        <div class="alert alert-secondary mt-3 mb-0">
-                            La validation de la clé privée sera disponible une fois le moteur de chiffrement branché.
-                        </div>
-                    }
                 </div>
-            </div>
+
+                <div class="setting setting-stacked">
+                    <div class="setting-text">
+                        <span class="setting-label">Clé privée</span>
+                        <p class="setting-help">
+                            Clé associée au certificat ci-dessus. Laissez vide si elle figure dans le même fichier.
+                        </p>
+                    </div>
+                    <div class="setting-nested">
+                        <div class="segmented mb-3" role="radiogroup" aria-label="Source de la clé privée">
+                            <input class="btn-check" type="radio" name="private-key-source" id="key-source-path" checked="@(PrivateKeySource == CertificateInputSource.FilePath)" @onchange="() => SetPrivateKeySource(CertificateInputSource.FilePath)" />
+                            <label class="segmented-option" for="key-source-path">Chemin du fichier</label>
+                            <input class="btn-check" type="radio" name="private-key-source" id="key-source-paste" checked="@(PrivateKeySource == CertificateInputSource.PastedContent)" @onchange="() => SetPrivateKeySource(CertificateInputSource.PastedContent)" />
+                            <label class="segmented-option" for="key-source-paste">Contenu PEM</label>
+                        </div>
+
+                        @if (PrivateKeySource == CertificateInputSource.FilePath)
+                        {
+                            <input type="text"
+                                   class="form-control font-monospace"
+                                   aria-label="Chemin du fichier de clé privée"
+                                   placeholder="/etc/letsencrypt/live/dns.exemple.fr/privkey.pem"
+                                   @bind="PrivateKeyFilePath"
+                                   @bind:event="oninput" />
+                        }
+                        else
+                        {
+                            <textarea class="form-control font-monospace"
+                                      rows="4"
+                                      aria-label="Contenu de la clé privée"
+                                      placeholder="-----BEGIN PRIVATE KEY-----"
+                                      @bind="PrivateKeyContent"
+                                      @bind:event="oninput"></textarea>
+                        }
+
+                    </div>
+                </div>
+
+                @if (ManualCertificateError is not null)
+                {
+                    <div class="setting setting-stacked">
+                        <div class="alert alert-danger mb-0">Certificat enregistré inutilisable : @ManualCertificateError</div>
+                    </div>
+                }
+                else if (ManualCertificate is { } manual)
+                {
+                    <div class="setting setting-stacked">
+                        <CertificateDetails Certificate="manual" ServerName="@SavedSettings.ServerName" />
+                    </div>
+                }
+            }
 
             <div class="settings-panel-footer">
                 <button type="button" class="btn btn-primary" @onclick="SaveEncryptionConfigurationAsync">Enregistrer</button>
@@ -189,6 +206,195 @@
                 @if (!string.IsNullOrEmpty(EncryptionStatusMessage))
                 {
                     <div class="alert @(EncryptionStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@EncryptionStatusMessage</div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Certificat Let's Encrypt</h2>
+            <p class="settings-intro-text">
+                Obtenu gratuitement et renouvelé sans intervention : OnyxFilter vérifie le certificat toutes les
+                12 heures et en demande un nouveau 15 jours avant son expiration.
+            </p>
+        </div>
+
+        <div class="card settings-panel">
+            @if (SavedSettings.LetsEncrypt.Enabled || LetsEncryptStatus.Certificate is not null)
+            {
+                <div class="setting setting-stacked le-status" role="status">
+                    <div class="le-status-head">
+                        <span class="setting-label">État</span>
+                        @switch (LetsEncryptStatus.State)
+                        {
+                            case LetsEncryptState.Valid:
+                                <span class="state-pill state-pill-on">Valide</span>
+                                break;
+                            case LetsEncryptState.Issuing:
+                                <span class="state-pill state-pill-busy">En cours</span>
+                                break;
+                            case LetsEncryptState.Error:
+                                <span class="state-pill state-pill-bad">Échec</span>
+                                break;
+                            case LetsEncryptState.NotConfigured:
+                                <span class="state-pill state-pill-warn">À compléter</span>
+                                break;
+                            default:
+                                <span class="state-pill state-pill-off">Désactivé</span>
+                                break;
+                        }
+
+                        @if (SavedSettings.LetsEncrypt.Enabled && LetsEncryptStatus.State != LetsEncryptState.NotConfigured)
+                        {
+                            <button type="button" class="btn btn-secondary btn-sm le-renew" @onclick="RenewNow" disabled="@LetsEncryptStatus.IsBusy">
+                                <Icon Name="refresh" />@(LetsEncryptStatus.Certificate is null ? "Obtenir le certificat" : "Renouveler maintenant")
+                            </button>
+                        }
+                    </div>
+
+                    @if (LetsEncryptStatus.State == LetsEncryptState.Issuing)
+                    {
+                        <div class="le-progress">
+                            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                            <span>@(LetsEncryptStatus.Message ?? "Demande en cours…")</span>
+                        </div>
+                    }
+                    else if (LetsEncryptStatus.State == LetsEncryptState.Error)
+                    {
+                        <div class="alert alert-danger mb-0">
+                            @LetsEncryptStatus.Message
+                            @if (LetsEncryptStatus.NextCheckUtc is { } retry)
+                            {
+                                <span> Nouvel essai le @FormatDate(retry).</span>
+                            }
+                        </div>
+                    }
+                    else if (LetsEncryptStatus.State == LetsEncryptState.NotConfigured)
+                    {
+                        <div class="alert alert-warning mb-0">@LetsEncryptStatus.Message</div>
+                    }
+
+                    @if (LetsEncryptStatus.Certificate is { } current)
+                    {
+                        <CertificateDetails Certificate="current.Summary" ServerName="@SavedSettings.ServerName" />
+
+                        @if (LetsEncryptStatus.State == LetsEncryptState.Valid && LetsEncryptStatus.RenewalDueUtc is { } due)
+                        {
+                            <p class="setting-help mb-0">
+                                Renouvellement prévu le @FormatDay(due) ; prochaine vérification le @FormatDate(LetsEncryptStatus.NextCheckUtc).
+                                Let's Encrypt limite à 5 par semaine les certificats demandés pour les mêmes noms.
+                            </p>
+                        }
+                    }
+                    else if (LetsEncryptStatus.State is LetsEncryptState.Valid or LetsEncryptState.Disabled)
+                    {
+                        <p class="setting-help mb-0">Aucun certificat obtenu pour l'instant.</p>
+                    }
+                </div>
+            }
+
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="le-enabled">Certificat automatique</label>
+                    <p class="setting-help">
+                        Obtient un certificat Let's Encrypt pour <strong>@(string.IsNullOrWhiteSpace(ServerName) ? "le nom du serveur" : ServerName.Trim())</strong>
+                        et l'utilise à la place du certificat fourni à la main.
+                    </p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="le-enabled" checked="@LetsEncryptEnabled" @onchange="OnLetsEncryptEnabledChanged" />
+                </div>
+            </div>
+
+            @if (LetsEncryptEnabled)
+            {
+                <div class="setting setting-stacked">
+                    <div class="alert alert-info mb-0">
+                        Conditions : le nom du serveur doit pointer, dans le DNS public, vers l'adresse publique de cette
+                        machine, et le port 80 doit lui parvenir depuis Internet (redirection de port sur la box) :
+                        Let's Encrypt s'y connecte pour vérifier que le domaine vous appartient.
+                    </div>
+                </div>
+
+                <div class="setting setting-stacked">
+                    <div class="setting-text">
+                        <label class="setting-label" for="le-domains">Noms supplémentaires</label>
+                        <p class="setting-help">
+                            Facultatif, un par ligne. Certificat demandé pour :
+                            <span class="mono">@(LetsEncryptDomains.Count == 0 ? "—" : string.Join(", ", LetsEncryptDomains))</span>.
+                        </p>
+                    </div>
+                    <div class="setting-nested">
+                        <textarea id="le-domains" class="form-control font-monospace" rows="2"
+                                  placeholder="@AdditionalDomainsPlaceholder"
+                                  @bind="AdditionalDomainsText"
+                                  @bind:event="oninput"></textarea>
+                    </div>
+                </div>
+
+                <div class="setting setting-stacked">
+                    <div class="setting-text">
+                        <label class="setting-label" for="le-email">Adresse e-mail</label>
+                        <p class="setting-help">Facultative, associée au compte Let's Encrypt.</p>
+                    </div>
+                    <div class="setting-nested field-narrow">
+                        <input id="le-email" type="email" class="form-control" placeholder="vous@exemple.fr" @bind="LetsEncryptEmail" @bind:event="oninput" />
+                    </div>
+                </div>
+
+                <div class="setting setting-stacked">
+                    <div class="setting-text">
+                        <span class="setting-label">Environnement</span>
+                        <p class="setting-help">
+                            L'environnement de test délivre des certificats non reconnus par les appareils, mais sans
+                            les limites d'émission : pratique pour vérifier la configuration.
+                        </p>
+                    </div>
+                    <div class="setting-nested">
+                        <div class="segmented" role="radiogroup" aria-label="Environnement Let's Encrypt">
+                            <input class="btn-check" type="radio" name="le-environment" id="le-production" checked="@(!LetsEncryptUseStaging)" @onchange="() => SetLetsEncryptStaging(false)" />
+                            <label class="segmented-option" for="le-production">Production</label>
+                            <input class="btn-check" type="radio" name="le-environment" id="le-staging" checked="@LetsEncryptUseStaging" @onchange="() => SetLetsEncryptStaging(true)" />
+                            <label class="segmented-option" for="le-staging">Test</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="setting setting-stacked">
+                    <div class="setting-text">
+                        <label class="setting-label" for="le-port">Port de validation</label>
+                        <p class="setting-help">
+                            Port ouvert sur cette machine le temps de la validation. Let's Encrypt contacte toujours le
+                            port 80 : ne changez ce réglage que si la box redirige ce port vers un autre port de cette
+                            machine. S'il est déjà occupé, la validation passe par l'interface web.
+                        </p>
+                    </div>
+                    <div class="setting-nested field-narrow">
+                        <input id="le-port" type="number" min="1" max="65535" class="form-control" @bind="LetsEncryptChallengePort" @bind:event="oninput" />
+                    </div>
+                </div>
+
+                <div class="setting">
+                    <div class="setting-text">
+                        <label class="setting-label" for="le-terms">Conditions d'utilisation</label>
+                        <p class="setting-help">
+                            J'accepte les
+                            <a href="@LetsEncryptPolicy.TermsOfServiceUrl" target="_blank" rel="noopener noreferrer">conditions d'utilisation de Let's Encrypt</a>
+                            (obligatoire).
+                        </p>
+                    </div>
+                    <div class="form-check form-switch setting-control">
+                        <input class="form-check-input" type="checkbox" role="switch" id="le-terms" checked="@LetsEncryptAcceptTerms" @onchange="OnLetsEncryptAcceptTermsChanged" />
+                    </div>
+                </div>
+            }
+
+            <div class="settings-panel-footer">
+                <button type="button" class="btn btn-primary" @onclick="SaveLetsEncryptConfigurationAsync">Enregistrer</button>
+                @if (!string.IsNullOrEmpty(LetsEncryptSaveMessage))
+                {
+                    <div class="alert @(LetsEncryptSaveMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@LetsEncryptSaveMessage</div>
                 }
             </div>
         </div>
