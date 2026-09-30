@@ -74,3 +74,33 @@ public sealed record UpdateStatusResponse(
     double? Progress,
     bool CanInstall,
     string? InstallBlocker);
+
+// Accès des clients au DNS (voir ClientAccessLists) : mode en vigueur (« Blocklist » : tous les clients sauf
+// les refusés ; « Allowlist » : seulement les autorisés) et règles valides des trois listes. Les clients
+// toujours autorisés sont servis dans tous les cas.
+public sealed record AccessListsResponse(
+    string Mode,
+    IReadOnlyList<string> AllowedClients,
+    IReadOnlyList<string> BlockedClients,
+    IReadOnlyList<string> AlwaysAllowedClients);
+
+// Corps de POST /api/v1/access/block et /api/v1/access/allow : adresse IP ou sous-réseau CIDR.
+public sealed record ClientAccessRequest(string? Client);
+
+// Règle d'une liste d'accès : List vaut « Allowed », « Blocked » ou « AlwaysAllowed ».
+public sealed record AccessRuleItem(string List, string Rule);
+
+public sealed record ClientAccessChangeResponse(
+    string Client,
+    bool Changed,
+    IReadOnlyList<AccessRuleItem> Added,
+    IReadOnlyList<AccessRuleItem> Removed,
+    string Mode,
+    IReadOnlyList<string> AllowedClients,
+    IReadOnlyList<string> BlockedClients,
+    IReadOnlyList<string> AlwaysAllowedClients);
+
+// Refus d'une opération d'accès (409) : Rules cite les règles des paramètres DNS qui s'y opposent.
+public sealed record ClientAccessConflictError(string Error, string Message, IReadOnlyList<AccessRuleItem> Rules);
+
+public sealed record ClientAccessCheckResponse(string Ip, bool Allowed, string Mode, string? Rule, string? List);

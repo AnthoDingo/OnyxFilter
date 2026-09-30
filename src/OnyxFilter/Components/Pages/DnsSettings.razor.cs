@@ -66,6 +66,8 @@ public partial class DnsSettings : ComponentBase
 
     private string DisallowedClientsText { get; set; } = string.Empty;
 
+    private string AlwaysAllowedClientsText { get; set; } = string.Empty;
+
     private string DisallowedDomainsText { get; set; } = string.Empty;
 
     private string? DnsServersStatusMessage { get; set; }
@@ -107,6 +109,7 @@ public partial class DnsSettings : ComponentBase
         OptimisticCache = data.OptimisticCache;
         AllowedClientsText = JoinLines(data.AllowedClients);
         DisallowedClientsText = JoinLines(data.DisallowedClients);
+        AlwaysAllowedClientsText = JoinLines(data.AlwaysAllowedClients);
         DisallowedDomainsText = JoinLines(data.DisallowedDomains);
     }
 
@@ -137,6 +140,7 @@ public partial class DnsSettings : ComponentBase
             OptimisticCache = OptimisticCache,
             AllowedClients = SplitLines(AllowedClientsText),
             DisallowedClients = SplitLines(DisallowedClientsText),
+            AlwaysAllowedClients = SplitLines(AlwaysAllowedClientsText),
             DisallowedDomains = SplitLines(DisallowedDomainsText),
         };
     }

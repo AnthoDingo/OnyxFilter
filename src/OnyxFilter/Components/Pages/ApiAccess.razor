@@ -177,6 +177,36 @@
                                 <code>GET /update</code> ; 409 si rien à installer ou installation impossible).
                             </dd>
                         </div>
+                        <div class="endpoint">
+                            <dt><span class="http-method http-get">GET</span><code>/access</code></dt>
+                            <dd>
+                                Accès des clients au DNS : mode (<code>Blocklist</code> : tous sauf les refusés ;
+                                <code>Allowlist</code> : seulement les autorisés) et listes <code>allowedClients</code>,
+                                <code>blockedClients</code>, <code>alwaysAllowedClients</code> (servis dans tous les cas).
+                            </dd>
+                        </div>
+                        <div class="endpoint">
+                            <dt><span class="http-method http-get">GET</span><code>/access/check</code></dt>
+                            <dd>
+                                Une adresse est-elle servie ? <code>?ip=192.168.1.50</code> ; réponse : <code>allowed</code>,
+                                et la règle en cause (<code>rule</code>, <code>list</code>).
+                            </dd>
+                        </div>
+                        <div class="endpoint">
+                            <dt><span class="http-method http-post">POST</span><code>/access/block</code></dt>
+                            <dd>
+                                Bloque une adresse IP ou un sous-réseau : <code>{"client": "192.168.1.50"}</code> (ou
+                                <code>?client=…</code>). Effet immédiat, visible dans Paramètres DNS. 409 si une règle
+                                autorisée plus large le couvre, ou si le blocage viderait la liste des clients autorisés.
+                            </dd>
+                        </div>
+                        <div class="endpoint">
+                            <dt><span class="http-method http-post">POST</span><code>/access/allow</code></dt>
+                            <dd>
+                                Autorise une adresse IP ou un sous-réseau, même format. Une adresse couverte par un
+                                sous-réseau refusé est ajoutée aux clients toujours autorisés : elle seule est débloquée.
+                            </dd>
+                        </div>
                     </dl>
                 </div>
             </div>
@@ -199,7 +229,15 @@ curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" @ApiBaseUrl/protection/enabl
 curl -H "Authorization: Bearer $ONYX_TOKEN" @ApiBaseUrl/stats
 
 <span class="code-comment"># 20 dernières requêtes bloquées par une liste</span>
-curl -H "Authorization: Bearer $ONYX_TOKEN" "@ApiBaseUrl/querylog?limit=20&amp;reason=Filtered"</pre>
+curl -H "Authorization: Bearer $ONYX_TOKEN" "@ApiBaseUrl/querylog?limit=20&amp;reason=Filtered"
+
+<span class="code-comment"># Couper le DNS à un appareil, puis le lui rendre</span>
+curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" \
+     -H "Content-Type: application/json" -d '{"client": "192.168.1.50"}' \
+     @ApiBaseUrl/access/block
+curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" \
+     -H "Content-Type: application/json" -d '{"client": "192.168.1.50"}' \
+     @ApiBaseUrl/access/allow</pre>
                 </div>
             </div>
         </div>
