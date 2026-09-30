@@ -22,6 +22,12 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
     [Inject]
     public ILetsEncryptService LetsEncryptService { get; set; } = default!;
 
+    [Inject]
+    public IHttpsEndpointService HttpsEndpointService { get; set; } = default!;
+
+    [Inject]
+    public NavigationManager Navigation { get; set; } = default!;
+
     private bool EnableEncryption { get; set; }
 
     private bool EnablePlainDns { get; set; } = true;
@@ -67,6 +73,18 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
 
     private LetsEncryptStatus LetsEncryptStatus { get; set; } = LetsEncryptStatus.Initial;
 
+    private HttpsEndpointStatus HttpsStatus { get; set; } = HttpsEndpointStatus.Initial;
+
+    // Adresse HTTPS de l'interface : nom du serveur, à défaut l'hôte de la page actuelle.
+    private string HttpsBaseUrl
+    {
+        get
+        {
+            string host = string.IsNullOrWhiteSpace(SavedSettings.ServerName) ? new Uri(Navigation.BaseUri).Host : SavedSettings.ServerName;
+            return HttpsStatus.Port == 443 ? $"https://{host}/" : $"https://{host}:{HttpsStatus.Port}/";
+        }
+    }
+
     // Paramètres enregistrés (et non ceux du formulaire en cours de saisie).
     private EncryptionSettingsData SavedSettings { get; set; } = new EncryptionSettingsData();
 
@@ -84,6 +102,8 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
     {
         LetsEncryptStatus = LetsEncryptService.Status;
         LetsEncryptService.StatusChanged += OnLetsEncryptStatusChanged;
+        HttpsStatus = HttpsEndpointService.Status;
+        HttpsEndpointService.StatusChanged += OnHttpsStatusChanged;
 
         AppLocalSettings settings = await SettingsStore.LoadAsync();
         ApplyData(settings.Encryption);
@@ -275,6 +295,15 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
         });
     }
 
+    private void OnHttpsStatusChanged()
+    {
+        _ = InvokeAsync(() =>
+        {
+            HttpsStatus = HttpsEndpointService.Status;
+            StateHasChanged();
+        });
+    }
+
     private static string FormatDate(DateTime? utc)
     {
         return utc is null ? "—" : utc.Value.ToLocalTime().ToString("d MMMM yyyy 'à' HH:mm", DisplayCulture);
@@ -306,5 +335,6 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
     public void Dispose()
     {
         LetsEncryptService.StatusChanged -= OnLetsEncryptStatusChanged;
+        HttpsEndpointService.StatusChanged -= OnHttpsStatusChanged;
     }
 }

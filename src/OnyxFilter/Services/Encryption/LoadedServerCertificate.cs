@@ -23,6 +23,9 @@ public sealed class LoadedServerCertificate : IDisposable
 
     public SslStreamCertificateContext Context { get; }
 
+    // Certificat final, avec sa clé privée.
+    public X509Certificate2 Certificate => leafCertificate;
+
     public CertificateSummary Summary { get; }
 
     public void Dispose()

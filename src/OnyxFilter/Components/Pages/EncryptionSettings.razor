@@ -29,8 +29,8 @@
                 <div class="setting-text">
                     <label class="setting-label" for="enable-encryption">Activer le chiffrement</label>
                     <p class="setting-help">
-                        L'interface passe en HTTPS et le serveur DNS accepte aussi les requêtes en DNS-over-HTTPS et
-                        DNS-over-TLS.
+                        Dès qu'un certificat valide est en place, l'interface est aussi servie en HTTPS et le serveur
+                        DNS accepte les requêtes en DNS-over-HTTPS, DNS-over-TLS et DNS-over-QUIC.
                     </p>
                 </div>
                 <div class="form-check form-switch setting-control">
@@ -54,7 +54,10 @@
             <div class="setting">
                 <div class="setting-text">
                     <label class="setting-label" for="auto-redirect-https">Rediriger HTTP vers HTTPS</label>
-                    <p class="setting-help">Les visites de l'interface en HTTP sont renvoyées automatiquement vers HTTPS.</p>
+                    <p class="setting-help">
+                        Une fois HTTPS actif, les visites en HTTP sont renvoyées vers HTTPS et le navigateur retient de
+                        n'utiliser que HTTPS pour ce nom (HSTS, 30 jours).
+                    </p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="auto-redirect-https" checked="@AutoRedirectToHttps" @onchange="OnAutoRedirectToHttpsChanged" />
@@ -97,6 +100,27 @@
                     </div>
                 </div>
             </div>
+
+            @if (SavedSettings.EnableEncryption)
+            {
+                <div class="setting setting-stacked">
+                    <div class="https-status" role="status">
+                        @if (HttpsStatus.Active)
+                        {
+                            <span class="state-pill state-pill-on">HTTPS actif</span>
+                            <span>
+                                Interface : <a href="@HttpsBaseUrl">@HttpsBaseUrl</a> · DNS-over-HTTPS :
+                                <span class="mono">@(HttpsBaseUrl)dns-query</span>
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="state-pill state-pill-off">HTTPS inactif</span>
+                            <span>@(string.IsNullOrEmpty(HttpsStatus.Reason) ? "vérification en cours…" : char.ToUpperInvariant(HttpsStatus.Reason[0]) + HttpsStatus.Reason[1..] + ".")</span>
+                        }
+                    </div>
+                </div>
+            }
 
             <h3 class="setting-group-title">Certificat et clé</h3>
 

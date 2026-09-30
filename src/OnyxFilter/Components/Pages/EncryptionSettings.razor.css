@@ -48,3 +48,17 @@
     color: var(--of-warn);
     background-color: var(--of-warn-soft);
 }
+
+.https-status {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--of-text-2);
+}
+
+    .https-status .state-pill {
+        margin-left: 0;
+        vertical-align: baseline;
+    }
