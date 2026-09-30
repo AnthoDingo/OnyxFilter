@@ -1,0 +1,133 @@
+name: Signaler un bogue
+description: OnyxFilter ne se comporte pas comme prévu (DNS, filtrage, interface, API, mise à jour…).
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci de prendre le temps de signaler ce problème. Avant d'envoyer, vérifiez qu'il n'a pas déjà été
+        [signalé](https://github.com/AnthoDingo/OnyxFilter/issues?q=is%3Aissue) et que la
+        [documentation](https://github.com/AnthoDingo/OnyxFilter#readme) n'y répond pas (port 53 occupé par
+        `systemd-resolved`, mot de passe administrateur perdu…).
+
+        **Ne publiez aucun secret** : mots de passe, jetons d'API, clés privées de certificat, adresses IP
+        publiques ou noms de domaine que vous ne souhaitez pas rendre publics.
+
+  - type: input
+    id: version
+    attributes:
+      label: Version d'OnyxFilter
+      description: Affichée dans **Configuration › Mises à jour**, ou par `OnyxFilter --version`.
+      placeholder: "1.4.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation
+    attributes:
+      label: Mode d'installation
+      options:
+        - Script install.sh
+        - Installation manuelle depuis une publication
+        - Compilation depuis les sources
+        - Conteneur (Docker, Podman…)
+        - Autre
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Système
+      description: Distribution et version, architecture.
+      placeholder: "Debian 12, x64"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: components
+    attributes:
+      label: Partie concernée
+      multiple: true
+      options:
+        - Serveur DNS (UDP/TCP)
+        - DNS chiffré (DNS-over-HTTPS, DNS-over-TLS, DNS-over-QUIC)
+        - Serveurs en amont, cache
+        - Listes de blocage et d'autorisation
+        - Règles personnalisées, réécritures DNS
+        - Services bloqués
+        - Protections (sécurité de navigation, contrôle parental, recherche sécurisée)
+        - Clients, contrôle d'accès
+        - Vue d'ensemble, statistiques, journal des requêtes
+        - Interface web
+        - Connexion, comptes, clés d'accès (passkeys)
+        - API HTTP
+        - Ligne de commande
+        - Mises à jour
+        - Installation, service systemd
+        - Autre
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description du problème
+      description: Ce qui se passe, en quelques phrases.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Étapes pour reproduire
+      description: Les actions qui mènent au problème, dans l'ordre.
+      placeholder: |
+        1. Aller dans « Filtres › Listes de blocage »
+        2. Ajouter la liste …
+        3. Interroger `dig @192.168.1.2 exemple.com`
+        4. …
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportement attendu
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Journaux
+      description: |
+        Extrait du journal du service autour du moment du problème, par exemple
+        `sudo journalctl -u onyxfilter --since "30 min ago"`. Pour un problème de résolution, joignez aussi la
+        sortie de `dig` ou `nslookup`. Relisez-les pour en retirer les informations sensibles.
+      render: shell
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuration utile
+      description: |
+        Réglages en rapport avec le problème (extrait d'`appsettings.local.json`, serveurs en amont, règles
+        concernées…), sans mot de passe ni jeton. Ou la sortie de `OnyxFilter status`.
+      render: text
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Informations complémentaires
+      description: Captures d'écran, navigateur utilisé pour l'interface, client DNS concerné, depuis quand le problème existe…
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Vérifications
+      options:
+        - label: J'ai cherché parmi les tickets existants sans trouver le même problème.
+          required: true
+        - label: J'ai retiré de ce ticket toute information sensible (mots de passe, jetons, adresses publiques).
+          required: true

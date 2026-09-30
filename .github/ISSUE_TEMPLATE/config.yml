@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/AnthoDingo/OnyxFilter#readme
+    about: Installation, premier démarrage, port 53 déjà utilisé, mises à jour, ligne de commande et API.

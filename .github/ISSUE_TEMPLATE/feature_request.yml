@@ -1,0 +1,71 @@
+name: Proposer une amélioration
+description: Une nouvelle fonctionnalité ou une évolution d'une fonctionnalité existante.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merci pour votre proposition. Avant d'envoyer, vérifiez qu'elle n'a pas déjà été
+        [proposée](https://github.com/AnthoDingo/OnyxFilter/issues?q=is%3Aissue).
+
+  - type: dropdown
+    id: components
+    attributes:
+      label: Partie concernée
+      multiple: true
+      options:
+        - Serveur DNS (UDP/TCP)
+        - DNS chiffré (DNS-over-HTTPS, DNS-over-TLS, DNS-over-QUIC)
+        - Serveurs en amont, cache
+        - Listes de blocage et d'autorisation
+        - Règles personnalisées, réécritures DNS
+        - Services bloqués
+        - Protections (sécurité de navigation, contrôle parental, recherche sécurisée)
+        - Clients, contrôle d'accès
+        - Vue d'ensemble, statistiques, journal des requêtes
+        - Interface web
+        - Connexion, comptes, clés d'accès (passkeys)
+        - API HTTP
+        - Ligne de commande
+        - Mises à jour
+        - Installation, service systemd
+        - Autre
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Besoin
+      description: Le problème à résoudre ou ce que vous cherchez à faire, et pourquoi c'est difficile aujourd'hui.
+      placeholder: J'aimerais pouvoir… car…
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solution proposée
+      description: "Ce que vous imaginez : comportement, écran, commande ou point d'accès d'API."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives envisagées
+      description: Autres solutions ou contournements essayés, ou comment d'autres outils (AdGuard Home, Pi-hole…) le font.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Informations complémentaires
+      description: Captures d'écran, maquettes, liens utiles…
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Vérifications
+      options:
+        - label: J'ai cherché parmi les tickets existants sans trouver la même proposition.
+          required: true
