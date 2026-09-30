@@ -1,0 +1,51 @@
+.cert-details {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--of-line);
+    border-radius: var(--of-radius-sm);
+    background-color: var(--of-surface-2);
+    font-size: 0.875rem;
+}
+
+.cert-row {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 0.75rem;
+}
+
+    .cert-row dt {
+        font-weight: 600;
+        color: var(--of-text-3);
+    }
+
+    .cert-row dd {
+        margin: 0;
+        color: var(--of-text);
+        overflow-wrap: anywhere;
+    }
+
+.cert-remaining {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+    .cert-remaining.is-ok {
+        color: var(--of-ok);
+    }
+
+    .cert-remaining.is-warn {
+        color: var(--of-warn);
+    }
+
+    .cert-remaining.is-bad {
+        color: var(--of-bad);
+    }
+
+@media (max-width: 575.98px) {
+    .cert-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.1rem;
+    }
+}

@@ -86,6 +86,31 @@ public class Program
             });
         }
 
+        // Port HTTPS ouvert et fermé à chaud, quand un certificat est en place (voir HttpsEndpointService).
+        KestrelEndpointsConfigurationSource kestrelEndpoints = new KestrelEndpointsConfigurationSource();
+        ((IConfigurationBuilder)builder.Configuration).Add(kestrelEndpoints);
+        builder.Services.AddSingleton(kestrelEndpoints.Provider);
+
+        // HTTPS : certificat choisi à chaque connexion (un certificat renouvelé est servi aussitôt), avec sa
+        // chaîne intermédiaire, que Kestrel n'enverrait pas avec un simple certificat.
+        builder.WebHost.ConfigureKestrel(options =>
+        {
+            options.ConfigureHttpsDefaults(https =>
+            {
+                https.ServerCertificateSelector = (connection, name) =>
+                    options.ApplicationServices.GetRequiredService<IHttpsEndpointService>().Certificate?.Certificate;
+                https.OnAuthenticate = (connection, sslOptions) =>
+                {
+                    if (options.ApplicationServices.GetRequiredService<IHttpsEndpointService>().Certificate is { } current)
+                    {
+                        sslOptions.ServerCertificateSelectionCallback = null;
+                        sslOptions.ServerCertificate = null;
+                        sslOptions.ServerCertificateContext = current.Context;
+                    }
+                };
+            });
+        });
+
         if (commandLineMode)
         {
             // Sortie réservée aux messages des commandes (pas de journaux EF Core ou d'hébergement).
@@ -283,16 +308,23 @@ public class Program
         builder.Services.AddSingleton<ILetsEncryptService>(serviceProvider => serviceProvider.GetRequiredService<LetsEncryptService>());
         builder.Services.AddHostedService(serviceProvider => serviceProvider.GetRequiredService<LetsEncryptService>());
 
+        // Port HTTPS de l'interface et du DNS-over-HTTPS, actif dès qu'un certificat valide est en place.
+        builder.Services.AddSingleton<HttpsEndpointService>();
+        builder.Services.AddSingleton<IHttpsEndpointService>(serviceProvider => serviceProvider.GetRequiredService<HttpsEndpointService>());
+        builder.Services.AddHostedService(serviceProvider => serviceProvider.GetRequiredService<HttpsEndpointService>());
+
         WebApplication app = builder.Build();
 
         // Défis HTTP-01 de Let's Encrypt, avant toute redirection, page d'erreur ou authentification.
         app.UseAcmeHttpChallenge();
 
+        // Redirection vers HTTPS et HSTS, selon « Rediriger HTTP vers HTTPS » (page « Chiffrement »).
+        app.UseOnyxHttpsRedirection();
+
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error", createScopeForErrors: true);
-            app.UseHsts();
         }
 
         app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
@@ -311,8 +343,6 @@ public class Program
 
             await next();
         });
-
-        app.UseHttpsRedirection();
 
         app.UseAntiforgery();
 

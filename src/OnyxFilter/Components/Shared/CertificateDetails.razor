@@ -1,0 +1,27 @@
+@using OnyxFilter.Services.Encryption
+
+<dl class="cert-details">
+    <div class="cert-row">
+        <dt>Noms</dt>
+        <dd class="mono">@Certificate.DisplayName</dd>
+    </div>
+    <div class="cert-row">
+        <dt>Émis par</dt>
+        <dd>@(string.IsNullOrEmpty(Certificate.Issuer) ? "—" : Certificate.Issuer)</dd>
+    </div>
+    <div class="cert-row">
+        <dt>Valide</dt>
+        <dd>
+            du @FormatDay(Certificate.NotBeforeUtc) au @FormatDay(Certificate.NotAfterUtc)
+            <span class="cert-remaining @RemainingTone">(@RemainingText)</span>
+        </dd>
+    </div>
+</dl>
+
+@if (MissingServerName)
+{
+    <div class="alert alert-warning mt-3 mb-0">
+        Le nom du serveur <span class="mono">@ServerName</span> ne figure pas dans ce certificat : les appareils
+        refuseront la connexion chiffrée.
+    </div>
+}
