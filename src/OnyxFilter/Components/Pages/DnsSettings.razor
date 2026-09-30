@@ -362,8 +362,8 @@
                 <div class="setting-text">
                     <label class="setting-label" for="allowed-clients">Clients autorisés</label>
                     <p class="setting-help">
-                        Adresses IP, sous-réseaux CIDR ou identifiants, un par ligne. Si la liste n'est pas vide, seuls
-                        ces clients sont servis.
+                        Adresses IP ou sous-réseaux CIDR, un par ligne. Si la liste n'est pas vide, seuls ces clients
+                        (et les clients toujours autorisés) sont servis.
                     </p>
                 </div>
                 <div class="setting-nested">
@@ -383,6 +383,22 @@
                     <textarea id="disallowed-clients" class="form-control font-monospace" rows="4"
                               placeholder="Un client par ligne"
                               @bind="DisallowedClientsText"
+                              @bind:event="oninput"></textarea>
+                </div>
+            </div>
+
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <label class="setting-label" for="always-allowed-clients">Clients toujours autorisés</label>
+                    <p class="setting-help">
+                        Servis dans tous les cas, même couverts par une règle des clients refusés : par exemple une
+                        adresse précise dans un sous-réseau bloqué. Ne restreint pas l'accès des autres clients.
+                    </p>
+                </div>
+                <div class="setting-nested">
+                    <textarea id="always-allowed-clients" class="form-control font-monospace" rows="3"
+                              placeholder="203.0.113.5"
+                              @bind="AlwaysAllowedClientsText"
                               @bind:event="oninput"></textarea>
                 </div>
             </div>

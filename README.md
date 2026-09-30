@@ -46,8 +46,10 @@ créé avec un mot de passe aléatoire, affiché dans le journal du service :
 sudo journalctl -u onyxfilter | grep -A3 'Compte administrateur'
 ```
 
-Changez-le ensuite depuis « Mon compte », ou en ligne de commande (voir plus bas). Il reste à indiquer
-l'adresse du serveur comme DNS dans les réglages DHCP de votre box ou de votre routeur.
+Changez-le ensuite depuis « Mon compte », ou en ligne de commande (voir plus bas). Mot de passe perdu ou
+introuvable dans le journal : définissez-en un nouveau avec
+`sudo -u onyxfilter /opt/onyxfilter/OnyxFilter user:reset-password admin`. Il reste à indiquer l'adresse du
+serveur comme DNS dans les réglages DHCP de votre box ou de votre routeur.
 
 ### Port 53 déjà utilisé
 
@@ -144,11 +146,21 @@ L'API `/api/v1` permet d'automatiser OnyxFilter (domotique, scripts, supervision
 | `GET /api/v1/update` | État des mises à jour. |
 | `POST /api/v1/update/check` | Recherche une nouvelle version. |
 | `POST /api/v1/update/install` | Installe la nouvelle version puis redémarre. |
+| `GET /api/v1/access` | Accès des clients au DNS : mode et listes (autorisés, refusés, toujours autorisés). |
+| `GET /api/v1/access/check?ip=…` | Indique si une adresse est servie, et par quelle règle. |
+| `POST /api/v1/access/block` | Bloque une adresse IP ou un sous-réseau, `{"client": "192.168.1.50"}`. |
+| `POST /api/v1/access/allow` | Autorise une adresse IP ou un sous-réseau (même format). |
 
 ```sh
 curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" -H "Content-Type: application/json" \
      -d '{"durationSeconds": 600}' http://onyxfilter.lan:8080/api/v1/protection/disable
 ```
+
+Les points d'accès `/access` modifient les listes de **Paramètres DNS › Contrôle d'accès**, avec effet
+immédiat et sans changer de mode : sans liste de clients autorisés, bloquer ajoute le client aux refusés ; avec
+une telle liste, bloquer l'en retire (jamais sa dernière règle, ce qui ouvrirait le DNS à tous). Une règle
+précise l'emporte sur une règle plus large : autoriser `203.0.113.5` alors que `203.0.113.0/24` est refusé
+l'ajoute aux clients toujours autorisés, et seule cette adresse est débloquée.
 
 Hors de votre réseau local, n'exposez l'API qu'en HTTPS : le jeton accompagne chaque requête.
 

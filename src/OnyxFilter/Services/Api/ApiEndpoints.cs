@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using OnyxFilter.Models.Settings;
 using OnyxFilter.Services.DnsForwarding;
 using OnyxFilter.Services.QueryLog;
 using OnyxFilter.Services.Statistics;
@@ -24,6 +26,10 @@ namespace OnyxFilter.Services.Api;
 //   GET  /api/v1/update               état des mises à jour
 //   POST /api/v1/update/check         recherche une nouvelle version sur GitHub
 //   POST /api/v1/update/install       installe la nouvelle version puis redémarre (202, asynchrone)
+//   GET  /api/v1/access               listes d'accès des clients, mode en vigueur
+//   GET  /api/v1/access/check         une adresse IP est-elle servie par le DNS ?
+//   POST /api/v1/access/block         bloque une adresse IP ou un sous-réseau
+//   POST /api/v1/access/allow         autorise une adresse IP ou un sous-réseau
 // Authentification par jeton uniquement (ApiTokenAuthenticationHandler) ; la référence utilisateur est
 // affichée sur la page « Accès API » (/settings/api).
 public static class ApiEndpoints
@@ -48,6 +54,10 @@ public static class ApiEndpoints
         api.MapGet("/update", GetUpdateStatus);
         api.MapPost("/update/check", CheckForUpdateAsync);
         api.MapPost("/update/install", InstallUpdate);
+        api.MapGet("/access", GetAccessAsync);
+        api.MapGet("/access/check", CheckAccessAsync);
+        api.MapPost("/access/block", BlockClientAsync);
+        api.MapPost("/access/allow", AllowClientAsync);
 
         // Toute autre adresse sous /api : 404 en JSON plutôt que la page « introuvable » de l'interface.
         endpoints.MapFallback("/api/{**path}", () => Results.Json(
@@ -273,6 +283,164 @@ public static class ApiEndpoints
 
         _ = Task.Run(() => updateService.InstallAsync(CancellationToken.None));
         return Results.Accepted("/api/v1/update", ToUpdateResponse(updateService.Status));
+    }
+
+    private static async Task<AccessListsResponse> GetAccessAsync(ILocalSettingsStore settingsStore)
+    {
+        AppLocalSettings settings = await settingsStore.LoadAsync();
+        return ToAccessListsResponse(settings.Dns);
+    }
+
+    // Décision du serveur DNS en cours d'exécution pour cette adresse, avec la règle en cause.
+    private static async Task<IResult> CheckAccessAsync(IDnsAccessControl accessControl, string? ip)
+    {
+        if (string.IsNullOrWhiteSpace(ip))
+        {
+            return Error(StatusCodes.Status400BadRequest, "missing_ip", "Indiquez l'adresse à vérifier : ?ip=192.168.1.50.");
+        }
+
+        if (ip.Contains('/', StringComparison.Ordinal)
+            || !ClientAccessRule.TryParseStrict(ip, out ClientAccessRule rule)
+            || !IPAddress.TryParse(ip.Trim(), out IPAddress? address))
+        {
+            return Error(StatusCodes.Status400BadRequest, "invalid_ip", "ip doit être une adresse IPv4 ou IPv6 (ex. 192.168.1.50).");
+        }
+
+        await accessControl.InitializeAsync();
+        ClientAccessDecision decision = accessControl.Evaluate(address);
+        return Results.Ok(new ClientAccessCheckResponse(rule.ToString(), decision.Allowed, decision.Mode.ToString(), decision.Rule, decision.RuleList?.ToString()));
+    }
+
+    private static Task<IResult> BlockClientAsync(HttpRequest request, ILocalSettingsStore settingsStore, IDnsAccessControl accessControl)
+    {
+        return ChangeClientAccessAsync(request, settingsStore, accessControl, block: true);
+    }
+
+    private static Task<IResult> AllowClientAsync(HttpRequest request, ILocalSettingsStore settingsStore, IDnsAccessControl accessControl)
+    {
+        return ChangeClientAccessAsync(request, settingsStore, accessControl, block: false);
+    }
+
+    // Modifie les listes d'accès des paramètres DNS (clients autorisés, refusés, toujours autorisés) sans changer
+    // de mode (voir ClientAccessLists). La modification est en vigueur pour le serveur DNS dès la réponse.
+    private static async Task<IResult> ChangeClientAccessAsync(
+        HttpRequest request,
+        ILocalSettingsStore settingsStore,
+        IDnsAccessControl accessControl,
+        bool block)
+    {
+        string? client;
+
+        if (request.ContentLength is > 0 || (request.ContentLength is null && request.HasJsonContentType()))
+        {
+            if (!request.HasJsonContentType())
+            {
+                return Error(StatusCodes.Status415UnsupportedMediaType, "unsupported_media_type", "Le corps de la requête doit être du JSON (Content-Type: application/json).");
+            }
+
+            try
+            {
+                ClientAccessRequest? body = await request.ReadFromJsonAsync<ClientAccessRequest>();
+                client = body?.Client;
+            }
+            catch (JsonException)
+            {
+                return Error(StatusCodes.Status400BadRequest, "invalid_json", "Corps JSON invalide. Attendu : {\"client\": \"192.168.1.50\"}.");
+            }
+        }
+        else
+        {
+            // Sans corps, le client est accepté dans l'adresse (pratique pour un simple webhook).
+            client = request.Query["client"];
+        }
+
+        if (string.IsNullOrWhiteSpace(client))
+        {
+            return Error(StatusCodes.Status400BadRequest, "missing_client", "Indiquez le client : {\"client\": \"192.168.1.50\"} ou ?client=192.168.1.50.");
+        }
+
+        if (!ClientAccessRule.TryParseStrict(client, out ClientAccessRule rule))
+        {
+            return Error(StatusCodes.Status400BadRequest, "invalid_client", "client doit être une adresse IP (ex. 192.168.1.50) ou un sous-réseau CIDR (ex. 192.168.1.0/24).");
+        }
+
+        // Vérification préalable, sans écriture : chaque enregistrement des réglages fait recharger tous les
+        // services, inutile quand il n'y a rien à changer ou que l'opération est refusée.
+        AppLocalSettings settings = await settingsStore.LoadAsync();
+        ClientAccessChange change = ApplyClientAccess(settings.Dns, rule, block);
+
+        if (change.Outcome == ClientAccessOutcome.Changed)
+        {
+            // Recalculé sous le verrou des réglages, sur leur dernière version.
+            await settingsStore.UpdateAsync(latest =>
+            {
+                change = ApplyClientAccess(latest.Dns, rule, block);
+                settings = latest;
+            });
+
+            await accessControl.ReloadAsync();
+        }
+
+        string canonical = rule.ToString();
+
+        switch (change.Outcome)
+        {
+            case ClientAccessOutcome.Conflict:
+                string rules = string.Join(", ", change.Conflicts.Select(conflict => $"« {conflict.Rule} » ({DescribeList(conflict.List)})"));
+                string message = change.Conflicts.Count > 1
+                    ? $"{canonical} reste autorisé par {rules}, plus larges. Pour n'en bloquer qu'une partie, modifiez ces règles depuis Paramètres DNS."
+                    : $"{canonical} reste autorisé par {rules}, plus large. Pour n'en bloquer qu'une partie, modifiez cette règle depuis Paramètres DNS.";
+                return Results.Json(new ClientAccessConflictError("covered_by_rule", message, ToRuleItems(change.Conflicts)), statusCode: StatusCodes.Status409Conflict);
+
+            case ClientAccessOutcome.AllowlistWouldBeEmpty:
+                return Results.Json(
+                    new ClientAccessConflictError(
+                        "allowlist_would_be_empty",
+                        $"Bloquer {canonical} viderait la liste des clients autorisés : le DNS serait alors ouvert à tous les clients. Ajoutez d'abord un autre client autorisé, ou modifiez les listes depuis Paramètres DNS.",
+                        ToRuleItems(change.Removed)),
+                    statusCode: StatusCodes.Status409Conflict);
+
+            default:
+                AccessListsResponse lists = ToAccessListsResponse(settings.Dns);
+                return Results.Ok(new ClientAccessChangeResponse(
+                    canonical,
+                    change.Outcome == ClientAccessOutcome.Changed,
+                    ToRuleItems(change.Added),
+                    ToRuleItems(change.Removed),
+                    lists.Mode,
+                    lists.AllowedClients,
+                    lists.BlockedClients,
+                    lists.AlwaysAllowedClients));
+        }
+    }
+
+    private static ClientAccessChange ApplyClientAccess(DnsSettingsData dns, ClientAccessRule rule, bool block)
+    {
+        return block ? ClientAccessLists.Block(dns, rule) : ClientAccessLists.Allow(dns, rule);
+    }
+
+    private static AccessListsResponse ToAccessListsResponse(DnsSettingsData dns)
+    {
+        return new AccessListsResponse(
+            ClientAccessLists.GetMode(dns).ToString(),
+            ClientAccessLists.ValidRules(dns.AllowedClients).Select(rule => rule.Source).ToList(),
+            ClientAccessLists.ValidRules(dns.DisallowedClients).Select(rule => rule.Source).ToList(),
+            ClientAccessLists.ValidRules(dns.AlwaysAllowedClients).Select(rule => rule.Source).ToList());
+    }
+
+    private static IReadOnlyList<AccessRuleItem> ToRuleItems(IReadOnlyList<ClientAccessListEntry> entries)
+    {
+        return entries.Select(entry => new AccessRuleItem(entry.List.ToString(), entry.Rule)).ToList();
+    }
+
+    private static string DescribeList(ClientAccessList list)
+    {
+        return list switch
+        {
+            ClientAccessList.Allowed => "clients autorisés",
+            ClientAccessList.Blocked => "clients refusés",
+            _ => "clients toujours autorisés",
+        };
     }
 
     private static UpdateStatusResponse ToUpdateResponse(UpdateStatus status)

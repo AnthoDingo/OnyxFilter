@@ -52,5 +52,9 @@ public sealed class DnsSettingsData
 
     public IReadOnlyList<string> DisallowedClients { get; set; } = Array.Empty<string>();
 
+    // Servis dans tous les cas, prioritaires sur DisallowedClients (ex. une adresse dans un sous-réseau
+    // refusé), sans restreindre l'accès des autres clients.
+    public IReadOnlyList<string> AlwaysAllowedClients { get; set; } = Array.Empty<string>();
+
     public IReadOnlyList<string> DisallowedDomains { get; set; } = Array.Empty<string>();
 }
