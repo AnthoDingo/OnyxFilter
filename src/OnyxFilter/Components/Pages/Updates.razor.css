@@ -1,0 +1,123 @@
+.version-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    padding: 1.4rem 1.5rem;
+}
+
+.version-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.version-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--of-text-3);
+}
+
+.version-value {
+    font-family: var(--of-mono);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--of-text);
+}
+
+    .version-value.is-new {
+        color: var(--of-accent-text);
+    }
+
+    .version-value.is-unknown {
+        color: var(--of-text-3);
+    }
+
+.version-arrow {
+    color: var(--of-text-3);
+}
+
+.version-state {
+    margin-left: auto;
+}
+
+.state-pill-new {
+    color: var(--of-accent-text);
+    background-color: var(--of-accent-soft);
+}
+
+.release-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+}
+
+.release-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+}
+
+.release-notes {
+    max-height: 18rem;
+    overflow-y: auto;
+    margin-top: 0.9rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--of-line);
+    border-radius: var(--of-radius-sm);
+    background-color: var(--of-surface-2);
+    color: var(--of-text-2);
+    font-size: 0.84rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.update-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.update-progress-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.update-progress-track {
+    height: 0.5rem;
+    border-radius: 999px;
+    background-color: var(--of-surface-3);
+    overflow: hidden;
+}
+
+.update-progress-bar {
+    height: 100%;
+    border-radius: inherit;
+    background-color: var(--of-accent);
+    transition: width 0.3s ease;
+}
+
+    .update-progress-bar.is-indeterminate {
+        background: repeating-linear-gradient(-45deg, var(--of-accent) 0 12px, color-mix(in srgb, var(--of-accent) 60%, transparent) 12px 24px);
+        background-size: 34px 100%;
+        animation: update-progress-stripes 0.8s linear infinite;
+    }
+
+@keyframes update-progress-stripes {
+    to {
+        background-position: 34px 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .update-progress-bar.is-indeterminate {
+        animation: none;
+    }
+}

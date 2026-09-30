@@ -1,0 +1,256 @@
+@page "/settings/updates"
+@attribute [Authorize]
+@rendermode InteractiveServer
+@using OnyxFilter.Services.Updates
+
+<PageTitle>Mises à jour · OnyxFilter</PageTitle>
+
+<header class="page-header">
+    <div class="page-heading">
+        <p class="page-eyebrow">Configuration</p>
+        <h1 class="page-title">Mises à jour</h1>
+        <p class="page-lead">
+            OnyxFilter suit ses publications GitHub et s'installe en un clic : archive vérifiée, fichiers actuels
+            sauvegardés, redémarrage automatique.
+        </p>
+    </div>
+    <div class="page-actions">
+        <button type="button" class="btn btn-secondary" @onclick="CheckNowAsync" disabled="@Status.IsBusy">
+            <Icon Name="refresh" />@(Status.State == UpdateState.Checking ? "Recherche…" : "Rechercher maintenant")
+        </button>
+    </div>
+</header>
+
+@if (Status.LastUpdate is { } lastUpdate)
+{
+    <div class="alert alert-success page-status">
+        Mise à jour de la version @lastUpdate.From vers @lastUpdate.To installée le @FormatDate(lastUpdate.InstalledAtUtc).
+    </div>
+}
+
+<div class="settings-sections">
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Version</h2>
+            <p class="settings-intro-text">
+                Publications suivies :
+                <a href="@ReleasesUrl" target="_blank" rel="noopener noreferrer">@UpdateOptions.Value.Repository</a>.
+                Dernière vérification : @FormatDate(Status.LastCheckedUtc).
+            </p>
+        </div>
+
+        <div class="card settings-panel">
+            <div class="version-row">
+                <div class="version-block">
+                    <span class="version-label">Installée</span>
+                    <span class="version-value">@Status.CurrentVersion</span>
+                </div>
+
+                <span class="version-arrow" aria-hidden="true"><Icon Name="arrow-right" /></span>
+
+                <div class="version-block">
+                    <span class="version-label">Dernière publication</span>
+                    @if (Status.LatestRelease is { } latest)
+                    {
+                        <span class="version-value @(Status.IsUpdateAvailable ? "is-new" : "")">@latest.Version</span>
+                    }
+                    else
+                    {
+                        <span class="version-value is-unknown">—</span>
+                    }
+                </div>
+
+                <div class="version-state">
+                    @switch (Status.State)
+                    {
+                        case UpdateState.Checking:
+                            <span class="state-pill state-pill-off">Recherche…</span>
+                            break;
+                        case UpdateState.UpToDate:
+                            <span class="state-pill state-pill-on">À jour</span>
+                            break;
+                        case UpdateState.Idle:
+                            <span class="state-pill state-pill-off">Non vérifiée</span>
+                            break;
+                        default:
+                            if (Status.IsUpdateAvailable)
+                            {
+                                <span class="state-pill state-pill-new">Nouvelle version</span>
+                            }
+                            break;
+                    }
+                </div>
+            </div>
+
+            @if (Status.IsDevelopmentBuild)
+            {
+                <div class="setting setting-stacked">
+                    <div class="alert alert-info mb-0">
+                        Compilation de développement : les publications sont signalées ici, mais l'installation
+                        automatique ne concerne que les versions publiées.
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Status.LastError))
+            {
+                <div class="setting setting-stacked">
+                    <div class="alert alert-danger mb-0">@Status.LastError</div>
+                </div>
+            }
+
+            @if (Status.State is UpdateState.Downloading or UpdateState.Verifying or UpdateState.Installing or UpdateState.Restarting)
+            {
+                <div class="setting setting-stacked">
+                    <div class="update-progress" role="status">
+                        <div class="update-progress-head">
+                            <span>@StateLabel</span>
+                            @if (Status.State == UpdateState.Downloading)
+                            {
+                                <span class="mono">@ProgressPercent %</span>
+                            }
+                        </div>
+                        <div class="update-progress-track">
+                            <div class="update-progress-bar @(Status.State == UpdateState.Downloading ? "" : "is-indeterminate")" style="width: @(Status.State == UpdateState.Downloading ? ProgressPercent : 100)%"></div>
+                        </div>
+                        @if (Status.State == UpdateState.Restarting)
+                        {
+                            <p class="setting-help mb-0">
+                                Le filtrage reprend dans quelques secondes ; cette page se rechargera d'elle-même.
+                            </p>
+                        }
+                    </div>
+                </div>
+            }
+            else if (Status.IsUpdateAvailable && Status.LatestRelease is { } release)
+            {
+                <div class="setting setting-stacked">
+                    <div class="release-head">
+                        <div>
+                            <h3 class="release-title">
+                                @release.Name
+                                @if (release.IsPreRelease)
+                                {
+                                    <span class="badge text-bg-warning ms-2">Préversion</span>
+                                }
+                            </h3>
+                            <p class="setting-help">
+                                Publiée le @FormatDate(release.PublishedAt)
+                                @if (release.Package is { Size: > 0 } package)
+                                {
+                                    <span> · archive de @FormatSize(package.Size)</span>
+                                }
+                                @if (!string.IsNullOrEmpty(release.HtmlUrl))
+                                {
+                                    <span> · <a href="@release.HtmlUrl" target="_blank" rel="noopener noreferrer">voir sur GitHub</a></span>
+                                }
+                            </p>
+                        </div>
+                        @if (Status.CanInstall)
+                        {
+                            <button type="button" class="btn btn-primary" @onclick="RequestInstall">
+                                <Icon Name="download" />Installer @release.Version
+                            </button>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(release.Notes))
+                    {
+                        <div class="release-notes">@release.Notes</div>
+                    }
+
+                    @if (Status.InstallBlocker is { } blocker)
+                    {
+                        <div class="alert alert-warning mt-3 mb-0">
+                            @blocker
+                            <a href="@ReleasesUrl" target="_blank" rel="noopener noreferrer">Téléchargements</a>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Préférences</h2>
+            <p class="settings-intro-text">La recherche automatique ne télécharge ni n'installe jamais rien d'elle-même.</p>
+        </div>
+
+        <div class="card settings-panel">
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="update-auto-check">Rechercher automatiquement</label>
+                    <p class="setting-help">Toutes les 12 heures ; une pastille apparaît dans le menu quand une version est disponible.</p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="update-auto-check" checked="@AutoCheck" @onchange="OnAutoCheckChanged" />
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="update-prereleases">Inclure les préversions</label>
+                    <p class="setting-help">Propose aussi les versions de test (bêta, candidates), potentiellement moins stables.</p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="update-prereleases" checked="@IncludePreReleases" @onchange="OnIncludePreReleasesChanged" />
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(SettingsMessage))
+            {
+                <div class="settings-panel-footer">
+                    <div class="alert @(SettingsMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@SettingsMessage</div>
+                </div>
+            }
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Retour arrière</h2>
+            <p class="settings-intro-text">Les fichiers remplacés par la dernière mise à jour sont conservés sur le serveur.</p>
+        </div>
+
+        <div class="card settings-panel">
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <span class="setting-label">Revenir à la version précédente</span>
+                    <p class="setting-help">
+                        Données et réglages (base, <code>appsettings*.json</code>, caches) ne sont jamais touchés par une
+                        mise à jour. Pour restaurer les fichiers de l'application précédente :
+                    </p>
+                </div>
+                <div class="setting-nested">
+                    <pre class="code-block">sudo systemctl stop onyxfilter
+sudo cp -a @BackupDirectory/. @InstallDirectory/
+sudo systemctl start onyxfilter</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+@if (ShowInstallConfirm && Status.LatestRelease is { } pending)
+{
+    <div class="modal-backdrop-static" @onclick="CancelInstall"></div>
+
+    <div class="modal-static" role="alertdialog" aria-modal="true" aria-labelledby="install-dialog-title">
+        <div class="card dialog-card">
+            <div class="card-body">
+                <h2 class="dialog-title" id="install-dialog-title">Installer OnyxFilter @pending.Version ?</h2>
+                <p class="dialog-lead">L'archive est téléchargée depuis GitHub et son empreinte SHA-256 vérifiée ; les fichiers actuels sont sauvegardés, puis OnyxFilter redémarre.</p>
+                <p class="dialog-lead mb-0"><strong>La résolution DNS est interrompue quelques secondes</strong> pendant le redémarrage.</p>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelInstall">Annuler</button>
+                    <button type="button" class="btn btn-primary" @onclick="ConfirmInstallAsync">Installer et redémarrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

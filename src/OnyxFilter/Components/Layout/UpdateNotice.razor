@@ -1,0 +1,16 @@
+@if (IsVisible)
+{
+    <a href="settings/updates" class="update-notice @(IsInProgress ? "is-progress" : "")">
+        <Icon Name="download" />
+        <span class="update-notice-text">
+            @if (IsInProgress)
+            {
+                <span>Mise à jour en cours…</span>
+            }
+            else
+            {
+                <span>Version @LatestVersion disponible</span>
+            }
+        </span>
+    </a>
+}

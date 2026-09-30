@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Routing;
 using OnyxFilter.Services.DnsForwarding;
 using OnyxFilter.Services.QueryLog;
 using OnyxFilter.Services.Statistics;
+using OnyxFilter.Services.Updates;
 
 namespace OnyxFilter.Services.Api;
 
@@ -20,6 +21,9 @@ namespace OnyxFilter.Services.Api;
 //   POST /api/v1/protection/enable    réactive le filtrage
 //   GET  /api/v1/stats                statistiques d'usage (24 dernières heures)
 //   GET  /api/v1/querylog             journal des requêtes, paginé
+//   GET  /api/v1/update               état des mises à jour
+//   POST /api/v1/update/check         recherche une nouvelle version sur GitHub
+//   POST /api/v1/update/install       installe la nouvelle version puis redémarre (202, asynchrone)
 // Authentification par jeton uniquement (ApiTokenAuthenticationHandler) ; la référence utilisateur est
 // affichée sur la page « Accès API » (/settings/api).
 public static class ApiEndpoints
@@ -41,6 +45,9 @@ public static class ApiEndpoints
         api.MapPost("/protection/disable", DisableProtectionAsync);
         api.MapGet("/stats", GetStats);
         api.MapGet("/querylog", GetQueryLogAsync);
+        api.MapGet("/update", GetUpdateStatus);
+        api.MapPost("/update/check", CheckForUpdateAsync);
+        api.MapPost("/update/install", InstallUpdate);
 
         // Toute autre adresse sous /api : 404 en JSON plutôt que la page « introuvable » de l'interface.
         endpoints.MapFallback("/api/{**path}", () => Results.Json(
@@ -231,6 +238,59 @@ public static class ApiEndpoints
             .ToList();
 
         return Results.Ok(new QueryLogResponse(items, skip, take, records.Count > take));
+    }
+
+    private static UpdateStatusResponse GetUpdateStatus(IUpdateService updateService)
+    {
+        return ToUpdateResponse(updateService.Status);
+    }
+
+    private static async Task<UpdateStatusResponse> CheckForUpdateAsync(IUpdateService updateService, CancellationToken cancellationToken)
+    {
+        return ToUpdateResponse(await updateService.CheckAsync(force: true, cancellationToken));
+    }
+
+    // L'installation (téléchargement compris) peut durer : elle est lancée en arrière-plan et suivie via
+    // GET /api/v1/update. Le serveur redémarre ensuite de lui-même.
+    private static IResult InstallUpdate(IUpdateService updateService)
+    {
+        UpdateStatus status = updateService.Status;
+
+        if (status.IsBusy)
+        {
+            return Error(StatusCodes.Status409Conflict, "update_in_progress", "Une vérification ou une installation est déjà en cours.");
+        }
+
+        if (!status.IsUpdateAvailable)
+        {
+            return Error(StatusCodes.Status409Conflict, "no_update", "Aucune mise à jour à installer (lancez d'abord POST /api/v1/update/check).");
+        }
+
+        if (!status.CanInstall)
+        {
+            return Error(StatusCodes.Status409Conflict, "install_unavailable", status.InstallBlocker ?? "Installation impossible sur cette machine.");
+        }
+
+        _ = Task.Run(() => updateService.InstallAsync(CancellationToken.None));
+        return Results.Accepted("/api/v1/update", ToUpdateResponse(updateService.Status));
+    }
+
+    private static UpdateStatusResponse ToUpdateResponse(UpdateStatus status)
+    {
+        ReleaseSummary? latest = status.LatestRelease is { } release
+            ? new ReleaseSummary(release.Version.ToString(), release.Name, release.PublishedAt, release.HtmlUrl, release.IsPreRelease, release.Notes)
+            : null;
+
+        return new UpdateStatusResponse(
+            status.CurrentVersion,
+            status.State.ToString(),
+            status.IsUpdateAvailable,
+            latest,
+            status.LastCheckedUtc,
+            status.LastError,
+            status.Progress,
+            status.CanInstall,
+            status.InstallBlocker);
     }
 
     private static ProtectionStatusResponse ToProtectionResponse(IDnsProtectionState protectionState)

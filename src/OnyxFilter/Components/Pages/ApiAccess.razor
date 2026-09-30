@@ -11,7 +11,7 @@
         <h1 class="page-title">Accès API</h1>
         <p class="page-lead">
             Pilotez OnyxFilter depuis vos scripts ou votre domotique : suspension temporaire du filtrage,
-            statistiques d'usage et journal des requêtes.
+            statistiques d'usage, journal des requêtes et mises à jour.
         </p>
     </div>
 </header>
@@ -157,6 +157,24 @@
                                 (<code>Resolved</code>, <code>Cached</code>, <code>Rewritten</code>, <code>SafeSearch</code>,
                                 <code>CustomRule</code>, <code>Filtered</code>, <code>BlockedService</code>,
                                 <code>SecurityThreat</code>, <code>ParentalControl</code>).
+                            </dd>
+                        </div>
+                        <div class="endpoint">
+                            <dt><span class="http-method http-get">GET</span><code>/update</code></dt>
+                            <dd>
+                                Mises à jour : version installée, dernière publication, état (<code>state</code>),
+                                progression et possibilité d'installer (<code>canInstall</code>, <code>installBlocker</code>).
+                            </dd>
+                        </div>
+                        <div class="endpoint">
+                            <dt><span class="http-method http-post">POST</span><code>/update/check</code></dt>
+                            <dd>Recherche immédiatement une nouvelle version sur GitHub.</dd>
+                        </div>
+                        <div class="endpoint">
+                            <dt><span class="http-method http-post">POST</span><code>/update/install</code></dt>
+                            <dd>
+                                Installe la nouvelle version puis redémarre OnyxFilter (réponse 202, suivi via
+                                <code>GET /update</code> ; 409 si rien à installer ou installation impossible).
                             </dd>
                         </div>
                     </dl>

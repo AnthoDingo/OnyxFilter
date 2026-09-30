@@ -45,6 +45,7 @@ public partial class Icon : ComponentBase
         ["external"] = "<path d='M14 4h6v6M20 4l-9 9'/><path d='M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-11A1.5 1.5 0 0 1 4 18.5v-11A1.5 1.5 0 0 1 5.5 6H10'/>",
         ["key"] = "<circle cx='8' cy='15' r='4.5'/><path d='m11.5 11.5 8-8M16 7l2.5 2.5'/>",
         ["alert"] = "<path d='M12 4 2.8 19.5h18.4z'/><path d='M12 10v4.5M12 17.2h.01'/>",
+        ["arrow-right"] = "<path d='M5 12h14M13 6l6 6-6 6'/>",
         ["plug"] = "<path d='M9 3v5M15 3v5'/><path d='M6.5 8h11v3.5a5.5 5.5 0 0 1-11 0z'/><path d='M12 17v4'/>",
         ["compass"] = "<circle cx='12' cy='12' r='8.5'/><path d='m15.5 8.5-2 5-5 2 2-5z'/>",
     };

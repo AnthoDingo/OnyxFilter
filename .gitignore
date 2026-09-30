@@ -42,6 +42,9 @@ coverage/
 
 # Build output
 dist/
+# ... sauf Bootstrap, servi par l'interface (wwwroot/lib) : il doit être versionné pour que les versions
+# publiées par la CI (.github/workflows/release.yml) aient leurs styles.
+!src/OnyxFilter/wwwroot/lib/bootstrap/dist/
 build/Release
 
 # TypeScript cache

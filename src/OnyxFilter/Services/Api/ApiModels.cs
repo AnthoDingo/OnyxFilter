@@ -54,3 +54,23 @@ public sealed record QueryLogResponse(
     int Offset,
     int Limit,
     bool HasMore);
+
+public sealed record ReleaseSummary(
+    string Version,
+    string Name,
+    DateTimeOffset? PublishedAt,
+    string Url,
+    bool PreRelease,
+    string Notes);
+
+// État des mises à jour (voir IUpdateService.Status).
+public sealed record UpdateStatusResponse(
+    string CurrentVersion,
+    string State,
+    bool UpdateAvailable,
+    ReleaseSummary? Latest,
+    DateTimeOffset? LastChecked,
+    string? LastError,
+    double? Progress,
+    bool CanInstall,
+    string? InstallBlocker);
