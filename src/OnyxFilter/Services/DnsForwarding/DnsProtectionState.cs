@@ -26,6 +26,8 @@ public sealed class DnsProtectionState : IDnsProtectionState, IDisposable
         this.logger = logger;
     }
 
+    public event EventHandler? Changed;
+
     public bool IsEnabled => isEnabled;
 
     public DateTime? DisabledUntilUtc
@@ -49,6 +51,7 @@ public sealed class DnsProtectionState : IDnsProtectionState, IDisposable
         }
 
         logger.LogInformation("Protection DNS désactivée manuellement (sans échéance).");
+        RaiseChanged();
     }
 
     public void DisableUntil(DateTime untilUtc)
@@ -65,15 +68,21 @@ public sealed class DnsProtectionState : IDnsProtectionState, IDisposable
                 // Échéance déjà passée (horloge, décalage réseau...) : rien à désactiver.
                 disabledUntilUtc = null;
                 isEnabled = true;
-                return;
             }
-
-            disabledUntilUtc = untilUtcNormalized;
-            isEnabled = false;
-            reEnableTimer = new Timer(OnReEnableTimer, null, delay, Timeout.InfiniteTimeSpan);
+            else
+            {
+                disabledUntilUtc = untilUtcNormalized;
+                isEnabled = false;
+                reEnableTimer = new Timer(OnReEnableTimer, null, delay, Timeout.InfiniteTimeSpan);
+            }
         }
 
-        logger.LogInformation("Protection DNS désactivée jusqu'à {UntilUtc:O}.", untilUtcNormalized);
+        if (delay > TimeSpan.Zero)
+        {
+            logger.LogInformation("Protection DNS désactivée jusqu'à {UntilUtc:O}.", untilUtcNormalized);
+        }
+
+        RaiseChanged();
     }
 
     public void Enable()
@@ -86,6 +95,7 @@ public sealed class DnsProtectionState : IDnsProtectionState, IDisposable
         }
 
         logger.LogInformation("Protection DNS réactivée.");
+        RaiseChanged();
     }
 
     private void OnReEnableTimer(object? state)
@@ -106,6 +116,12 @@ public sealed class DnsProtectionState : IDnsProtectionState, IDisposable
         }
 
         logger.LogInformation("Protection DNS réactivée automatiquement (échéance atteinte).");
+        RaiseChanged();
+    }
+
+    private void RaiseChanged()
+    {
+        Changed?.Invoke(this, EventArgs.Empty);
     }
 
     private void CancelPendingReEnable_NoLock()

@@ -1,31 +1,38 @@
 @page "/account/passkeys"
 @attribute [Authorize]
 
-<PageTitle>Clés d'accès - OnyxFilter</PageTitle>
+<PageTitle>Clés d'accès · OnyxFilter</PageTitle>
 
-<div class="container mt-5">
-    <h1 class="mb-4">Gérer mes clés d'accès</h1>
+<header class="page-header">
+    <div class="page-heading">
+        <p class="page-eyebrow">Compte</p>
+        <h1 class="page-title">Clés d'accès</h1>
+        <p class="page-lead">Connexion sans mot de passe via l'empreinte, le visage ou une clé de sécurité.</p>
+    </div>
+</header>
 
-    <StatusMessage Message="@Message" />
+<StatusMessage Message="@Message" />
 
+<div class="card table-panel" style="max-width: 48rem;">
     @if (CurrentPasskeys is { Count: > 0 })
     {
-        <table class="table">
+        <table class="table align-middle">
             <tbody>
                 @foreach (UserPasskeyInfo passkey in CurrentPasskeys)
                 {
                     <tr>
                         <td>
-                            <div>@(passkey.Name ?? "Clé d'accès")</div>
-                            <small class="text-muted">Créée le @FormatCreatedAt(passkey.CreatedAt)</small>
+                            <span class="list-name">@(passkey.Name ?? "Clé d'accès")</span>
+                            <span class="text-body-secondary small">Ajoutée le @FormatCreatedAt(passkey.CreatedAt)</span>
                         </td>
                         <td>
                             @{
                                 string credentialId = EncodeCredentialId(passkey.CredentialId);
                             }
-                            <form @formname="@($"delete-passkey-{credentialId}")" @onsubmit="DeletePasskeyAsync" method="post">
+                            <form class="row-actions" @formname="@($"delete-passkey-{credentialId}")" @onsubmit="DeletePasskeyAsync" method="post">
+                                <AntiforgeryToken />
                                 <input type="hidden" name="CredentialId" value="@credentialId" />
-                                <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
                             </form>
                         </td>
                     </tr>
@@ -35,18 +42,22 @@
     }
     else
     {
-        <p>Aucune clé d'accès enregistrée.</p>
+        <p class="empty-state mb-0">
+            <span class="empty-state-title">Aucune clé d'accès</span>
+            Ajoutez-en une pour vous connecter sans mot de passe.
+        </p>
     }
 
-    <form @formname="add-passkey" @onsubmit="AddPasskeyAsync" method="post">
+    <form class="settings-panel-footer" @formname="add-passkey" @onsubmit="AddPasskeyAsync" method="post">
+        <AntiforgeryToken />
         @if (CurrentPasskeys is { Count: >= MaxPasskeyCount })
         {
-            <p class="text-danger">Nombre maximal de clés d'accès atteint. Supprimez-en une avant d'en ajouter une nouvelle.</p>
+            <p class="text-danger mb-0">Nombre maximal de clés atteint : supprimez-en une avant d'en ajouter une autre.</p>
         }
         else
         {
-            <PasskeySubmit Operation="PasskeyOperation.Create" Name="Input" class="btn btn-primary">
-                Ajouter une clé d'accès
+            <PasskeySubmit Operation="PasskeyOperation.Create" Name="Input" class="btn btn-secondary">
+                <Icon Name="plus" />Ajouter une clé d'accès
             </PasskeySubmit>
         }
     </form>

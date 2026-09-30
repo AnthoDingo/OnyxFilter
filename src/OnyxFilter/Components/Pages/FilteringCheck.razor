@@ -2,52 +2,53 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
-<PageTitle>Vérification du filtrage - OnyxFilter</PageTitle>
+<PageTitle>Tester un domaine · OnyxFilter</PageTitle>
 
-<h1 class="page-title">Vérification du filtrage</h1>
-<p class="text-body-secondary">Vérifier si le nom d'hôte est filtré.</p>
+<header class="page-header">
+    <div class="page-heading">
+        <p class="page-eyebrow">Filtrage</p>
+        <h1 class="page-title">Tester un domaine</h1>
+        <p class="page-lead">Simulez une requête pour savoir si un domaine serait bloqué, autorisé ou réécrit, et pourquoi.</p>
+    </div>
+</header>
 
-<div class="settings-page">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-12">
+<div class="card check-card">
+    <div class="card-body">
+        <div class="check-search">
+            <Icon Name="search" />
+            <input id="check-host" type="text" class="form-control check-host" placeholder="exemple.fr" aria-label="Nom d'hôte ou domaine à tester" @bind="HostName" @bind:event="oninput" />
+            <button type="button" class="btn btn-primary" @onclick="CheckAsync" disabled="@IsChecking">
+                @(IsChecking ? "Vérification…" : "Tester")
+            </button>
+        </div>
 
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label class="form-label" for="check-host">Nom d'hôte ou nom de domaine</label>
-                        <input id="check-host" type="text" class="form-control" placeholder="example.com" @bind="HostName" @bind:event="oninput" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="check-client">Identifiant du client (ClientID ou adresse IP)</label>
-                        <input id="check-client" type="text" class="form-control" placeholder="Saisissez l'identifiant du client" @bind="ClientIdentifier" @bind:event="oninput" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="check-record-type">Sélectionnez le type d'enregistrement DNS</label>
-                        <select id="check-record-type" class="form-select" value="@SelectedRecordType" @onchange="OnRecordTypeChanged">
-                            @foreach ((string Label, ushort Type) option in RecordTypeOptions)
-                            {
-                                <option value="@option.Type">@option.Label</option>
-                            }
-                        </select>
-                    </div>
-
-                    @if (!string.IsNullOrEmpty(ErrorMessage))
+        <div class="field-grid mt-3">
+            <div>
+                <label class="form-label" for="check-client">Client simulé <span class="text-body-secondary fw-normal">(facultatif)</span></label>
+                <input id="check-client" type="text" class="form-control font-monospace" placeholder="192.168.1.42 ou identifiant" @bind="ClientIdentifier" @bind:event="oninput" />
+            </div>
+            <div>
+                <label class="form-label" for="check-record-type">Type d'enregistrement</label>
+                <select id="check-record-type" class="form-select" value="@SelectedRecordType" @onchange="OnRecordTypeChanged">
+                    @foreach ((string Label, ushort Type) option in RecordTypeOptions)
                     {
-                        <div class="alert alert-danger py-2 mb-3">@ErrorMessage</div>
+                        <option value="@option.Type">@option.Label</option>
                     }
-
-                    <button type="button" class="btn btn-success" @onclick="CheckAsync" disabled="@IsChecking">
-                        @(IsChecking ? "Vérification..." : "Vérifier")
-                    </button>
-
-                    @if (!string.IsNullOrEmpty(ResultMessage))
-                    {
-                        <div class="alert @ResultCssClass py-2 mt-3 mb-0">@ResultMessage</div>
-                    }
-                </div>
+                </select>
             </div>
         </div>
+
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="alert alert-danger mt-3 mb-0">@ErrorMessage</div>
+        }
     </div>
+
+    @if (!string.IsNullOrEmpty(ResultMessage))
+    {
+        <div class="check-result">
+            <p class="check-result-label">Résultat</p>
+            <div class="alert @ResultCssClass mb-0">@ResultMessage</div>
+        </div>
+    }
 </div>

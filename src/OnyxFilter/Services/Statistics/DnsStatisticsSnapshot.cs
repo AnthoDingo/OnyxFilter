@@ -58,7 +58,7 @@ public sealed class DnsStatisticsSnapshot
     public IReadOnlyList<DnsStatisticsResponseTimeEntry> UpstreamResponseTimes { get; }
 
     // Série horaire (24 points, une valeur par heure sur les dernières 24h, la plus ancienne en premier),
-    // pour les graphiques du tableau de bord (Home.razor / StatCard). Toujours exactement 24 points,
+    // pour les graphiques du tableau de bord (Home.razor / ActivityChart). Toujours exactement 24 points,
     // zéro-remplis pour les heures sans tranche persistée.
     public IReadOnlyList<DnsStatisticsHourlyPoint> HourlySeries { get; }
 }

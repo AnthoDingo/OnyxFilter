@@ -1,64 +1,74 @@
-@inject NavigationManager NavigationManager
-
-<header class="topnav">
-    <div class="topnav-brand">
-        <span class="topnav-logo" aria-hidden="true"></span>
-        <div class="topnav-title">
-            <span class="topnav-title-main">OnyxFilter</span>
-            <span class="topnav-title-sub">DNS Filter</span>
-        </div>
-        <span class="topnav-badge">Activé</span>
+<aside class="sidebar" id="app-sidebar" aria-label="Menu principal">
+    <div class="sidebar-top">
+        <a href="" class="sidebar-brand">
+            <BrandMark />
+            <span class="sidebar-brand-text">
+                <span class="sidebar-brand-name">Onyx<strong>Filter</strong></span>
+                <span class="sidebar-brand-tag">Résolveur filtrant</span>
+            </span>
+        </a>
+        <button type="button" class="sidebar-close" data-nav-close aria-label="Fermer le menu">
+            <Icon Name="close" />
+        </button>
     </div>
 
-    <nav class="topnav-links">
-        <NavLink class="topnav-link" href="" Match="NavLinkMatch.All">
-            <span class="topnav-icon icon-dashboard" aria-hidden="true"></span>
-            Tableau de bord
-        </NavLink>
-        <details class="topnav-dropdown">
-            <summary class="topnav-link topnav-dropdown-summary">
-                <span class="topnav-icon icon-settings" aria-hidden="true"></span>
-                Paramètres
-                <span class="topnav-dropdown-chevron" aria-hidden="true">▾</span>
-            </summary>
-            <ul class="topnav-dropdown-menu">
-                <li><NavLink class="topnav-dropdown-item" href="settings/general">Paramètres généraux</NavLink></li>
-                <li><NavLink class="topnav-dropdown-item" href="settings/dns">Paramètres DNS</NavLink></li>
-                <li><NavLink class="topnav-dropdown-item" href="settings/encryption">Paramètres de chiffrement</NavLink></li>
-                <li><NavLink class="topnav-dropdown-item" href="settings/client">Paramètres du client</NavLink></li>
-            </ul>
-        </details>
-        <details class="topnav-dropdown">
-            <summary class="topnav-link topnav-dropdown-summary">
-                <span class="topnav-icon icon-filters" aria-hidden="true"></span>
-                Filtres
-                <span class="topnav-dropdown-chevron" aria-hidden="true">▾</span>
-            </summary>
-            <ul class="topnav-dropdown-menu">
-                <li><NavLink class="topnav-dropdown-item" href="filters/blocklists">Listes de blocage DNS</NavLink></li>
-                <li><NavLink class="topnav-dropdown-item" href="filters/allowlists">Listes d'autorisation DNS</NavLink></li>
-                <li><NavLink class="topnav-dropdown-item" href="filters/rewrites">Réécritures DNS</NavLink></li>
-                <li><NavLink class="topnav-dropdown-item" href="filters/blocked-services">Services bloqués</NavLink></li>
-                <li><NavLink class="topnav-dropdown-item" href="filters/custom-rules">Règles de filtrage personnalisées</NavLink></li>
-                <li><NavLink class="topnav-dropdown-item" href="filters/check">Vérification du filtrage</NavLink></li>
-            </ul>
-        </details>
-        <NavLink class="topnav-link" href="query-log">
-            <span class="topnav-icon icon-log" aria-hidden="true"></span>
-            Journal des requêtes
-        </NavLink>
-        <NavLink class="topnav-link" href="setup-guide">
-            <span class="topnav-icon icon-guide" aria-hidden="true"></span>
-            Guide d'installation
-        </NavLink>
-        <NavLink class="topnav-link topnav-link--right" href="account/my-account">
-            <span class="topnav-icon icon-settings" aria-hidden="true"></span>
-            Mon Compte
-        </NavLink>
+    <ProtectionIndicator @rendermode="InteractiveServer" />
 
-        <a href="Account/Logout" class="topnav-logout">
-            <span class="topnav-icon icon-logout" aria-hidden="true"></span>
-            Déconnexion
-        </a>
+    <nav class="sidebar-nav">
+        <p class="sidebar-section">Supervision</p>
+        <NavLink class="sidebar-link" href="" Match="NavLinkMatch.All"><Icon Name="overview" />Vue d'ensemble</NavLink>
+        <NavLink class="sidebar-link" href="query-log"><Icon Name="log" />Journal des requêtes</NavLink>
+
+        <p class="sidebar-section">Filtrage</p>
+        <NavLink class="sidebar-link" href="filters/blocklists"><Icon Name="blocklist" />Listes de blocage</NavLink>
+        <NavLink class="sidebar-link" href="filters/allowlists"><Icon Name="allowlist" />Listes d'autorisation</NavLink>
+        <NavLink class="sidebar-link" href="filters/blocked-services"><Icon Name="services" />Services bloqués</NavLink>
+        <NavLink class="sidebar-link" href="filters/custom-rules"><Icon Name="rules" />Règles personnalisées</NavLink>
+        <NavLink class="sidebar-link" href="filters/rewrites"><Icon Name="rewrites" />Réécritures DNS</NavLink>
+        <NavLink class="sidebar-link" href="filters/check"><Icon Name="search" />Tester un domaine</NavLink>
+
+        <p class="sidebar-section">Configuration</p>
+        <NavLink class="sidebar-link" href="settings/general"><Icon Name="sliders" />Général</NavLink>
+        <NavLink class="sidebar-link" href="settings/dns"><Icon Name="server" />Serveur DNS</NavLink>
+        <NavLink class="sidebar-link" href="settings/encryption"><Icon Name="lock" />Chiffrement</NavLink>
+        <NavLink class="sidebar-link" href="settings/client"><Icon Name="devices" />Clients</NavLink>
+        <NavLink class="sidebar-link" href="setup-guide"><Icon Name="book" />Guide d'installation</NavLink>
     </nav>
-</header>
+
+    <div class="sidebar-bottom">
+        <div class="sidebar-account">
+            <NavLink class="sidebar-account-link" href="account/my-account" title="Mon compte">
+                <span class="sidebar-avatar" aria-hidden="true">@UserInitial</span>
+                <span class="sidebar-account-text">
+                    <span class="sidebar-account-name">@UserName</span>
+                    <span class="sidebar-account-role">Mon compte</span>
+                </span>
+            </NavLink>
+            <a href="Account/Logout" class="sidebar-logout" title="Se déconnecter" aria-label="Se déconnecter">
+                <Icon Name="logout" />
+            </a>
+        </div>
+
+        <div class="sidebar-prefs">
+            <div class="theme-toggle" role="group" aria-label="Thème de l'interface">
+                <button type="button" class="theme-toggle-option" data-theme-choice="auto" aria-pressed="false" title="Thème du système">
+                    <Icon Name="contrast" /><span>Auto</span>
+                </button>
+                <button type="button" class="theme-toggle-option" data-theme-choice="dark" aria-pressed="false" title="Thème sombre">
+                    <Icon Name="moon" /><span>Sombre</span>
+                </button>
+                <button type="button" class="theme-toggle-option" data-theme-choice="light" aria-pressed="false" title="Thème clair">
+                    <Icon Name="sun" /><span>Clair</span>
+                </button>
+            </div>
+        </div>
+
+        <p class="sidebar-meta">
+            <span class="mono">v@(AssemblyVersion)</span>
+            <span aria-hidden="true">·</span>
+            <a href="https://github.com/AnthoDingo/OnyxFilter" target="_blank" rel="noopener noreferrer">Code source</a>
+            <span aria-hidden="true">·</span>
+            <a href="https://github.com/AnthoDingo/OnyxFilter/issues/new" target="_blank" rel="noopener noreferrer">Signaler un bug</a>
+        </p>
+    </div>
+</aside>

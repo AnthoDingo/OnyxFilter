@@ -1,0 +1,32 @@
+<div class="activity">
+    <div class="activity-plot">
+        <div class="activity-scale" aria-hidden="true">
+            @if (!IsEmpty)
+            {
+                <span>@FormatCount(ScaleMax)</span>
+                <span>@FormatCount(ScaleMax / 2)</span>
+                <span>0</span>
+            }
+        </div>
+        <div class="activity-bars" role="img" aria-label="@AriaSummary">
+            @foreach (Bar bar in Bars)
+            {
+                <div class="activity-col" title="@bar.Tooltip">
+                    <div class="activity-stack" style="height: @bar.HeightPercent">
+                        <span class="activity-blocked" style="height: @bar.BlockedPercent"></span>
+                    </div>
+                </div>
+            }
+            @if (IsEmpty)
+            {
+                <p class="activity-empty">Aucune requête enregistrée sur cette période.</p>
+            }
+        </div>
+    </div>
+    <div class="activity-hours" aria-hidden="true">
+        @foreach (Bar bar in Bars)
+        {
+            <span>@bar.HourLabel</span>
+        }
+    </div>
+</div>

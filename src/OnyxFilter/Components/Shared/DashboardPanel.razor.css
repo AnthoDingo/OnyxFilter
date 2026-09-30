@@ -1,73 +1,47 @@
 .panel {
-    background-color: var(--app-card);
-    border: 1px solid var(--app-border);
-    border-radius: 8px;
-    padding: 1.1rem 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    /* Hauteur uniforme pour tous les panneaux du tableau de bord (Home.razor). Les panneaux à contenu plus
-       long (tableaux "Top" jusqu'à 10 lignes) défilent dans .panel-body ci-dessous plutôt que d'agrandir
-       la carte. */
-    height: 23rem;
+    min-width: 0;
+    background-color: var(--of-surface);
+    border: 1px solid var(--of-line);
+    border-radius: var(--of-radius);
+    box-shadow: var(--of-shadow);
 }
 
 .panel-header {
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 0.5rem 1rem;
+    padding: 1.1rem 1.35rem 0.9rem;
+}
+
+.panel-heading {
+    min-width: 0;
 }
 
 .panel-title {
     margin: 0;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--app-heading);
+    font-size: 0.95rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
 }
 
-.panel-subtitle {
-    margin: 0.15rem 0 0;
-    font-size: 0.8rem;
-    color: var(--app-muted);
+.panel-caption {
+    margin: 0.2rem 0 0;
+    font-size: 0.78rem;
+    color: var(--of-text-3);
 }
 
-.panel-refresh {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
+.panel-aside {
     flex-shrink: 0;
-    background: none;
-    border: 1px solid var(--app-blue);
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-    .panel-refresh:hover {
-        background-color: var(--app-blue-bg);
-    }
-
-.panel-refresh-icon {
-    display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    background-color: var(--app-blue);
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    -webkit-mask-position: center;
-    mask-position: center;
-    -webkit-mask-size: contain;
-    mask-size: contain;
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3E%3Cpath fill-rule='evenodd' d='M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z'/%3E%3Cpath d='M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z'/%3E%3C/svg%3E");
-    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3E%3Cpath fill-rule='evenodd' d='M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z'/%3E%3Cpath d='M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z'/%3E%3C/svg%3E");
+    font-size: 0.78rem;
+    color: var(--of-text-3);
 }
 
 .panel-body {
     flex: 1;
-    /* min-height: 0 est nécessaire pour qu'un enfant flex avec overflow puisse réellement défiler au lieu
-       de forcer .panel à grandir au-delà de sa hauteur fixe ci-dessus. */
     min-height: 0;
-    overflow-y: auto;
+    padding: 0 1.35rem 1.2rem;
 }

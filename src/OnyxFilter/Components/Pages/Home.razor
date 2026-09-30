@@ -2,276 +2,198 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
-<PageTitle>Tableau de bord - OnyxFilter</PageTitle>
+<PageTitle>Vue d'ensemble · OnyxFilter</PageTitle>
 
-<div class="dashboard-header">
-    <h1>Tableau de bord</h1>
+<div class="overview">
+    <header class="page-header">
+        <div class="page-heading">
+            <p class="page-eyebrow">Supervision</p>
+            <h1 class="page-title">Vue d'ensemble</h1>
+            <p class="page-lead">Activité du résolveur sur les dernières 24 heures.</p>
+        </div>
+        <div class="page-actions">
+            <span class="refresh-stamp mono" title="Dernière actualisation des statistiques">
+                <Icon Name="clock" />@LastRefreshedAt.ToString("HH:mm:ss")
+            </span>
+            <div class="form-check form-switch live-switch mb-0" title="Actualise les statistiques toutes les 5 secondes">
+                <input class="form-check-input" type="checkbox" role="switch" id="live-refresh" checked="@AutoRefreshEnabled" @onchange="OnAutoRefreshChanged" />
+                <label class="form-check-label" for="live-refresh">Direct</label>
+            </div>
+            <button type="button" class="btn btn-secondary" @onclick="RefreshStatisticsAsync">
+                <Icon Name="refresh" />Actualiser
+            </button>
+        </div>
+    </header>
 
-    <div class="dashboard-actions">
-        <div class="protection-dropdown">
-            <div class="btn-protection-group">
-                <button type="button" class="btn-protection-main" @onclick="ToggleProtection">
-                    @(ProtectionEnabled ? "Désactiver la protection" : "Activer la protection")
-                </button>
+    <section class="overview-hero">
+        <div class="status-card @(ProtectionEnabled ? "is-on" : "is-off")">
+            <div class="status-emblem" aria-hidden="true">
+                <Icon Name="@(ProtectionEnabled ? "shield" : "shield-off")" StrokeWidth="1.5" />
+            </div>
+            <div class="status-body">
+                <p class="status-kicker">Protection DNS</p>
+                <h2 class="status-title">@(ProtectionEnabled ? "Active" : "Suspendue")</h2>
+                <p class="status-detail">@ProtectionDetail</p>
+
                 @if (ProtectionEnabled)
                 {
-                    <button type="button" class="btn-protection-chevron" @onclick="ToggleProtectionMenu" aria-label="Choisir une durée">
-                        <span class="chevron @(IsProtectionMenuOpen ? "chevron-open" : "")" aria-hidden="true">▾</span>
-                    </button>
+                    <div class="status-actions">
+                        <span class="status-actions-label"><Icon Name="pause" />Pause</span>
+                        <div class="pause-chips" role="group" aria-label="Suspendre la protection">
+                            @foreach (ProtectionPauseOption option in PauseOptions)
+                            {
+                                <button type="button" class="pause-chip" title="@option.Description" @onclick="() => DisableProtectionUntil(option.ComputeUntil())">
+                                    @option.Label
+                                </button>
+                            }
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger" @onclick="DisableProtection">
+                            Couper la protection
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="status-actions">
+                        <button type="button" class="btn btn-primary" @onclick="EnableProtection">
+                            <Icon Name="play" />Réactiver maintenant
+                        </button>
+                    </div>
                 }
             </div>
+        </div>
 
-            @if (ProtectionEnabled && IsProtectionMenuOpen)
+        <div class="ratio-card">
+            <div class="ratio-ring">
+                <svg viewBox="0 0 120 120" aria-hidden="true">
+                    <circle class="ratio-track" cx="60" cy="60" r="50" pathLength="100" />
+                    <circle class="ratio-value" cx="60" cy="60" r="50" pathLength="100" stroke-dasharray="@BlockedRingDash" />
+                </svg>
+                <div class="ratio-center">
+                    <strong class="tabular">@BlockedPercentText</strong>
+                    <span>bloquées</span>
+                </div>
+            </div>
+            <dl class="ratio-legend">
+                <div>
+                    <dt><span class="swatch swatch-allowed" aria-hidden="true"></span>Autorisées</dt>
+                    <dd class="mono">@FormatCount(AllowedCount)</dd>
+                </div>
+                <div>
+                    <dt><span class="swatch swatch-blocked" aria-hidden="true"></span>Bloquées</dt>
+                    <dd class="mono">@FormatCount(BlockedByFiltersCount)</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+
+    <section class="metric-strip" aria-label="Indicateurs clés">
+        <div class="metric">
+            <span class="metric-label">Requêtes traitées</span>
+            <span class="metric-value">@FormatCount(DnsQueriesCount)</span>
+            <span class="metric-foot">≈ @FormatCount(AveragePerHour) par heure</span>
+        </div>
+        <div class="metric">
+            <span class="metric-label">Temps de traitement</span>
+            <span class="metric-value">@AverageProcessingTimeMs<small>ms</small></span>
+            <span class="metric-foot">moyenne par requête</span>
+        </div>
+        <div class="metric">
+            <span class="metric-label">Heure de pointe</span>
+            @if (PeakHour is { } peak)
             {
-                <ul class="protection-menu">
-                    @foreach (ProtectionDisableOption option in DisableOptions)
-                    {
-                        <li>
-                            <button type="button" class="protection-menu-item" @onclick="() => DisableProtectionUntil(option.ComputeUntil())">
-                                @option.Label
-                            </button>
-                        </li>
-                    }
-                </ul>
+                <span class="metric-value">@FormatCount(peak.TotalQueries)</span>
+                <span class="metric-foot">requêtes @FormatHourRange(peak)</span>
+            }
+            else
+            {
+                <span class="metric-value metric-value-empty">—</span>
+                <span class="metric-foot">aucune activité enregistrée</span>
             }
         </div>
-        <button type="button" class="btn-refresh" @onclick="RefreshStatisticsAsync">
-            Actualiser les statistiques
-        </button>
-        <label class="auto-refresh-toggle" title="Rafraîchit automatiquement les statistiques toutes les 5 secondes">
-            <input type="checkbox" class="auto-refresh-input" checked="@AutoRefreshEnabled" @onchange="OnAutoRefreshChanged" />
-            <span class="auto-refresh-slider" aria-hidden="true"></span>
-            <span class="auto-refresh-label">Rafraîchissement auto</span>
-        </label>
+    </section>
+
+    <DashboardPanel Title="Activité horaire" Caption="Requêtes reçues par heure, sur 24 heures glissantes" Class="overview-activity">
+        <Aside>
+            <span class="legend-item"><span class="swatch swatch-allowed" aria-hidden="true"></span>Autorisées</span>
+            <span class="legend-item"><span class="swatch swatch-blocked" aria-hidden="true"></span>Bloquées</span>
+        </Aside>
+        <ChildContent>
+            <ActivityChart Points="HourlySeries" />
+        </ChildContent>
+    </DashboardPanel>
+
+    <div class="overview-grid overview-grid-3">
+        <DashboardPanel Title="Domaines les plus demandés" Caption="Top 24 h">
+            <RankList Items="TopSearchedDomains" Tone="RankTone.Accent" EmptyText="Aucun domaine demandé pour le moment." />
+        </DashboardPanel>
+
+        <DashboardPanel Title="Domaines les plus bloqués" Caption="Top 24 h">
+            <RankList Items="TopBlockedDomains" Tone="RankTone.Blocked" EmptyText="Aucun domaine bloqué pour le moment." />
+        </DashboardPanel>
+
+        <DashboardPanel Title="Clients les plus actifs" Caption="Top 24 h">
+            <RankList Items="TopClients" Tone="RankTone.Neutral" EmptyText="Aucun client observé pour le moment." />
+        </DashboardPanel>
     </div>
-</div>
 
-@if (!ProtectionEnabled && ProtectionDisabledUntil is not null)
-{
-    <p class="protection-status">Protection désactivée jusqu'à @ProtectionDisabledUntil.Value.ToString("HH:mm")</p>
-}
-
-<div class="dashboard-grid">
-    <StatCard Value="DnsQueriesCount"
-              Label="Requêtes DNS"
-              Accent="StatCardAccent.Neutral"
-              Shape="SparklineShape.Spike"
-              Series="DnsQueriesHourly" />
-
-    <StatCard Value="BlockedByFiltersCount"
-              PercentageText="@BlockedByFiltersPercentText"
-              Label="Bloqué par Filtres"
-              Accent="StatCardAccent.Orange"
-              Shape="SparklineShape.Spike"
-              Series="BlockedByFiltersHourly" />
-
-    <StatCard Value="MalwareBlockedCount"
-              PercentageText="@MalwareBlockedPercentText"
-              Label="Tentative de malware/hameçonnage bloquée"
-              Accent="StatCardAccent.Orange"
-              Shape="SparklineShape.Flat" />
-
-    <StatCard Value="AdultContentBlockedCount"
-              PercentageText="@AdultContentBlockedPercentText"
-              Label="Sites à contenu adulte bloqués"
-              Accent="StatCardAccent.Purple"
-              Shape="SparklineShape.Flat" />
-</div>
-
-<div class="dashboard-panels">
-    <DashboardPanel Title="Statistiques générales" Subtitle="pendant les dernières 24 heures" OnRefresh="RefreshGeneralStatsAsync">
-        <ul class="stat-list">
-            <li>
-                <span class="stat-list-label">
-                    Requêtes DNS
-                    <span class="info-icon" title="Nombre total de requêtes DNS traitées.">?</span>
-                </span>
-                <span class="stat-list-value">@GeneralStatsDnsQueries</span>
-            </li>
-            <li>
-                <span class="stat-list-label">
-                    Bloqué par Filtres
-                    <span class="info-icon" title="Requêtes bloquées par les listes de filtres.">?</span>
-                </span>
-                <span class="stat-list-value">@GeneralStatsBlockedByFilters</span>
-            </li>
-            <li>
-                <span class="stat-list-label">
-                    Tentative de malware/hameçonnage bloquée
-                    <span class="info-icon" title="Requêtes bloquées par la protection malware/hameçonnage.">?</span>
-                </span>
-                <span class="stat-list-value">@GeneralStatsMalwareBlocked</span>
-            </li>
-            <li>
-                <span class="stat-list-label">
-                    Sites à contenu adulte bloqués
-                    <span class="info-icon" title="Requêtes bloquées par le filtre de contenu adulte.">?</span>
-                </span>
-                <span class="stat-list-value">@GeneralStatsAdultBlocked</span>
-            </li>
-            <li>
-                <span class="stat-list-label">
-                    Recherche sécurisée forcée
-                    <span class="info-icon" title="Requêtes redirigées vers la recherche sécurisée.">?</span>
-                </span>
-                <span class="stat-list-value">@GeneralStatsSafeSearchEnforced</span>
-            </li>
-            <li>
-                <span class="stat-list-label">
-                    Temps moyen de traitement
-                    <span class="info-icon" title="Temps moyen de traitement d'une requête DNS.">?</span>
-                </span>
-                <span class="stat-list-value">@GeneralStatsAverageProcessingTimeMs ms</span>
-            </li>
-        </ul>
-    </DashboardPanel>
-
-    <DashboardPanel Title="Meilleurs clients" Subtitle="pendant les dernières 24 heures" OnRefresh="RefreshTopClientsAsync">
-        <table class="clients-table">
-            <thead>
-                <tr>
-                    <th>Client</th>
-                    <th>Nombre de requêtes</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (TopClients.Count == 0)
-                {
-                    <tr>
-                        <td colspan="2" class="clients-table-empty">Aucune donnée pour le moment.</td>
-                    </tr>
-                }
-                else
-                {
-                    @foreach (TopClientEntry client in TopClients)
-                    {
+    <div class="overview-grid overview-grid-wide">
+        <DashboardPanel Title="Serveurs en amont" Caption="Volume transmis et latence moyenne de réponse">
+            @if (Upstreams.Count == 0)
+            {
+                <p class="panel-empty">Aucune requête transmise en amont pour le moment.</p>
+            }
+            else
+            {
+                <table class="upstream-table">
+                    <thead>
                         <tr>
-                            <td>@client.Client</td>
-                            <td>@client.RequestCount</td>
+                            <th scope="col">Serveur</th>
+                            <th scope="col">Requêtes</th>
+                            <th scope="col">Latence</th>
                         </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </DashboardPanel>
-</div>
+                    </thead>
+                    <tbody>
+                        @foreach (UpstreamRow row in Upstreams)
+                        {
+                            <tr>
+                                <td class="upstream-name" title="@row.Upstream">@row.Upstream</td>
+                                <td>@(row.RequestCount is long count ? FormatCount(count) : "—")</td>
+                                <td>
+                                    @if (row.ResponseTimeMs is int latency)
+                                    {
+                                        <span class="latency @(latency < 50 ? "latency-fast" : latency < 150 ? "latency-mid" : "latency-slow")">@latency ms</span>
+                                    }
+                                    else
+                                    {
+                                        <span>—</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </DashboardPanel>
 
-<div class="dashboard-panels">
-    <DashboardPanel Title="Domaines les plus recherchés" Subtitle="pendant les dernières 24 heures" OnRefresh="RefreshTopSearchedDomainsAsync">
-        <table class="clients-table">
-            <thead>
-                <tr>
-                    <th>Domaine</th>
-                    <th>Nombre de requêtes</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (TopSearchedDomains.Count == 0)
-                {
-                    <tr>
-                        <td colspan="2" class="clients-table-empty">Aucune donnée pour le moment.</td>
-                    </tr>
-                }
-                else
-                {
-                    @foreach (TopDomainEntry entry in TopSearchedDomains)
-                    {
-                        <tr>
-                            <td>@entry.Domain</td>
-                            <td>@entry.RequestCount</td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </DashboardPanel>
-
-    <DashboardPanel Title="Les domaines les plus fréquemment bloqués" Subtitle="pendant les dernières 24 heures" OnRefresh="RefreshTopBlockedDomainsAsync">
-        <table class="clients-table">
-            <thead>
-                <tr>
-                    <th>Domaine</th>
-                    <th>Nombre de requêtes</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (TopBlockedDomains.Count == 0)
-                {
-                    <tr>
-                        <td colspan="2" class="clients-table-empty">Aucune donnée pour le moment.</td>
-                    </tr>
-                }
-                else
-                {
-                    @foreach (TopDomainEntry entry in TopBlockedDomains)
-                    {
-                        <tr>
-                            <td>@entry.Domain</td>
-                            <td>@entry.RequestCount</td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </DashboardPanel>
-</div>
-
-<div class="dashboard-panels">
-    <DashboardPanel Title="Top amonts" Subtitle="pendant les dernières 24 heures" OnRefresh="RefreshTopUpstreamsAsync">
-        <table class="clients-table">
-            <thead>
-                <tr>
-                    <th>Amont</th>
-                    <th>Nombre de requêtes</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (TopUpstreams.Count == 0)
-                {
-                    <tr>
-                        <td colspan="2" class="clients-table-empty">Aucune donnée pour le moment.</td>
-                    </tr>
-                }
-                else
-                {
-                    @foreach (UpstreamEntry entry in TopUpstreams)
-                    {
-                        <tr>
-                            <td>@entry.Upstream</td>
-                            <td>@entry.RequestCount</td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </DashboardPanel>
-
-    <DashboardPanel Title="Temps de réponse moyen en amont" Subtitle="pendant les dernières 24 heures" OnRefresh="RefreshUpstreamResponseTimesAsync">
-        <table class="clients-table">
-            <thead>
-                <tr>
-                    <th>Amont</th>
-                    <th>Temps de réponse</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (UpstreamResponseTimes.Count == 0)
-                {
-                    <tr>
-                        <td colspan="2" class="clients-table-empty">Aucune donnée pour le moment.</td>
-                    </tr>
-                }
-                else
-                {
-                    @foreach (UpstreamResponseTimeEntry entry in UpstreamResponseTimes)
-                    {
-                        <tr>
-                            <td>@entry.Upstream</td>
-                            <td>@entry.ResponseTimeMs ms</td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </DashboardPanel>
+        <DashboardPanel Title="Protection avancée" Caption="Détections spécifiques, 24 h">
+            <ul class="detection-list">
+                <li>
+                    <span class="detection-icon detection-threat" aria-hidden="true"><Icon Name="alert" /></span>
+                    <span class="detection-label">Menaces (malware, hameçonnage)</span>
+                    <span class="detection-value">@FormatCount(MalwareBlockedCount)</span>
+                </li>
+                <li>
+                    <span class="detection-icon detection-adult" aria-hidden="true"><Icon Name="shield" /></span>
+                    <span class="detection-label">Contenu pour adultes</span>
+                    <span class="detection-value">@FormatCount(AdultContentBlockedCount)</span>
+                </li>
+                <li>
+                    <span class="detection-icon detection-safe" aria-hidden="true"><Icon Name="search" /></span>
+                    <span class="detection-label">Recherche sécurisée imposée</span>
+                    <span class="detection-value">@FormatCount(SafeSearchEnforcedCount)</span>
+                </li>
+            </ul>
+        </DashboardPanel>
+    </div>
 </div>

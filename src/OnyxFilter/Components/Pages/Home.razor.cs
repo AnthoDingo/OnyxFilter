@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using OnyxFilter.Components.Shared;
 using OnyxFilter.Services.DnsForwarding;
 using OnyxFilter.Services.Statistics;
 
@@ -11,6 +14,8 @@ namespace OnyxFilter.Components.Pages;
 public partial class Home : ComponentBase, IDisposable
 {
     private const int AutoRefreshIntervalSeconds = 5;
+
+    private static readonly CultureInfo DisplayCulture = CultureInfo.GetCultureInfo("fr-FR");
 
     private Timer? AutoRefreshTimer;
 
@@ -22,102 +27,86 @@ public partial class Home : ComponentBase, IDisposable
     [Inject]
     public IDnsProtectionState ProtectionState { get; set; } = default!;
 
-    private sealed class ProtectionDisableOption
+    private sealed class ProtectionPauseOption
     {
         public string Label { get; init; } = string.Empty;
+
+        public string Description { get; init; } = string.Empty;
 
         public Func<DateTime> ComputeUntil { get; init; } = () => DateTime.Now;
     }
 
-    private static readonly ProtectionDisableOption[] DisableOptions =
+    private static readonly ProtectionPauseOption[] PauseOptions =
     [
-        new ProtectionDisableOption { Label = "Pendant 30 secondes", ComputeUntil = () => DateTime.Now.AddSeconds(30) },
-        new ProtectionDisableOption { Label = "Pendant 1 minute", ComputeUntil = () => DateTime.Now.AddMinutes(1) },
-        new ProtectionDisableOption { Label = "Pendant 10 minutes", ComputeUntil = () => DateTime.Now.AddMinutes(10) },
-        new ProtectionDisableOption { Label = "Pendant 1 heure", ComputeUntil = () => DateTime.Now.AddHours(1) },
-        new ProtectionDisableOption { Label = "Jusqu'à demain", ComputeUntil = () => DateTime.Today.AddDays(1) },
+        new ProtectionPauseOption { Label = "30 s", Description = "Suspendre 30 secondes", ComputeUntil = () => DateTime.Now.AddSeconds(30) },
+        new ProtectionPauseOption { Label = "1 min", Description = "Suspendre 1 minute", ComputeUntil = () => DateTime.Now.AddMinutes(1) },
+        new ProtectionPauseOption { Label = "10 min", Description = "Suspendre 10 minutes", ComputeUntil = () => DateTime.Now.AddMinutes(10) },
+        new ProtectionPauseOption { Label = "1 h", Description = "Suspendre 1 heure", ComputeUntil = () => DateTime.Now.AddHours(1) },
+        new ProtectionPauseOption { Label = "Jusqu'à demain", Description = "Suspendre jusqu'à minuit", ComputeUntil = () => DateTime.Today.AddDays(1) },
     ];
 
     // Copie locale de IDnsProtectionState.IsEnabled/DisabledUntilUtc pour l'affichage : resynchronisée à
-    // l'initialisation et à chaque rafraîchissement (manuel ou automatique), pour refléter une
-    // réactivation automatique survenue en arrière-plan (échéance atteinte) même sans action de
-    // l'utilisateur sur cette page.
+    // l'initialisation, à chaque rafraîchissement et à chaque IDnsProtectionState.Changed (y compris la
+    // réactivation automatique à l'échéance, survenue en arrière-plan).
     private bool ProtectionEnabled { get; set; } = true;
-
-    private bool IsProtectionMenuOpen { get; set; }
 
     private DateTime? ProtectionDisabledUntil { get; set; }
 
     private long DnsQueriesCount { get; set; }
     private long BlockedByFiltersCount { get; set; }
+    private int AverageProcessingTimeMs { get; set; }
+
+    // Détections spécifiques du panneau « Protection avancée ». Restent à 0 : le moteur de filtrage n'a
+    // pour le moment qu'un blocage générique par listes (pas de catégorisation malware/hameçonnage,
+    // contenu adulte ou recherche sécurisée forcée dans les statistiques).
     private long MalwareBlockedCount { get; set; }
     private long AdultContentBlockedCount { get; set; }
+    private long SafeSearchEnforcedCount { get; set; }
 
-    private string BlockedByFiltersPercentText => FormatPercent(BlockedByFiltersCount, DnsQueriesCount);
-    private string MalwareBlockedPercentText => FormatPercent(MalwareBlockedCount, DnsQueriesCount);
-    private string AdultContentBlockedPercentText => FormatPercent(AdultContentBlockedCount, DnsQueriesCount);
+    private long AllowedCount => Math.Max(0, DnsQueriesCount - BlockedByFiltersCount);
 
-    // Séries horaires (24 points, une valeur par heure sur les dernières 24h) pour les graphiques des
-    // cartes "Requêtes DNS" et "Bloqué par Filtres" : voir DnsStatisticsSnapshot.HourlySeries. Malware et
-    // contenu adulte n'ont pas de série dédiée (comptés à 0, non encore catégorisés) : leur StatCard garde
-    // le tracé de repli "Flat".
-    private List<long> DnsQueriesHourly { get; } = new List<long>();
-    private List<long> BlockedByFiltersHourly { get; } = new List<long>();
+    private double BlockedRatio => DnsQueriesCount <= 0 ? 0 : Math.Min(1.0, BlockedByFiltersCount / (double)DnsQueriesCount);
 
-    private sealed class TopClientEntry
-    {
-        public string Client { get; init; } = string.Empty;
+    private string BlockedPercentText => (BlockedRatio * 100).ToString(BlockedRatio > 0 && BlockedRatio < 0.1 ? "0.#" : "0", DisplayCulture) + " %";
 
-        public long RequestCount { get; init; }
-    }
+    // Longueur de l'arc de l'anneau (cercle SVG avec pathLength="100"), en culture invariante.
+    private string BlockedRingDash => (BlockedRatio * 100).ToString("0.##", CultureInfo.InvariantCulture) + " 100";
 
-    // Panneau "Statistiques générales". MalwareBlocked/AdultBlocked/SafeSearchEnforced restent à 0 : le
-    // moteur de filtrage n'a pour le moment qu'un blocage générique par listes (pas de catégorisation
-    // malware/hameçonnage, contenu adulte ou recherche sécurisée forcée).
-    private long GeneralStatsDnsQueries { get; set; }
-    private long GeneralStatsBlockedByFilters { get; set; }
-    private long GeneralStatsMalwareBlocked { get; set; }
-    private long GeneralStatsAdultBlocked { get; set; }
-    private long GeneralStatsSafeSearchEnforced { get; set; }
-    private int GeneralStatsAverageProcessingTimeMs { get; set; }
+    // Série horaire (24 points, la plus ancienne en premier) : voir DnsStatisticsSnapshot.HourlySeries.
+    private List<DnsStatisticsHourlyPoint> HourlySeries { get; } = new List<DnsStatisticsHourlyPoint>();
 
-    // Panneau "Meilleurs clients".
-    private List<TopClientEntry> TopClients { get; } = new List<TopClientEntry>();
+    private long AveragePerHour => HourlySeries.Count == 0 ? 0 : HourlySeries.Sum(point => point.TotalQueries) / HourlySeries.Count;
 
-    private sealed class TopDomainEntry
-    {
-        public string Domain { get; init; } = string.Empty;
+    private DnsStatisticsHourlyPoint? PeakHour { get; set; }
 
-        public long RequestCount { get; init; }
-    }
+    private List<RankItem> TopClients { get; } = new List<RankItem>();
+    private List<RankItem> TopSearchedDomains { get; } = new List<RankItem>();
+    private List<RankItem> TopBlockedDomains { get; } = new List<RankItem>();
 
-    private sealed class UpstreamEntry
+    // Panneau « Serveurs en amont » : volume de requêtes et latence moyenne réunis par serveur.
+    private sealed class UpstreamRow
     {
         public string Upstream { get; init; } = string.Empty;
 
-        public long RequestCount { get; init; }
+        public long? RequestCount { get; set; }
+
+        public int? ResponseTimeMs { get; set; }
     }
 
-    private sealed class UpstreamResponseTimeEntry
-    {
-        public string Upstream { get; init; } = string.Empty;
+    private List<UpstreamRow> Upstreams { get; } = new List<UpstreamRow>();
 
-        public int ResponseTimeMs { get; init; }
-    }
+    private DateTime LastRefreshedAt { get; set; } = DateTime.Now;
 
-    private List<TopDomainEntry> TopSearchedDomains { get; } = new List<TopDomainEntry>();
-    private List<TopDomainEntry> TopBlockedDomains { get; } = new List<TopDomainEntry>();
-    private List<UpstreamEntry> TopUpstreams { get; } = new List<UpstreamEntry>();
-    private List<UpstreamResponseTimeEntry> UpstreamResponseTimes { get; } = new List<UpstreamResponseTimeEntry>();
-
-    // true une fois Dispose() appelé : garde contre RefreshOnceAfterFirstRenderAsync qui se réveille après
-    // que l'utilisateur a déjà quitté la page (StateHasChanged sur un composant supprimé lèverait).
+    // true une fois Dispose() appelé : garde contre RefreshOnceAfterFirstRenderAsync ou un
+    // IDnsProtectionState.Changed qui arriveraient après que l'utilisateur a quitté la page
+    // (StateHasChanged sur un composant supprimé lèverait).
     private bool isDisposed;
 
     protected override Task OnInitializedAsync()
     {
         ApplySnapshot(StatisticsService.GetSnapshot());
         SyncProtectionState();
+        ProtectionState.Changed += OnProtectionStateChanged;
         return Task.CompletedTask;
     }
 
@@ -126,9 +115,9 @@ public partial class Home : ComponentBase, IDisposable
         if (firstRender)
         {
             // Un seul rafraîchissement automatique peu après l'affichage initial de la page, indépendant
-            // de la bascule "Rafraîchissement auto" (désactivée par défaut) : couvre l'écart entre la
-            // donnée envoyée au chargement (voir OnInitializedAsync) et l'état réel au moment où
-            // l'utilisateur consulte effectivement la page.
+            // du mode direct (désactivé par défaut) : couvre l'écart entre la donnée envoyée au
+            // chargement (voir OnInitializedAsync) et l'état réel au moment où l'utilisateur consulte
+            // effectivement la page.
             _ = RefreshOnceAfterFirstRenderAsync();
         }
     }
@@ -147,135 +136,105 @@ public partial class Home : ComponentBase, IDisposable
         StateHasChanged();
     }
 
-    // Relit IDnsProtectionState (source de vérité, partagée par tous les transports DNS) pour tenir les
-    // champs d'affichage à jour, y compris après une réactivation automatique survenue en arrière-plan
-    // (échéance "Pendant 30 secondes"/"Jusqu'à demain"/etc. atteinte).
+    // Relit IDnsProtectionState (source de vérité, partagée par tous les transports DNS).
     private void SyncProtectionState()
     {
         ProtectionEnabled = ProtectionState.IsEnabled;
         ProtectionDisabledUntil = ProtectionEnabled ? null : ProtectionState.DisabledUntilUtc?.ToLocalTime();
     }
 
-    // GetSnapshot() agrège déjà l'ensemble des panneaux en une seule fois (coût négligeable : quelques
-    // dictionnaires en mémoire) : chaque bouton "Actualiser" de panneau individuel recharge donc la même
-    // photo instantanée plutôt que de maintenir une logique de rafraîchissement partiel séparée.
+    private void OnProtectionStateChanged(object? sender, EventArgs e)
+    {
+        _ = InvokeAsync(() =>
+        {
+            if (isDisposed)
+            {
+                return;
+            }
+
+            SyncProtectionState();
+            StateHasChanged();
+        });
+    }
+
+    // GetSnapshot() agrège l'ensemble des panneaux en une seule fois (coût négligeable : quelques
+    // dictionnaires en mémoire) : toute la page est donc rafraîchie d'un bloc.
     private void ApplySnapshot(DnsStatisticsSnapshot snapshot)
     {
         DnsQueriesCount = snapshot.TotalQueries;
         BlockedByFiltersCount = snapshot.BlockedQueries;
+        AverageProcessingTimeMs = snapshot.AverageProcessingTimeMs;
 
-        GeneralStatsDnsQueries = snapshot.TotalQueries;
-        GeneralStatsBlockedByFilters = snapshot.BlockedQueries;
-        GeneralStatsAverageProcessingTimeMs = snapshot.AverageProcessingTimeMs;
+        FillRanking(TopClients, snapshot.TopClients);
+        FillRanking(TopSearchedDomains, snapshot.TopSearchedDomains);
+        FillRanking(TopBlockedDomains, snapshot.TopBlockedDomains);
 
-        TopClients.Clear();
-        foreach (DnsStatisticsEntry entry in snapshot.TopClients)
-        {
-            TopClients.Add(new TopClientEntry { Client = entry.Label, RequestCount = entry.Count });
-        }
+        Upstreams.Clear();
+        Dictionary<string, UpstreamRow> rowsByUpstream = new Dictionary<string, UpstreamRow>(StringComparer.OrdinalIgnoreCase);
 
-        TopSearchedDomains.Clear();
-        foreach (DnsStatisticsEntry entry in snapshot.TopSearchedDomains)
-        {
-            TopSearchedDomains.Add(new TopDomainEntry { Domain = entry.Label, RequestCount = entry.Count });
-        }
-
-        TopBlockedDomains.Clear();
-        foreach (DnsStatisticsEntry entry in snapshot.TopBlockedDomains)
-        {
-            TopBlockedDomains.Add(new TopDomainEntry { Domain = entry.Label, RequestCount = entry.Count });
-        }
-
-        TopUpstreams.Clear();
         foreach (DnsStatisticsEntry entry in snapshot.TopUpstreams)
         {
-            TopUpstreams.Add(new UpstreamEntry { Upstream = entry.Label, RequestCount = entry.Count });
+            UpstreamRow row = new UpstreamRow { Upstream = entry.Label, RequestCount = entry.Count };
+            rowsByUpstream[entry.Label] = row;
+            Upstreams.Add(row);
         }
 
-        UpstreamResponseTimes.Clear();
         foreach (DnsStatisticsResponseTimeEntry entry in snapshot.UpstreamResponseTimes)
         {
-            UpstreamResponseTimes.Add(new UpstreamResponseTimeEntry { Upstream = entry.Upstream, ResponseTimeMs = entry.AverageResponseTimeMs });
+            if (rowsByUpstream.TryGetValue(entry.Upstream, out UpstreamRow? existing))
+            {
+                existing.ResponseTimeMs = entry.AverageResponseTimeMs;
+            }
+            else
+            {
+                UpstreamRow row = new UpstreamRow { Upstream = entry.Upstream, ResponseTimeMs = entry.AverageResponseTimeMs };
+                rowsByUpstream[entry.Upstream] = row;
+                Upstreams.Add(row);
+            }
         }
 
-        DnsQueriesHourly.Clear();
-        BlockedByFiltersHourly.Clear();
-        foreach (DnsStatisticsHourlyPoint point in snapshot.HourlySeries)
+        HourlySeries.Clear();
+        HourlySeries.AddRange(snapshot.HourlySeries);
+
+        PeakHour = null;
+        foreach (DnsStatisticsHourlyPoint point in HourlySeries)
         {
-            DnsQueriesHourly.Add(point.TotalQueries);
-            BlockedByFiltersHourly.Add(point.BlockedQueries);
+            if (point.TotalQueries > 0 && (PeakHour is null || point.TotalQueries > PeakHour.Value.TotalQueries))
+            {
+                PeakHour = point;
+            }
         }
+
+        LastRefreshedAt = DateTime.Now;
     }
 
-    private Task RefreshGeneralStatsAsync()
+    private static void FillRanking(List<RankItem> destination, IReadOnlyList<DnsStatisticsEntry> source)
     {
-        ApplySnapshot(StatisticsService.GetSnapshot());
-        return Task.CompletedTask;
-    }
-
-    private Task RefreshTopClientsAsync()
-    {
-        ApplySnapshot(StatisticsService.GetSnapshot());
-        return Task.CompletedTask;
-    }
-
-    private Task RefreshTopSearchedDomainsAsync()
-    {
-        ApplySnapshot(StatisticsService.GetSnapshot());
-        return Task.CompletedTask;
-    }
-
-    private Task RefreshTopBlockedDomainsAsync()
-    {
-        ApplySnapshot(StatisticsService.GetSnapshot());
-        return Task.CompletedTask;
-    }
-
-    private Task RefreshTopUpstreamsAsync()
-    {
-        ApplySnapshot(StatisticsService.GetSnapshot());
-        return Task.CompletedTask;
-    }
-
-    private Task RefreshUpstreamResponseTimesAsync()
-    {
-        ApplySnapshot(StatisticsService.GetSnapshot());
-        return Task.CompletedTask;
-    }
-
-    private void ToggleProtection()
-    {
-        if (ProtectionEnabled)
+        destination.Clear();
+        foreach (DnsStatisticsEntry entry in source)
         {
-            // Clic sur le bouton principal : désactivation immédiate, sans échéance.
-            ProtectionState.Disable();
-            IsProtectionMenuOpen = false;
-            SyncProtectionState();
-        }
-        else
-        {
-            EnableProtection();
+            destination.Add(new RankItem(entry.Label, entry.Count));
         }
     }
 
-    private void ToggleProtectionMenu()
+    private void DisableProtection()
     {
-        IsProtectionMenuOpen = !IsProtectionMenuOpen;
+        // Coupure sans échéance : jusqu'à réactivation manuelle.
+        ProtectionState.Disable();
+        SyncProtectionState();
     }
 
     private void DisableProtectionUntil(DateTime until)
     {
-        // "until" est en heure locale (voir DisableOptions.ComputeUntil ci-dessus) : IDnsProtectionState
+        // "until" est en heure locale (voir PauseOptions.ComputeUntil ci-dessus) : IDnsProtectionState
         // travaille en UTC en interne.
         ProtectionState.DisableUntil(until.ToUniversalTime());
-        IsProtectionMenuOpen = false;
         SyncProtectionState();
     }
 
     private void EnableProtection()
     {
         ProtectionState.Enable();
-        IsProtectionMenuOpen = false;
         SyncProtectionState();
     }
 
@@ -324,6 +283,11 @@ public partial class Home : ComponentBase, IDisposable
     {
         _ = InvokeAsync(() =>
         {
+            if (isDisposed)
+            {
+                return;
+            }
+
             ApplySnapshot(StatisticsService.GetSnapshot());
             SyncProtectionState();
             StateHasChanged();
@@ -333,18 +297,37 @@ public partial class Home : ComponentBase, IDisposable
     public void Dispose()
     {
         isDisposed = true;
+        ProtectionState.Changed -= OnProtectionStateChanged;
         StopAutoRefresh();
     }
 
-    private static string FormatPercent(long part, long total)
-    {
-        if (total <= 0)
-        {
-            return "0%";
-        }
+    private static string FormatCount(long value) => value.ToString("N0", DisplayCulture);
 
-        double percentage = part * 100.0 / total;
-        int roundedPercentage = (int)Math.Round(percentage);
-        return roundedPercentage + "%";
+    private static string FormatHourRange(DnsStatisticsHourlyPoint point)
+    {
+        DateTime start = point.HourStartUtc.ToLocalTime();
+        return string.Create(CultureInfo.InvariantCulture, $"de {start.Hour} h à {start.AddHours(1).Hour} h");
+    }
+
+    private string ProtectionDetail
+    {
+        get
+        {
+            if (ProtectionEnabled)
+            {
+                return "Listes de blocage, services bloqués, règles personnalisées et protections avancées s'appliquent à chaque requête.";
+            }
+
+            if (ProtectionDisabledUntil is null)
+            {
+                return "Les requêtes sont résolues sans filtrage jusqu'à ce que vous réactiviez la protection.";
+            }
+
+            DateTime until = ProtectionDisabledUntil.Value;
+            string when = until.Date == DateTime.Today
+                ? until.ToString("HH:mm", DisplayCulture)
+                : until.ToString("dddd d MMMM 'à' HH:mm", DisplayCulture);
+            return "Les requêtes sont résolues sans filtrage. Reprise automatique " + (until.Date == DateTime.Today ? "à " : "le ") + when + ".";
+        }
     }
 }

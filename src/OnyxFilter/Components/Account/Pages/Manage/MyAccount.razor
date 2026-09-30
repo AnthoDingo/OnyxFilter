@@ -1,131 +1,146 @@
 @page "/account/my-account"
 @attribute [Authorize]
 
-<PageTitle>Mon Compte - OnyxFilter</PageTitle>
+<PageTitle>Mon compte · OnyxFilter</PageTitle>
 
-<h1 class="page-title">Mon Compte</h1>
-
-<div class="settings-page">
-
-    <StatusMessage Message="@Message" />
-
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-12">
-            @* ── Nom d'utilisateur ── *@
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h2 class="card-title fs-5">Nom d'utilisateur</h2>
-                    <p class="text-muted mb-3">Nom d'utilisateur actuel : <strong>@CurrentUsername</strong></p>
-
-                    <form @formname="change-username" @onsubmit="ChangeUsernameAsync" method="post">
-                        <AntiforgeryToken />
-                        <div class="mb-3" style="max-width: 24rem;">
-                            <label class="form-label" for="new-username">Nouveau nom d'utilisateur</label>
-                            <input id="new-username"
-                                   type="text"
-                                   class="form-control"
-                                   name="UsernameInput.NewUsername"
-                                   value="@UsernameInput.NewUsername"
-                                   required
-                                   autocomplete="username" />
-                        </div>
-                        <button type="submit" class="btn btn-success">Enregistrer</button>
-                    </form>
-                </div>
-            </div>
-
-            @* ── Mot de passe ── *@
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h2 class="card-title fs-5">Mot de passe</h2>
-
-                    <form @formname="change-password" @onsubmit="ChangePasswordAsync" method="post">
-                        <AntiforgeryToken />
-                        <div class="mb-3" style="max-width: 24rem;">
-                            <label class="form-label" for="current-password">Mot de passe actuel</label>
-                            <input id="current-password"
-                                   type="password"
-                                   class="form-control"
-                                   name="PasswordInput.CurrentPassword"
-                                   required
-                                   autocomplete="current-password" />
-                        </div>
-                        <div class="mb-3" style="max-width: 24rem;">
-                            <label class="form-label" for="new-password">Nouveau mot de passe</label>
-                            <input id="new-password"
-                                   type="password"
-                                   class="form-control"
-                                   name="PasswordInput.NewPassword"
-                                   required
-                                   autocomplete="new-password" />
-                        </div>
-                        <div class="mb-3" style="max-width: 24rem;">
-                            <label class="form-label" for="confirm-password">Confirmer le nouveau mot de passe</label>
-                            <input id="confirm-password"
-                                   type="password"
-                                   class="form-control"
-                                   name="PasswordInput.ConfirmNewPassword"
-                                   required
-                                   autocomplete="new-password" />
-                        </div>
-                        <button type="submit" class="btn btn-success">Changer le mot de passe</button>
-                    </form>
-                </div>
-            </div>
-
-            @* ── Clés d'accès ── *@
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h2 class="card-title fs-5">Clés d'accès</h2>
-
-                    @if (CurrentPasskeys is { Count: > 0 })
-                    {
-                        <table class="table mb-3">
-                            <tbody>
-                                @foreach (UserPasskeyInfo passkey in CurrentPasskeys)
-                                {
-                                    <tr>
-                                        <td>
-                                            <div>@(passkey.Name ?? "Clé d'accès")</div>
-                                            <small class="text-muted">Créée le @FormatCreatedAt(passkey.CreatedAt)</small>
-                                        </td>
-                                        <td>
-                                            @{
-                                                string credentialId = EncodeCredentialId(passkey.CredentialId);
-                                            }
-                                            <form @formname="@($"delete-passkey-{credentialId}")" @onsubmit="DeletePasskeyAsync" method="post">
-                                                <AntiforgeryToken />
-                                                <input type="hidden" name="CredentialId" value="@credentialId" />
-                                                <button type="submit" class="btn btn-outline-danger btn-sm">Supprimer</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <p>Aucune clé d'accès enregistrée.</p>
-                    }
-
-                    <form @formname="add-passkey" @onsubmit="AddPasskeyAsync" method="post">
-                        <AntiforgeryToken />
-                        @if (CurrentPasskeys is { Count: >= MaxPasskeyCount })
-                        {
-                            <p class="text-danger">Nombre maximal de clés d'accès atteint. Supprimez-en une avant d'en ajouter une nouvelle.</p>
-                        }
-                        else
-                        {
-                            <PasskeySubmit Operation="PasskeyOperation.Create" Name="PasskeyInput" class="btn btn-primary">
-                                Ajouter une clé d'accès
-                            </PasskeySubmit>
-                        }
-                    </form>
-                </div>
-            </div>
-        </div>
+<header class="page-header">
+    <div class="page-heading">
+        <p class="page-eyebrow">Compte</p>
+        <h1 class="page-title">Mon compte</h1>
+        <p class="page-lead">Identifiants de connexion à la console d'administration.</p>
     </div>
-    
+</header>
+
+<StatusMessage Message="@Message" />
+
+<div class="settings-sections">
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Identifiant</h2>
+            <p class="settings-intro-text">Nom utilisé pour vous connecter.</p>
+        </div>
+
+        <form class="card settings-panel" @formname="change-username" @onsubmit="ChangeUsernameAsync" method="post">
+            <AntiforgeryToken />
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <label class="setting-label" for="new-username">Nouveau nom d'utilisateur</label>
+                    <p class="setting-help">Actuellement : <strong class="mono">@CurrentUsername</strong></p>
+                </div>
+                <div class="setting-nested field-narrow">
+                    <input id="new-username"
+                           type="text"
+                           class="form-control"
+                           name="UsernameInput.NewUsername"
+                           value="@UsernameInput.NewUsername"
+                           required
+                           autocomplete="username" />
+                </div>
+            </div>
+            <div class="settings-panel-footer">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Mot de passe</h2>
+            <p class="settings-intro-text">Choisissez une phrase longue et unique.</p>
+        </div>
+
+        <form class="card settings-panel" @formname="change-password" @onsubmit="ChangePasswordAsync" method="post">
+            <AntiforgeryToken />
+            <div class="setting setting-stacked">
+                <div class="field-grid">
+                    <div>
+                        <label class="form-label" for="current-password">Mot de passe actuel</label>
+                        <input id="current-password"
+                               type="password"
+                               class="form-control"
+                               name="PasswordInput.CurrentPassword"
+                               required
+                               autocomplete="current-password" />
+                    </div>
+                </div>
+                <div class="field-grid mt-3">
+                    <div>
+                        <label class="form-label" for="new-password">Nouveau mot de passe</label>
+                        <input id="new-password"
+                               type="password"
+                               class="form-control"
+                               name="PasswordInput.NewPassword"
+                               required
+                               autocomplete="new-password" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="confirm-password">Confirmation</label>
+                        <input id="confirm-password"
+                               type="password"
+                               class="form-control"
+                               name="PasswordInput.ConfirmNewPassword"
+                               required
+                               autocomplete="new-password" />
+                    </div>
+                </div>
+            </div>
+            <div class="settings-panel-footer">
+                <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Clés d'accès</h2>
+            <p class="settings-intro-text">Connexion sans mot de passe via l'empreinte, le visage ou une clé de sécurité.</p>
+        </div>
+
+        <div class="card settings-panel">
+            @if (CurrentPasskeys is { Count: > 0 })
+            {
+                <ul class="passkey-list">
+                    @foreach (UserPasskeyInfo passkey in CurrentPasskeys)
+                    {
+                        string credentialId = EncodeCredentialId(passkey.CredentialId);
+                        <li class="passkey-item">
+                            <span class="passkey-icon" aria-hidden="true"><Icon Name="key" /></span>
+                            <span class="passkey-text">
+                                <span class="passkey-name">@(passkey.Name ?? "Clé d'accès")</span>
+                                <span class="passkey-date">Ajoutée le @FormatCreatedAt(passkey.CreatedAt)</span>
+                            </span>
+                            <form @formname="@($"delete-passkey-{credentialId}")" @onsubmit="DeletePasskeyAsync" method="post">
+                                <AntiforgeryToken />
+                                <input type="hidden" name="CredentialId" value="@credentialId" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                            </form>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="empty-state mb-0">
+                    <span class="empty-state-title">Aucune clé d'accès</span>
+                    Ajoutez-en une pour vous connecter sans mot de passe.
+                </p>
+            }
+
+            <form class="settings-panel-footer" @formname="add-passkey" @onsubmit="AddPasskeyAsync" method="post">
+                <AntiforgeryToken />
+                @if (CurrentPasskeys is { Count: >= MaxPasskeyCount })
+                {
+                    <p class="text-danger mb-0">Nombre maximal de clés atteint : supprimez-en une avant d'en ajouter une autre.</p>
+                }
+                else
+                {
+                    <PasskeySubmit Operation="PasskeyOperation.Create" Name="PasskeyInput" class="btn btn-secondary">
+                        <Icon Name="plus" />Ajouter une clé d'accès
+                    </PasskeySubmit>
+                }
+            </form>
+        </div>
+    </section>
 
 </div>

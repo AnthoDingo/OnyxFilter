@@ -24,6 +24,10 @@ public partial class Settings : ComponentBase
 
     private int FilterUpdateIntervalHours { get; set; } = 24;
 
+    // Exemple affiché dans les zones « domaines exclus » : chaîne C# plutôt qu'entité HTML (&#10;), que
+    // Blazor encoderait telle quelle dans l'attribut.
+    private const string IgnoredDomainsPlaceholder = "exemple.lan\n*.telemetrie.exemple";
+
     private bool UseBrowsingSecurity { get; set; }
 
     private bool UseParentalControl { get; set; }

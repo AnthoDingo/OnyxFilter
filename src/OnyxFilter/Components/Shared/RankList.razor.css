@@ -1,0 +1,72 @@
+.rank-list {
+    --rank-bar: var(--of-accent-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.rank-tone-blocked {
+    --rank-bar: var(--of-bad-soft);
+}
+
+.rank-tone-neutral {
+    --rank-bar: var(--of-surface-3);
+}
+
+.rank-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: 7px;
+    font-size: 0.84rem;
+    isolation: isolate;
+}
+
+    /* Barre proportionnelle derrière la ligne. */
+    .rank-row::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: var(--share, 0%);
+        border-radius: inherit;
+        background-color: var(--rank-bar);
+        z-index: -1;
+    }
+
+.rank-position {
+    font-family: var(--of-mono);
+    font-size: 0.72rem;
+    color: var(--of-text-3);
+    text-align: right;
+}
+
+.rank-label {
+    font-family: var(--of-mono);
+    font-size: 0.8rem;
+    color: var(--of-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rank-count {
+    font-family: var(--of-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--of-text-2);
+    font-variant-numeric: tabular-nums;
+}
+
+.rank-empty {
+    margin: 0;
+    padding: 2.5rem 0;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--of-text-3);
+}

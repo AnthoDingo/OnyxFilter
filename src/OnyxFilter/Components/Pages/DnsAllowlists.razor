@@ -2,124 +2,123 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
-<PageTitle>Listes d'autorisation DNS - OnyxFilter</PageTitle>
+<PageTitle>Listes d'autorisation · OnyxFilter</PageTitle>
 
-<h1 class="page-title">Listes d'autorisation DNS</h1>
-<p class="text-body-secondary">
-    Les domaines des listes d'autorisation seront résolus normalement même s'ils figurent dans une des
-    listes de blocage.
-</p>
+<header class="page-header">
+    <div class="page-heading">
+        <p class="page-eyebrow">Filtrage</p>
+        <h1 class="page-title">Listes d'autorisation</h1>
+        <p class="page-lead">
+            Domaines toujours résolus normalement, même s'ils figurent dans une liste de blocage. Même format et
+            même actualisation automatique que les listes de blocage.
+        </p>
+    </div>
+    <div class="page-actions">
+        <button type="button" class="btn btn-secondary" @onclick="RefreshNowAsync" disabled="@IsRefreshing">
+            <Icon Name="refresh" />@(IsRefreshing ? "Actualisation…" : "Actualiser les listes")
+        </button>
+        <button type="button" class="btn btn-primary" @onclick="OpenAddDialog">
+            <Icon Name="plus" />Ajouter une liste
+        </button>
+    </div>
+</header>
 
-<div class="settings-page">
-    <div class="row justify-content-center">
-        <div class="col-md-10 col-12">
+@if (!string.IsNullOrEmpty(StatusMessage))
+{
+    <div class="alert page-status @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
+}
 
-            <div class="card mb-4 table-card">
-                <div class="card-body">
-                    <p class="mb-0">
-                        OnyxFilter comprend les règles basiques de blocage ainsi que la syntaxe des fichiers hosts.
-                    </p>
-
-                    <hr />
-
-                    <div class="table-responsive mb-3">
-                        <table class="table align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Activé</th>
-                                    <th>Nom</th>
-                                    <th>URL de la liste</th>
-                                    <th>Nombre des règles</th>
-                                    <th>Dernière mise à jour</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Lists.Count == 0)
-                                {
-                                    <tr>
-                                        <td colspan="6" class="empty-state-cell">Aucune liste d'autorisation ajoutée</td>
-                                    </tr>
-                                }
-                                else
-                                {
-                                    @foreach (FilterListEntry entry in PagedLists)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <input class="form-check-input" type="checkbox" checked="@entry.Enabled" @onchange="e => ToggleEnabledAsync(entry, e)" />
-                                            </td>
-                                            <td>@entry.Name</td>
-                                            <td class="filter-list-url" title="@entry.Url">@entry.Url</td>
-                                            <td title="@(GetStatus(entry)?.LastError)">@FormatRuleCount(GetStatus(entry))</td>
-                                            <td>@FormatLastUpdated(GetStatus(entry))</td>
-                                            <td>
-                                                <div class="filter-list-actions">
-                                                    <button type="button" class="btn btn-sm btn-outline-primary" title="Modifier" @onclick="() => OpenEditDialog(entry)">
-                                                        <icon class="filter-list-icon icon-edit" aria-hidden="true"></icon>
-                                                    </button>
-                                                    <button type="button" class="btn btn-sm btn-outline-danger" title="Supprimer" @onclick="() => RequestDelete(entry)">
-                                                        <icon class="filter-list-icon icon-trash" aria-hidden="true"></icon>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="pagination-bar">
-                        <button type="button" class="btn btn-outline-secondary" disabled="@(CurrentPage <= 1)" @onclick="GoToPreviousPage">Précédent</button>
-
-                        <div class="pagination-bar-center">
-                            <span>Page @CurrentPage / @TotalPages</span>
-
-                            <select class="form-select form-select-sm" style="width:auto;" value="@PageSize" @onchange="OnPageSizeChanged">
-                                @foreach (int option in PageSizeOptions)
-                                {
-                                    <option value="@option">@option lignes</option>
-                                }
-                            </select>
-                        </div>
-
-                        <button type="button" class="btn btn-outline-secondary" disabled="@(CurrentPage >= TotalPages)" @onclick="GoToNextPage">Suivant</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex gap-2 mb-4">
-                <button type="button" class="btn btn-success" @onclick="OpenAddDialog">Ajouter liste d'autorisation</button>
-                <button type="button" class="btn btn-primary" @onclick="RefreshNowAsync" disabled="@IsRefreshing">
-                    @(IsRefreshing ? "Mise à jour en cours..." : "Vérifier les mises à jour")
-                </button>
-            </div>
-            <p class="form-text">
-                Un domaine autorisé n'est jamais bloqué par les <a href="/filters/blocklists">listes de blocage DNS</a>,
-                quel que soit le « Mode de blocage » choisi dans les <a href="/settings/dns">Paramètres DNS</a>. Il
-                reste en revanche soumis à la Sécurité de navigation et au Contrôle parental s'ils sont activés dans
-                les <a href="/settings/general">Paramètres généraux</a>, qui gèrent aussi l'intervalle de mise à jour
-                automatique.
-            </p>
-        </div>
+<div class="card table-panel">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 4rem;">Active</th>
+                    <th scope="col">Liste</th>
+                    <th scope="col">Règles</th>
+                    <th scope="col">Dernière actualisation</th>
+                    <th scope="col"><span class="visually-hidden">Actions</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Lists.Count == 0)
+                {
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <span class="empty-state-title">Aucune liste d'autorisation</span>
+                            Ajoutez une liste pour exempter des domaines du blocage.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (FilterListEntry entry in PagedLists)
+                    {
+                        <tr>
+                            <td>
+                                <div class="form-check form-switch cell-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" aria-label="Activer @entry.Name" checked="@entry.Enabled" @onchange="e => ToggleEnabledAsync(entry, e)" />
+                                </div>
+                            </td>
+                            <td>
+                                <span class="list-name">@entry.Name</span>
+                                <span class="list-url" title="@entry.Url">@entry.Url</span>
+                            </td>
+                            <td class="mono @(string.IsNullOrEmpty(GetStatus(entry)?.LastError) ? "" : "list-error")" title="@(GetStatus(entry)?.LastError)">@FormatRuleCount(GetStatus(entry))</td>
+                            <td class="text-body-secondary">@FormatLastUpdated(GetStatus(entry))</td>
+                            <td>
+                                <div class="row-actions">
+                                    <button type="button" class="btn btn-outline-primary btn-icon" title="Modifier" aria-label="Modifier @entry.Name" @onclick="() => OpenEditDialog(entry)">
+                                        <Icon Name="edit" />
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-icon" title="Supprimer" aria-label="Supprimer @entry.Name" @onclick="() => RequestDelete(entry)">
+                                        <Icon Name="trash" />
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
     </div>
 
-    @if (!string.IsNullOrEmpty(StatusMessage))
+    @if (Lists.Count > 0)
     {
-        <div class="alert @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mb-4">@StatusMessage</div>
-    }
+        <div class="pagination-bar">
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage <= 1)" @onclick="GoToPreviousPage">Précédent</button>
 
+            <div class="pagination-bar-center">
+                <span>Page @CurrentPage sur @TotalPages</span>
+                <select class="form-select form-select-sm" aria-label="Lignes par page" value="@PageSize" @onchange="OnPageSizeChanged">
+                    @foreach (int option in PageSizeOptions)
+                    {
+                        <option value="@option">@option par page</option>
+                    }
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage >= TotalPages)" @onclick="GoToNextPage">Suivant</button>
+        </div>
+    }
 </div>
+
+<p class="page-note">
+    Un domaine autorisé n'est jamais bloqué par les <a href="/filters/blocklists">listes de blocage</a>, quelle
+    que soit la réponse configurée dans <a href="/settings/dns">Serveur DNS</a>. Il reste soumis à la sécurité
+    de navigation et au contrôle parental s'ils sont activés dans <a href="/settings/general">Général</a>, où se
+    règle aussi la fréquence d'actualisation automatique.
+</p>
 
 @if (ShowDialog)
 {
     <div class="modal-backdrop-static" @onclick="CloseDialog"></div>
 
-    <div class="modal-static">
-        <div class="card" style="width: 32rem; max-width: 90vw;">
+    <div class="modal-static" role="dialog" aria-modal="true" aria-labelledby="list-dialog-title">
+        <div class="card dialog-card">
             <div class="card-body">
-                <h2 class="card-title fs-5">@(IsEditMode ? "Modifier la liste d'autorisation" : "Ajouter une liste d'autorisation")</h2>
+                <h2 class="dialog-title" id="list-dialog-title">@(IsEditMode ? "Modifier la liste" : "Nouvelle liste d'autorisation")</h2>
+                <p class="dialog-lead">La liste est téléchargée et analysée dès l'enregistrement.</p>
 
                 <div class="mb-3">
                     <label class="form-label" for="dialog-list-name">Nom</label>
@@ -127,21 +126,21 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label" for="dialog-list-url">URL</label>
-                    <input id="dialog-list-url" type="text" class="form-control" placeholder="https://..." @bind="DialogUrl" @bind:event="oninput" />
+                    <label class="form-label" for="dialog-list-url">Adresse de la liste</label>
+                    <input id="dialog-list-url" type="text" class="form-control font-monospace" placeholder="https://…" @bind="DialogUrl" @bind:event="oninput" />
                 </div>
 
                 @if (!string.IsNullOrEmpty(DialogError))
                 {
-                    <div class="alert alert-danger py-2 mb-3">@DialogError</div>
+                    <div class="alert alert-danger mb-0">@DialogError</div>
                 }
             </div>
             <div class="card-footer">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-success" @onclick="SaveDialogAsync" disabled="@IsSavingDialog">
-                        @(IsSavingDialog ? "Téléchargement..." : "Enregistrer")
-                    </button>
                     <button type="button" class="btn btn-outline-secondary" @onclick="CloseDialog" disabled="@IsSavingDialog">Annuler</button>
+                    <button type="button" class="btn btn-primary" @onclick="SaveDialogAsync" disabled="@IsSavingDialog">
+                        @(IsSavingDialog ? "Téléchargement…" : "Enregistrer")
+                    </button>
                 </div>
             </div>
         </div>
@@ -152,19 +151,19 @@
 {
     <div class="modal-backdrop-static" @onclick="CancelDelete"></div>
 
-    <div class="modal-static">
-        <div class="card" style="width: 28rem; max-width: 90vw;">
+    <div class="modal-static" role="alertdialog" aria-modal="true" aria-labelledby="delete-dialog-title">
+        <div class="card dialog-card">
             <div class="card-body">
-                <h2 class="card-title fs-5">Supprimer la liste d'autorisation</h2>
-                <p class="mb-0">
-                    Voulez-vous vraiment supprimer « @EntryPendingDeletion.Name » ? Cette action ne peut pas être
-                    annulée.
+                <h2 class="dialog-title" id="delete-dialog-title">Supprimer la liste ?</h2>
+                <p class="dialog-lead mb-0">
+                    « @EntryPendingDeletion.Name » ne sera plus utilisée pour autoriser des domaines. Cette action est
+                    définitive.
                 </p>
             </div>
             <div class="card-footer">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeleteAsync">Supprimer</button>
                     <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">Annuler</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeleteAsync">Supprimer</button>
                 </div>
             </div>
         </div>

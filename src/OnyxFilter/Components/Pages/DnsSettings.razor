@@ -2,435 +2,412 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
-<PageTitle>Paramètres DNS - OnyxFilter</PageTitle>
+<PageTitle>Serveur DNS · OnyxFilter</PageTitle>
 
-<h1 class="page-title">Paramètres DNS</h1>
+<header class="page-header">
+    <div class="page-heading">
+        <p class="page-eyebrow">Configuration</p>
+        <h1 class="page-title">Serveur DNS</h1>
+        <p class="page-lead">Résolveurs en amont, comportement du serveur, cache et contrôle d'accès.</p>
+    </div>
+</header>
 
-<div class="settings-page">
+<div class="settings-sections">
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <h2 class="card-title fs-5">Serveurs DNS upstream</h2>
-
-            <p class="text-body-secondary">
-                Saisissez les adresses des serveurs, une par ligne.
-                <span class="text-primary">En savoir plus</span>
-                sur la configuration des serveurs DNS en amont. Voici une
-                <span class="text-primary">liste de fournisseurs DNS connus</span>.
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Résolveurs en amont</h2>
+            <p class="settings-intro-text">
+                Serveurs auxquels OnyxFilter transmet les requêtes qu'il ne bloque pas et ne connaît pas déjà.
             </p>
-
-            <textarea class="form-control font-monospace mb-3" rows="8" @bind="UpstreamServersText" @bind:event="oninput"></textarea>
-
-            <div class="small text-body-secondary">
-                <p class="mb-2">Exemples :</p>
-                <ol>
-                    <li><code>94.140.14.140, 2a10:50c0::1:ff</code> : DNS classique (au-dessus de UDP) ;</li>
-                    <li><code>94.140.14.140:53, [2a10:50c0::1:ff]:53</code> : DNS normal (sur UDP, avec port) ;</li>
-                    <li><code>udp://unfiltered.adguard-dns.com</code> : DNS normal (sur UDP, nom d'hôte) ;</li>
-                    <li><code>tcp://94.140.14.140, tcp://[2a10:50c0::1:ff]</code> : DNS classique (au-dessus de TCP) ;</li>
-                    <li><code>tcp://94.140.14.140:53, tcp://[2a10:50c0::1:ff]:53</code> : DNS normal (sur TCP, avec port) ;</li>
-                    <li><code>tcp://unfiltered.adguard-dns.com</code> : DNS normal (sur TCP, nom d'hôte) ;</li>
-                    <li>
-                        <code>tls://unfiltered.adguard-dns.com</code> :
-                        <a href="https://en.wikipedia.org/wiki/DNS_over_TLS" target="_blank" rel="noopener noreferrer">DNS-over-TLS</a>
-                        chiffré ;
-                    </li>
-                    <li>
-                        <code>https://unfiltered.adguard-dns.com/dns-query</code> :
-                        <a href="https://en.wikipedia.org/wiki/DNS_over_HTTPS" target="_blank" rel="noopener noreferrer">DNS-over-HTTPS</a>
-                        chiffré ;
-                    </li>
-                    <li>
-                        <code>h3://unfiltered.adguard-dns.com/dns-query</code> : DNS-over-HTTPS chiffré avec
-                        <a href="https://en.wikipedia.org/wiki/HTTP/3" target="_blank" rel="noopener noreferrer">HTTP/3</a>
-                        forcé sans repli sur HTTP/2 ou inférieur ;
-                    </li>
-                    <li>
-                        <code>quic://unfiltered.adguard-dns.com</code> :
-                        <a href="https://en.wikipedia.org/wiki/DNS_over_QUIC" target="_blank" rel="noopener noreferrer">DNS-over-QUIC</a>
-                        chiffré;
-                    </li>
-                    <li>
-                        <code>sdns://...</code> : vous pouvez utiliser
-                        <a href="https://dnscrypt.info/stamps-specifications" target="_blank" rel="noopener noreferrer">DNS Stamps</a>
-                        pour
-                        <a href="https://en.wikipedia.org/wiki/DNSCrypt" target="_blank" rel="noopener noreferrer">DNSCrypt</a>
-                        ou les résolveurs
-                        <a href="https://en.wikipedia.org/wiki/DNS_over_HTTPS" target="_blank" rel="noopener noreferrer">DNS_over_HTTPS</a>
-                        ;
-                    </li>
-                    <li>
-                        <code>[/example.local/]94.140.14.140</code> : un amont
-                        <span class="text-primary">pour des domaines spécifiques</span>
-                        ;
-                    </li>
-                    <li>
-                        <code>[/example.local/]94.140.14.140 2a10:50c0::1:ff</code> : plusieurs amonts
-                        <span class="text-primary">pour des domaines spécifiques</span>
-                        ;
-                    </li>
-                    <li><code># comment</code> : un commentaire.</li>
-                </ol>
-            </div>
-
-            <hr />
-
-            <h2 class="card-title fs-5">Mode de résolution</h2>
-
-            <div class="form-check mb-3">
-                <input class="form-check-input"
-                       type="radio"
-                       name="resolution-mode"
-                       id="mode-load-balancing"
-                       checked="@(ResolutionMode == UpstreamResolutionMode.LoadBalancing)"
-                       @onchange="() => SetResolutionMode(UpstreamResolutionMode.LoadBalancing)" />
-                <label class="form-check-label fw-semibold" for="mode-load-balancing">Équilibrage de charge</label>
-                <div class="form-text">
-                    Une requête par serveur en amont à la fois. OnyxFilter utilise un algorithme aléatoire pondéré
-                    pour sélectionner les serveurs avec le plus petit nombre d'échecs de recherche et le temps de
-                    recherche moyen le plus bas.
-                </div>
-            </div>
-
-            <div class="form-check mb-3">
-                <input class="form-check-input"
-                       type="radio"
-                       name="resolution-mode"
-                       id="mode-parallel"
-                       checked="@(ResolutionMode == UpstreamResolutionMode.Parallel)"
-                       @onchange="() => SetResolutionMode(UpstreamResolutionMode.Parallel)" />
-                <label class="form-check-label fw-semibold" for="mode-parallel">Requêtes en parallèle</label>
-                <div class="form-text">
-                    Utilisez des requêtes parallèles pour accélérer la résolution en requêtant simultanément tous
-                    les serveurs en amont.
-                </div>
-            </div>
-
-            <div class="form-check">
-                <input class="form-check-input"
-                       type="radio"
-                       name="resolution-mode"
-                       id="mode-fastest"
-                       checked="@(ResolutionMode == UpstreamResolutionMode.FastestAddress)"
-                       @onchange="() => SetResolutionMode(UpstreamResolutionMode.FastestAddress)" />
-                <label class="form-check-label fw-semibold" for="mode-fastest">Adresse IP la plus rapide</label>
-                <div class="form-text">
-                    Attente des réponses de <strong>tous</strong> les serveurs DNS, mesure de la vitesse de
-                    connexion TCP pour chaque serveur et renvoi de l'adresse IP du serveur avec la vitesse de
-                    connexion la plus rapide.
-                    Ce mode peut considérablement ralentir les requêtes DNS, si un ou plusieurs serveurs en amont
-                    ne répondent pas. Assurez-vous que vos serveurs en amont sont stables et que votre délai
-                    dépassé en amont est faible.
-                </div>
-            </div>
-
-            <hr />
-            
-            <h2 class="card-title fs-5">Serveurs DNS de repli</h2>
-
-            <p class="text-body-secondary">
-                Liste des serveurs DNS de repli utilisés lorsque les serveurs DNS en amont ne répondent pas. La
-                syntaxe est la même que dans le champ principal en amont ci-dessus.
-            </p>
-
-            <textarea class="form-control font-monospace"
-                      rows="4"
-                      placeholder="Saisissez un serveur DNS de repli par ligne"
-                      @bind="FallbackServersText"
-                      @bind:event="oninput"></textarea>
-
-            <hr />
-
-            <h2 class="card-title fs-5">Serveurs DNS d'amorçage</h2>
-
-            <p class="text-body-secondary">
-                Les adresses IP des serveurs DNS utilisées pour résoudre les adresses IP des résolveurs DoH/DoT
-                que vous spécifiez comme en amont. Les commentaires ne sont pas autorisés.
-            </p>
-
-            <textarea class="form-control font-monospace" rows="4" @bind="BootstrapServersText" @bind:event="oninput"></textarea>
-
-            <hr />
-            
-            <h2 class="card-title fs-5">Serveurs DNS privés inverses</h2>
-
-            <p class="text-body-secondary">
-                Les serveurs DNS utilisés par OnyxFilter pour les requêtes privées PTR, SOA et NS. Une requête
-                est considérée privée si elle demande un domaine ARPA contenant un sous-réseau entre les plages
-                IP privées (par exemple « 192.168.12.34 ») et provient d'un client avec une adresse IP privée.
-                Sans réglages additionnels, les résolveurs DNS par défaut de votre système d'exploitation seront
-                utilisés, sauf pour les adresses IP d'OnyxFilter.
-            </p>
-
-            <p class="text-body-secondary">
-                Par défaut, OnyxFilter utilise les résolveurs DNS inversés suivants : « 8.8.4.4:53 », «
-                8.8.8.8:53 ».
-            </p>
-
-            <textarea class="form-control font-monospace"
-                      rows="3"
-                      placeholder="Saisissez une adresse IP par ligne"
-                      @bind="ReversePrivateServersText"
-                      @bind:event="oninput"></textarea>
-
-            <hr />
-
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="use-private-reverse-resolvers" checked="@UsePrivateReverseResolvers" @onchange="OnUsePrivateReverseResolversChanged" />
-                <label class="form-check-label fw-semibold" for="use-private-reverse-resolvers">Utiliser des résolveurs DNS inversés privés</label>
-                <div class="form-text">
-                    Résolvez les requêtes PTR, SOA et NS pour les domaines ARPA contenant des adresses IP privées
-                    par aide des serveurs privés en amont, DHCP, /etc/hosts, etc. S'il est désactivé, OnyxFilter
-                    répondra à toutes ces requêtes avec NXDOMAIN.
-                </div>
-            </div>
-
-            <hr />
-            
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="enable-client-ip-reverse-resolution" checked="@EnableClientIpReverseResolution" @onchange="OnEnableClientIpReverseResolutionChanged" />
-                <label class="form-check-label fw-semibold" for="enable-client-ip-reverse-resolution">Activer la résolution inverse des adresses IP des clients</label>
-                <div class="form-text">
-                    Résoudre inversement les adresses IP des clients en leurs noms d'hôtes en envoyant des
-                    requêtes PTR aux résolveurs correspondants (serveurs DNS privés pour les clients locaux,
-                    serveurs en amont pour les clients ayant une adresse IP publique).
-                </div>
-            </div>
         </div>
 
-        <div class="card-footer">
-            <div class="d-flex gap-2 mt-2 mb-2">
-                <button type="button" class="btn btn-primary">Tester les upstreams</button>
-                <button type="button" class="btn btn-success" @onclick="ValidateDnsServerSettingsAsync">Enregistrer</button>
+        <div class="card settings-panel">
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <label class="setting-label" for="upstream-servers">Serveurs principaux</label>
+                    <p class="setting-help">Un serveur par ligne.</p>
+                </div>
+                <div class="setting-nested">
+                    <textarea id="upstream-servers" class="form-control font-monospace" rows="6" @bind="UpstreamServersText" @bind:event="oninput"></textarea>
+
+                    <details class="help-disclosure">
+                        <summary>Syntaxes acceptées</summary>
+                        <dl class="syntax-list">
+                            <dt><code>9.9.9.9</code></dt>
+                            <dd>DNS classique, port 53</dd>
+                            <dt><code>[2620:fe::fe]:53</code></dt>
+                            <dd>Adresse IPv6, entre crochets pour préciser le port</dd>
+                            <dt><code>udp://9.9.9.9:5353</code></dt>
+                            <dd>UDP uniquement, port personnalisé</dd>
+                            <dt><code>tcp://9.9.9.9</code></dt>
+                            <dd>TCP uniquement</dd>
+                            <dt><code>tls://dns.quad9.net</code></dt>
+                            <dd>DNS-over-TLS chiffré (port 853 par défaut)</dd>
+                            <dt><code>https://dns.quad9.net/dns-query</code></dt>
+                            <dd>DNS-over-HTTPS chiffré</dd>
+                            <dt><code># note</code></dt>
+                            <dd>Commentaire, ligne ignorée</dd>
+                        </dl>
+                        <p class="form-text px-3 pb-3 mb-0">
+                            Pas encore pris en charge (ligne ignorée) : <code>h3://</code>, <code>quic://</code>,
+                            <code>sdns://</code> et le routage par domaine <code>[/domaine/]serveur</code>.
+                        </p>
+                    </details>
+                </div>
+            </div>
+
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <span class="setting-label">Stratégie d'interrogation</span>
+                    <p class="setting-help">Comment répartir les requêtes entre les serveurs principaux.</p>
+                </div>
+                <div class="setting-nested choice-grid">
+                    <label class="choice" for="mode-load-balancing">
+                        <input class="form-check-input choice-input" type="radio" name="resolution-mode" id="mode-load-balancing"
+                               checked="@(ResolutionMode == UpstreamResolutionMode.LoadBalancing)"
+                               @onchange="() => SetResolutionMode(UpstreamResolutionMode.LoadBalancing)" />
+                        <span class="choice-title">Répartition</span>
+                        <span class="choice-desc">Un serveur à la fois, choisi au hasard en privilégiant les plus rapides et les plus fiables.</span>
+                    </label>
+                    <label class="choice" for="mode-parallel">
+                        <input class="form-check-input choice-input" type="radio" name="resolution-mode" id="mode-parallel"
+                               checked="@(ResolutionMode == UpstreamResolutionMode.Parallel)"
+                               @onchange="() => SetResolutionMode(UpstreamResolutionMode.Parallel)" />
+                        <span class="choice-title">En parallèle</span>
+                        <span class="choice-desc">Tous les serveurs sont interrogés en même temps ; la première réponse l'emporte.</span>
+                    </label>
+                    <label class="choice" for="mode-fastest">
+                        <input class="form-check-input choice-input" type="radio" name="resolution-mode" id="mode-fastest"
+                               checked="@(ResolutionMode == UpstreamResolutionMode.FastestAddress)"
+                               @onchange="() => SetResolutionMode(UpstreamResolutionMode.FastestAddress)" />
+                        <span class="choice-title">Adresse la plus rapide</span>
+                        <span class="choice-desc">
+                            Attend toutes les réponses puis renvoie l'adresse IP la plus rapide à joindre en TCP. Plus lent
+                            si un serveur tarde à répondre.
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <label class="setting-label" for="fallback-servers">Serveurs de secours</label>
+                    <p class="setting-help">Utilisés uniquement si aucun serveur principal ne répond. Même syntaxe que ci-dessus.</p>
+                </div>
+                <div class="setting-nested">
+                    <textarea id="fallback-servers" class="form-control font-monospace" rows="3"
+                              placeholder="Un serveur de secours par ligne"
+                              @bind="FallbackServersText"
+                              @bind:event="oninput"></textarea>
+                </div>
+            </div>
+
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <label class="setting-label" for="bootstrap-servers">Serveurs d'amorçage</label>
+                    <p class="setting-help">
+                        Adresses IP servant à résoudre le nom des serveurs chiffrés (<code>tls://</code>,
+                        <code>https://</code>) indiqués ci-dessus. Commentaires non autorisés.
+                    </p>
+                </div>
+                <div class="setting-nested">
+                    <textarea id="bootstrap-servers" class="form-control font-monospace" rows="4" @bind="BootstrapServersText" @bind:event="oninput"></textarea>
+                </div>
+            </div>
+
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <label class="setting-label" for="reverse-private-servers">Résolveurs inverses privés</label>
+                    <p class="setting-help">
+                        Serveurs interrogés pour les requêtes PTR, SOA et NS portant sur des adresses privées (par
+                        exemple 192.168.x.x) et émises par un client du réseau local. Laissé vide, OnyxFilter utilise
+                        les résolveurs du système (par défaut <code>8.8.4.4:53</code> et <code>8.8.8.8:53</code>).
+                    </p>
+                </div>
+                <div class="setting-nested">
+                    <textarea id="reverse-private-servers" class="form-control font-monospace" rows="3"
+                              placeholder="Une adresse IP par ligne"
+                              @bind="ReversePrivateServersText"
+                              @bind:event="oninput"></textarea>
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="use-private-reverse-resolvers">Résoudre les adresses privées</label>
+                    <p class="setting-help">
+                        Répond aux requêtes inverses sur les adresses privées via les résolveurs ci-dessus, le DHCP ou
+                        /etc/hosts. Désactivé, OnyxFilter leur répond NXDOMAIN.
+                    </p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="use-private-reverse-resolvers" checked="@UsePrivateReverseResolvers" @onchange="OnUsePrivateReverseResolversChanged" />
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="enable-client-ip-reverse-resolution">Nommer les clients automatiquement</label>
+                    <p class="setting-help">
+                        Retrouve le nom d'hôte des clients à partir de leur adresse IP (requête PTR auprès des
+                        résolveurs privés pour le réseau local, des serveurs principaux sinon).
+                    </p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="enable-client-ip-reverse-resolution" checked="@EnableClientIpReverseResolution" @onchange="OnEnableClientIpReverseResolutionChanged" />
+                </div>
+            </div>
+
+            <div class="settings-panel-footer">
+                <button type="button" class="btn btn-primary" @onclick="ValidateDnsServerSettingsAsync">Enregistrer</button>
+                <button type="button" class="btn btn-secondary">Tester les serveurs</button>
                 <button type="button" class="btn btn-outline-secondary" @onclick="ResetDnsServerSettingsAsync">Réinitialiser</button>
+                @if (!string.IsNullOrEmpty(DnsServersStatusMessage))
+                {
+                    <div class="alert @(DnsServersStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@DnsServersStatusMessage</div>
+                }
             </div>
-
-            @if (!string.IsNullOrEmpty(DnsServersStatusMessage))
-            {
-                <div class="alert @(DnsServersStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mb-4">@DnsServersStatusMessage</div>
-            }
         </div>
-    </div>
+    </section>
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <h2 class="card-title fs-5">Configuration du serveur DNS</h2>
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Comportement du serveur</h2>
+            <p class="settings-intro-text">Limitation de débit, extensions DNS et réponse renvoyée pour un domaine bloqué.</p>
+        </div>
 
-            <div class="row mb-3">
-                <div class="col-md-6 col-12">
-                    <label class="form-label" for="rate-limit">Limite de requêtes par seconde</label>
-                    <input id="rate-limit" type="number" min="0" class="form-control" @bind="RateLimitPerSecond" @bind:event="oninput" />
-                    <div class="form-text">
-                        Nombre maximal de requêtes autorisées par seconde pour une même adresse IP. La valeur 0
-                        désactive la limite.
+        <div class="card settings-panel">
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <span class="setting-label">Limitation de débit</span>
+                    <p class="setting-help">
+                        Nombre maximal de requêtes par seconde pour un même client (0 = illimité). Les adresses sont
+                        regroupées par sous-réseau selon les longueurs de préfixe indiquées.
+                    </p>
+                </div>
+                <div class="setting-nested field-grid">
+                    <div>
+                        <label class="form-label" for="rate-limit">Requêtes / seconde</label>
+                        <input id="rate-limit" type="number" min="0" class="form-control" @bind="RateLimitPerSecond" @bind:event="oninput" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="subnet-ipv4">Préfixe IPv4</label>
+                        <input id="subnet-ipv4" type="number" min="0" max="32" class="form-control" @bind="RateLimitSubnetLengthIpv4" @bind:event="oninput" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="subnet-ipv6">Préfixe IPv6</label>
+                        <input id="subnet-ipv6" type="number" min="0" max="128" class="form-control" @bind="RateLimitSubnetLengthIpv6" @bind:event="oninput" />
                     </div>
                 </div>
             </div>
 
-            <div class="row g-3 mb-3">
-                <div class="col-md-6 col-12">
-                    <label class="form-label" for="subnet-ipv4">Longueur de préfixe du sous-réseau pour les adresses IPv4</label>
-                    <input id="subnet-ipv4" type="number" min="0" max="32" class="form-control" @bind="RateLimitSubnetLengthIpv4" @bind:event="oninput" />
-                    <div class="form-text">Utilisée pour regrouper les adresses IPv4 lors de l'application de la limite de requêtes.</div>
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="enable-edns">Transmettre le sous-réseau du client (EDNS)</label>
+                    <p class="setting-help">Envoie une partie de l'adresse du client aux serveurs en amont pour obtenir des réponses géographiquement proches.</p>
                 </div>
-
-                <div class="col-md-6 col-12">
-                    <label class="form-label" for="subnet-ipv6">Longueur de préfixe du sous-réseau pour les adresses IPv6</label>
-                    <input id="subnet-ipv6" type="number" min="0" max="128" class="form-control" @bind="RateLimitSubnetLengthIpv6" @bind:event="oninput" />
-                    <div class="form-text">Utilisée pour regrouper les adresses IPv6 lors de l'application de la limite de requêtes.</div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="enable-edns" checked="@EnableEdnsClientSubnet" @onchange="OnEnableEdnsClientSubnetChanged" />
                 </div>
             </div>
 
-            <hr />
-
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="enable-edns" checked="@EnableEdnsClientSubnet" @onchange="OnEnableEdnsClientSubnetChanged" />
-                <label class="form-check-label fw-semibold" for="enable-edns">Activer le sous-réseau client (EDNS)</label>
-                <div class="form-text">
-                    Utiliser l'extension EDNS Client Subnet pour transmettre une partie de l'adresse IP du client
-                    aux serveurs en amont, afin d'obtenir des réponses géographiquement plus pertinentes.
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="enable-dnssec">Valider DNSSEC</label>
+                    <p class="setting-help">Vérifie la signature des réponses lorsque les serveurs en amont la fournissent.</p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="enable-dnssec" checked="@EnableDnssec" @onchange="OnEnableDnssecChanged" />
                 </div>
             </div>
 
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="enable-dnssec" checked="@EnableDnssec" @onchange="OnEnableDnssecChanged" />
-                <label class="form-check-label fw-semibold" for="enable-dnssec">Activer DNSSEC</label>
-                <div class="form-text">Vérifier la signature DNSSEC des réponses lorsque les serveurs en amont la fournissent.</div>
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="disable-ipv6">Ignorer IPv6</label>
+                    <p class="setting-help">Les requêtes AAAA reçoivent une réponse vide.</p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="disable-ipv6" checked="@DisableIpv6Resolution" @onchange="OnDisableIpv6ResolutionChanged" />
+                </div>
             </div>
 
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="disable-ipv6" checked="@DisableIpv6Resolution" @onchange="OnDisableIpv6ResolutionChanged" />
-                <label class="form-check-label fw-semibold" for="disable-ipv6">Désactiver la résolution IPv6</label>
-                <div class="form-text">Toutes les requêtes de type AAAA renverront une réponse vide.</div>
-            </div>
-
-            <hr />
-
-            <h3 class="fs-6 fw-semibold">Mode de blocage</h3>
-
-            <div class="form-check mb-2">
-                <input class="form-check-input" type="radio" name="blocking-mode" id="blocking-default" checked="@(BlockingMode == DnsBlockingMode.Default)" @onchange="() => SetBlockingMode(DnsBlockingMode.Default)" />
-                <label class="form-check-label" for="blocking-default">Par défaut</label>
-                <div class="form-text">Utilise le mode NXDOMAIN ou une adresse IP nulle selon le type de filtre déclenché.</div>
-            </div>
-
-            <div class="form-check mb-2">
-                <input class="form-check-input" type="radio" name="blocking-mode" id="blocking-nxdomain" checked="@(BlockingMode == DnsBlockingMode.NxDomain)" @onchange="() => SetBlockingMode(DnsBlockingMode.NxDomain)" />
-                <label class="form-check-label" for="blocking-nxdomain">NXDOMAIN</label>
-                <div class="form-text">Répond avec un statut NXDOMAIN, comme si le domaine n'existait pas.</div>
-            </div>
-
-            <div class="form-check mb-2">
-                <input class="form-check-input" type="radio" name="blocking-mode" id="blocking-refused" checked="@(BlockingMode == DnsBlockingMode.Refused)" @onchange="() => SetBlockingMode(DnsBlockingMode.Refused)" />
-                <label class="form-check-label" for="blocking-refused">REFUSED</label>
-                <div class="form-text">Répond avec un statut REFUSED.</div>
-            </div>
-
-            <div class="form-check mb-2">
-                <input class="form-check-input" type="radio" name="blocking-mode" id="blocking-nullip" checked="@(BlockingMode == DnsBlockingMode.NullIp)" @onchange="() => SetBlockingMode(DnsBlockingMode.NullIp)" />
-                <label class="form-check-label" for="blocking-nullip">Adresse IP non spécifiée</label>
-                <div class="form-text">Répond avec l'adresse IP non spécifiée (0.0.0.0 ou ::).</div>
-            </div>
-
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="radio" name="blocking-mode" id="blocking-customip" checked="@(BlockingMode == DnsBlockingMode.CustomIp)" @onchange="() => SetBlockingMode(DnsBlockingMode.CustomIp)" />
-                <label class="form-check-label" for="blocking-customip">Adresse IP personnalisée</label>
-                <div class="form-text">Répond avec les adresses IPv4/IPv6 spécifiées ci-dessous.</div>
-            </div>
-
-            @if (BlockingMode == DnsBlockingMode.CustomIp)
-            {
-                <div class="row g-3 mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label" for="custom-blocking-ipv4">Adresse IPv4 de blocage</label>
-                        <input id="custom-blocking-ipv4" type="text" class="form-control" @bind="CustomBlockingIpv4" @bind:event="oninput" />
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <span class="setting-label">Réponse aux domaines bloqués</span>
+                    <p class="setting-help">Ce que reçoit un appareil lorsqu'il demande un domaine bloqué.</p>
+                </div>
+                <div class="setting-nested choice-grid">
+                    <label class="choice" for="blocking-default">
+                        <input class="form-check-input choice-input" type="radio" name="blocking-mode" id="blocking-default" checked="@(BlockingMode == DnsBlockingMode.Default)" @onchange="() => SetBlockingMode(DnsBlockingMode.Default)" />
+                        <span class="choice-title">Automatique</span>
+                        <span class="choice-desc">NXDOMAIN ou adresse nulle selon la règle qui a bloqué.</span>
+                    </label>
+                    <label class="choice" for="blocking-nxdomain">
+                        <input class="form-check-input choice-input" type="radio" name="blocking-mode" id="blocking-nxdomain" checked="@(BlockingMode == DnsBlockingMode.NxDomain)" @onchange="() => SetBlockingMode(DnsBlockingMode.NxDomain)" />
+                        <span class="choice-title">NXDOMAIN</span>
+                        <span class="choice-desc">Le domaine est présenté comme inexistant.</span>
+                    </label>
+                    <label class="choice" for="blocking-refused">
+                        <input class="form-check-input choice-input" type="radio" name="blocking-mode" id="blocking-refused" checked="@(BlockingMode == DnsBlockingMode.Refused)" @onchange="() => SetBlockingMode(DnsBlockingMode.Refused)" />
+                        <span class="choice-title">REFUSED</span>
+                        <span class="choice-desc">Le serveur refuse explicitement de répondre.</span>
+                    </label>
+                    <label class="choice" for="blocking-nullip">
+                        <input class="form-check-input choice-input" type="radio" name="blocking-mode" id="blocking-nullip" checked="@(BlockingMode == DnsBlockingMode.NullIp)" @onchange="() => SetBlockingMode(DnsBlockingMode.NullIp)" />
+                        <span class="choice-title">Adresse nulle</span>
+                        <span class="choice-desc">Répond <code>0.0.0.0</code> ou <code>::</code>.</span>
+                    </label>
+                    <label class="choice" for="blocking-customip">
+                        <input class="form-check-input choice-input" type="radio" name="blocking-mode" id="blocking-customip" checked="@(BlockingMode == DnsBlockingMode.CustomIp)" @onchange="() => SetBlockingMode(DnsBlockingMode.CustomIp)" />
+                        <span class="choice-title">Adresse personnalisée</span>
+                        <span class="choice-desc">Répond avec les adresses IPv4/IPv6 de votre choix.</span>
+                    </label>
+                </div>
+                @if (BlockingMode == DnsBlockingMode.CustomIp)
+                {
+                    <div class="setting-nested field-grid">
+                        <div>
+                            <label class="form-label" for="custom-blocking-ipv4">Adresse IPv4 renvoyée</label>
+                            <input id="custom-blocking-ipv4" type="text" class="form-control font-monospace" @bind="CustomBlockingIpv4" @bind:event="oninput" />
+                        </div>
+                        <div>
+                            <label class="form-label" for="custom-blocking-ipv6">Adresse IPv6 renvoyée</label>
+                            <input id="custom-blocking-ipv6" type="text" class="form-control font-monospace" @bind="CustomBlockingIpv6" @bind:event="oninput" />
+                        </div>
                     </div>
+                }
+            </div>
 
-                    <div class="col-md-6">
-                        <label class="form-label" for="custom-blocking-ipv6">Adresse IPv6 de blocage</label>
-                        <input id="custom-blocking-ipv6" type="text" class="form-control" @bind="CustomBlockingIpv6" @bind:event="oninput" />
+            <div class="settings-panel-footer">
+                <button type="button" class="btn btn-primary" @onclick="SaveDnsServerConfigurationAsync">Enregistrer</button>
+                @if (!string.IsNullOrEmpty(ServerConfigStatusMessage))
+                {
+                    <div class="alert @(ServerConfigStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@ServerConfigStatusMessage</div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Cache</h2>
+            <p class="settings-intro-text">Garde les réponses en mémoire pour répondre instantanément aux requêtes répétées.</p>
+        </div>
+
+        <div class="card settings-panel">
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="enable-cache">Activer le cache</label>
+                    <p class="setting-help">Conserve les réponses des serveurs en amont pendant leur durée de validité (TTL).</p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="enable-cache" checked="@EnableCache" @onchange="OnEnableCacheChanged" />
+                </div>
+            </div>
+
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <span class="setting-label">Taille et durée de vie</span>
+                    <p class="setting-help">
+                        Taille à 0 : valeur par défaut choisie par OnyxFilter. TTL à 0 : pas de réécriture de la durée
+                        de validité reçue.
+                    </p>
+                </div>
+                <div class="setting-nested field-grid">
+                    <div>
+                        <label class="form-label" for="cache-size">Taille (octets)</label>
+                        <input id="cache-size" type="number" min="0" class="form-control" @bind="CacheSizeBytes" @bind:event="oninput" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="cache-ttl-min">TTL minimal (s)</label>
+                        <input id="cache-ttl-min" type="number" min="0" class="form-control" @bind="CacheTtlMinSeconds" @bind:event="oninput" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="cache-ttl-max">TTL maximal (s)</label>
+                        <input id="cache-ttl-max" type="number" min="0" class="form-control" @bind="CacheTtlMaxSeconds" @bind:event="oninput" />
                     </div>
                 </div>
-            }
-        </div>
-        <div class="card-footer">
-            <div class="d-flex gap-2">
-                <button type="button" class="btn btn-success" @onclick="SaveDnsServerConfigurationAsync">Enregistrer</button>
             </div>
-            @if (!string.IsNullOrEmpty(ServerConfigStatusMessage))
-            {
-                <div class="alert @(ServerConfigStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mt-3 mb-0">@ServerConfigStatusMessage</div>
-            }
-        </div>
-    </div>
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <h2 class="card-title fs-5">Configuration du cache DNS</h2>
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="enable-cache" checked="@EnableCache" @onchange="OnEnableCacheChanged" />
-                <label class="form-check-label fw-semibold" for="enable-cache">Activer le cache</label>
-                <div class="form-text">Conserver les réponses des serveurs en amont afin de répondre plus rapidement aux requêtes répétées.</div>
-            </div>
-             
-            <hr />
-
-            <div class="row mb-3">
-                <div class="col-md-6 col-12">
-                    <label class="form-label" for="cache-size">Taille du cache (en octets)</label>
-                    <input id="cache-size" type="number" min="0" <class="form-control" @bind="CacheSizeBytes" @bind:event="oninput" />
-                    <div class="form-text">La valeur 0 laisse OnyxFilter choisir automatiquement une taille par défaut.</div>
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="optimistic-cache">Cache optimiste</label>
+                    <p class="setting-help">Sert une réponse expirée immédiatement, puis la rafraîchit en arrière-plan.</p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="optimistic-cache" checked="@OptimisticCache" @onchange="OnOptimisticCacheChanged" />
                 </div>
             </div>
 
-            <div class="row g-3 mb-3">
-                <div class="col-md-6">
-                    <label class="form-label" for="cache-ttl-min">Écrasement TTL minimum</label>
-                    <input id="cache-ttl-min" type="number" min="0" class="form-control" @bind="CacheTtlMinSeconds" @bind:event="oninput" />
-                    <div class="form-text">Si le TTL d'une réponse est inférieur à cette valeur, il est remplacé par celle-ci. 0 désactive l'écrasement.</div>
-                </div>
+            <div class="settings-panel-footer">
+                <button type="button" class="btn btn-primary" @onclick="SaveCacheConfigurationAsync">Enregistrer</button>
+                <button type="button" class="btn btn-outline-danger" @onclick="ClearCacheAsync">Vider le cache</button>
+                @if (!string.IsNullOrEmpty(CacheStatusMessage))
+                {
+                    <div class="alert @(CacheStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@CacheStatusMessage</div>
+                }
+            </div>
+        </div>
+    </section>
 
-                <div class="col-md-6">
-                    <label class="form-label" for="cache-ttl-max">Écrasement TTL maximum</label>
-                    <input id="cache-ttl-max" type="number" min="0" class="form-control" @bind="CacheTtlMaxSeconds" @bind:event="oninput" />
-                    <div class="form-text">Si le TTL d'une réponse est supérieur à cette valeur, il est remplacé par celle-ci. 0 désactive l'écrasement.</div>
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Contrôle d'accès</h2>
+            <p class="settings-intro-text">Qui peut utiliser ce serveur, et quels domaines ne sont jamais traités.</p>
+        </div>
+
+        <div class="card settings-panel">
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <label class="setting-label" for="allowed-clients">Clients autorisés</label>
+                    <p class="setting-help">
+                        Adresses IP, sous-réseaux CIDR ou identifiants, un par ligne. Si la liste n'est pas vide, seuls
+                        ces clients sont servis.
+                    </p>
+                </div>
+                <div class="setting-nested">
+                    <textarea id="allowed-clients" class="form-control font-monospace" rows="4"
+                              placeholder="192.168.1.0/24"
+                              @bind="AllowedClientsText"
+                              @bind:event="oninput"></textarea>
                 </div>
             </div>
 
-            <hr />
-
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="optimistic-cache" checked="@OptimisticCache" @onchange="OnOptimisticCacheChanged" />
-                <label class="form-check-label fw-semibold" for="optimistic-cache">Cache optimiste</label>
-                <div class="form-text">
-                    Répondre à partir du cache même lorsque les entrées ont expiré, tout en tentant de les
-                    rafraîchir en arrière-plan.
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <label class="setting-label" for="disallowed-clients">Clients refusés</label>
+                    <p class="setting-help">Ignoré tant que la liste des clients autorisés n'est pas vide.</p>
                 </div>
-            </div>          
-        </div>
-        <div class="card-footer">
-            <div class="d-flex gap-2">
-                <button type="button" class="btn btn-success" @onclick="SaveCacheConfigurationAsync">Enregistrer</button>
-                <button type="button" class="btn btn-outline-secondary" @onclick="ClearCacheAsync">Vider le cache</button>
-            </div>  
-            @if (!string.IsNullOrEmpty(CacheStatusMessage))
-            {
-                <div class="alert @(CacheStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mt-3 mb-0">@CacheStatusMessage</div>
-            }
-        </div>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-body">
-            <h2 class="card-title fs-5">Paramètres d'accès</h2>
-
-            <div class="mb-3">
-                <label class="form-label" for="allowed-clients">Clients autorisés</label>
-                <div class="form-text mb-2">
-                    Liste blanche des clients (adresses IP, sous-réseaux CIDR ou identifiants) autorisés à
-                    utiliser OnyxFilter. Si cette liste n'est pas vide, seuls ces clients seront servis.
+                <div class="setting-nested">
+                    <textarea id="disallowed-clients" class="form-control font-monospace" rows="4"
+                              placeholder="Un client par ligne"
+                              @bind="DisallowedClientsText"
+                              @bind:event="oninput"></textarea>
                 </div>
-                <textarea id="allowed-clients"
-                          class="form-control font-monospace"
-                          rows="4"
-                          placeholder="Saisissez un client par ligne"
-                          @bind="AllowedClientsText"
-                          @bind:event="oninput"></textarea>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="disallowed-clients">Clients interdits</label>
-                <div class="form-text mb-2">Liste noire des clients. Elle est ignorée si la liste des clients autorisés n'est pas vide.</div>
-                <textarea id="disallowed-clients"
-                          class="form-control font-monospace"
-                          rows="4"
-                          placeholder="Saisissez un client par ligne"
-                          @bind="DisallowedClientsText"
-                          @bind:event="oninput"></textarea>
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <label class="setting-label" for="disallowed-domains">Domaines ignorés</label>
+                    <p class="setting-help">Ces requêtes ne sont pas traitées du tout, ni comptées, ni journalisées.</p>
+                </div>
+                <div class="setting-nested">
+                    <textarea id="disallowed-domains" class="form-control font-monospace" rows="4"
+                              placeholder="Un domaine par ligne"
+                              @bind="DisallowedDomainsText"
+                              @bind:event="oninput"></textarea>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label" for="disallowed-domains">Domaines interdits</label>
-                <div class="form-text mb-2">
-                    Ces requêtes ne sont pas traitées du tout et sont exclues des statistiques et du journal des
-                    requêtes.
-                </div>
-                <textarea id="disallowed-domains"
-                          class="form-control font-monospace"
-                          rows="4"
-                          placeholder="Saisissez un domaine par ligne"
-                          @bind="DisallowedDomainsText"
-                          @bind:event="oninput"></textarea>
-            </div>            
-        </div>
-        <div class="card-footer">
-            <div class="d-flex gap-2">
-                <button type="button" class="btn btn-success" @onclick="SaveAccessSettingsAsync">Enregistrer</button>
+            <div class="settings-panel-footer">
+                <button type="button" class="btn btn-primary" @onclick="SaveAccessSettingsAsync">Enregistrer</button>
+                @if (!string.IsNullOrEmpty(AccessStatusMessage))
+                {
+                    <div class="alert @(AccessStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@AccessStatusMessage</div>
+                }
             </div>
-            @if (!string.IsNullOrEmpty(AccessStatusMessage))
-            {
-                <div class="alert @(AccessStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mt-3 mb-0">@AccessStatusMessage</div>
-            }
         </div>
-    </div>
+    </section>
+
 </div>

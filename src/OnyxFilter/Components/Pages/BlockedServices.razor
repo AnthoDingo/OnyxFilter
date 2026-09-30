@@ -3,109 +3,109 @@
 @rendermode InteractiveServer
 @using OnyxFilter.Services.BlockedServices
 
-<PageTitle>Services bloqués - OnyxFilter</PageTitle>
+<PageTitle>Services bloqués · OnyxFilter</PageTitle>
 
-<h1 class="page-title">Services bloqués</h1>
-<p class="text-body-secondary">Permet de bloquer les sites et services populaires rapidement.</p>
-
-<div class="settings-page">
-    <div class="row justify-content-center">
-        <div class="col-12 col-xl-11">
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="row g-2 mb-4">
-                        <div class="col-md-6">
-                            <button type="button" class="btn btn-outline-danger w-100" @onclick="BlockAll">Tout bloquer</button>
-                        </div>
-                        <div class="col-md-6">
-                            <button type="button" class="btn btn-outline-success w-100" @onclick="UnblockAll">Tout débloquer</button>
-                        </div>
-                    </div>
-
-                    @foreach ((string Id, string Label, IReadOnlyList<BlockedServiceDefinition> Services) group in GroupedServices)
-                    {
-                        <div class="blocked-services-group mb-4">
-                            <div class="d-flex align-items-center flex-wrap gap-3 mb-2">
-                                <h2 class="fs-6 mb-0">@group.Label</h2>
-                                <button type="button" class="btn btn-link btn-sm text-danger p-0 text-decoration-none" @onclick="() => BlockAllInGroup(group.Id)">Tout bloquer</button>
-                                <button type="button" class="btn btn-link btn-sm text-success p-0 text-decoration-none" @onclick="() => UnblockAllInGroup(group.Id)">Tout débloquer</button>
-                            </div>
-
-                            <div class="row row-cols-1 row-cols-md-3 g-2">
-                                @foreach (BlockedServiceDefinition service in group.Services)
-                                {
-                                    <div class="col">
-                                        <div class="blocked-service-row">
-                                            <span class="blocked-service-icon">@((MarkupString)service.Icon)</span>
-                                            <span class="blocked-service-name">@service.Name</span>
-                                            <div class="form-check form-switch ms-auto mb-0">
-                                                <input class="form-check-input" type="checkbox" role="switch" checked="@IsBlocked(service.Id)" @onchange="e => ToggleService(service.Id, e)" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    }
-
-                    <button type="button" class="btn btn-success" @onclick="SaveAsync" disabled="@IsSaving">
-                        @(IsSaving ? "Enregistrement..." : "Enregistrer")
-                    </button>
-
-                    @if (!string.IsNullOrEmpty(StatusMessage))
-                    {
-                        <div class="alert @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mt-3 mb-0">@StatusMessage</div>
-                    }
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h2 class="fs-5">Suspendre le blocage des services</h2>
-                    <p class="text-body-secondary mb-3">Configurez l'horaire de pause du filtre de blocage de services.</p>
-
-                    <p class="mb-3">Fuseau horaire actuel : Local</p>
-
-                    <button type="button" class="btn btn-success" @onclick="OpenScheduleDialog">Nouvel horaire</button>
-                </div>
-            </div>
-        </div>
+<header class="page-header">
+    <div class="page-heading">
+        <p class="page-eyebrow">Filtrage</p>
+        <h1 class="page-title">Services bloqués</h1>
+        <p class="page-lead">Coupez l'accès à des plateformes entières en un geste, sans connaître leurs domaines.</p>
     </div>
+    <div class="page-actions">
+        <button type="button" class="btn btn-outline-success" @onclick="UnblockAll">Tout autoriser</button>
+        <button type="button" class="btn btn-outline-danger" @onclick="BlockAll">Tout bloquer</button>
+        <button type="button" class="btn btn-primary" @onclick="SaveAsync" disabled="@IsSaving">
+            @(IsSaving ? "Enregistrement…" : "Enregistrer")
+        </button>
+    </div>
+</header>
+
+@if (!string.IsNullOrEmpty(StatusMessage))
+{
+    <div class="alert page-status @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
+}
+
+<div class="service-groups">
+    @foreach ((string Id, string Label, IReadOnlyList<BlockedServiceDefinition> Services) group in GroupedServices)
+    {
+        <section class="service-group">
+            <header class="service-group-head">
+                <h2 class="service-group-title">@group.Label <span class="service-group-count">@group.Services.Count</span></h2>
+                <div class="service-group-actions">
+                    <button type="button" class="btn btn-link btn-sm" @onclick="() => UnblockAllInGroup(group.Id)">Tout autoriser</button>
+                    <button type="button" class="btn btn-link btn-sm text-danger" @onclick="() => BlockAllInGroup(group.Id)">Tout bloquer</button>
+                </div>
+            </header>
+
+            <div class="service-grid">
+                @foreach (BlockedServiceDefinition service in group.Services)
+                {
+                    string inputId = "service-" + service.Id;
+                    <label class="service-tile @(IsBlocked(service.Id) ? "is-blocked" : "")" for="@inputId">
+                        <span class="service-icon" aria-hidden="true">@((MarkupString)service.Icon)</span>
+                        <span class="service-text">
+                            <span class="service-name">@service.Name</span>
+                            <span class="service-state">@(IsBlocked(service.Id) ? "Bloqué" : "Autorisé")</span>
+                        </span>
+                        <span class="form-check form-switch cell-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="@inputId" checked="@IsBlocked(service.Id)" @onchange="e => ToggleService(service.Id, e)" />
+                        </span>
+                    </label>
+                }
+            </div>
+        </section>
+    }
 </div>
+
+<section class="card schedule-card">
+    <div class="schedule-card-icon" aria-hidden="true"><Icon Name="clock" /></div>
+    <div class="schedule-card-text">
+        <h2 class="schedule-card-title">Pause programmée</h2>
+        <p class="schedule-card-desc">
+            Autorisez temporairement les services bloqués à certaines heures de la semaine (heure locale du
+            serveur).
+        </p>
+    </div>
+    <button type="button" class="btn btn-secondary" @onclick="OpenScheduleDialog">
+        <Icon Name="plus" />Nouvel horaire
+    </button>
+</section>
 
 @if (ShowScheduleDialog)
 {
     <div class="modal-backdrop-static" @onclick="CloseScheduleDialog"></div>
 
-    <div class="modal-static">
-        <div class="card" style="width: 34rem; max-width: 92vw;">
+    <div class="modal-static" role="dialog" aria-modal="true" aria-labelledby="schedule-dialog-title">
+        <div class="card dialog-card">
             <div class="card-body">
-                <h2 class="card-title fs-5">Horaire de suspension du blocage des services</h2>
+                <h2 class="dialog-title" id="schedule-dialog-title">Pause programmée</h2>
+                <p class="dialog-lead">Pendant ces plages, les services bloqués redeviennent accessibles.</p>
 
-                @for (int day = 0; day < 7; day++)
-                {
-                    int dayIndex = day;
-                    <div class="schedule-day-row mb-2">
-                        <div class="form-check schedule-day-checkbox">
-                            <input class="form-check-input" type="checkbox" id="@("schedule-day-" + dayIndex)" checked="@DialogDayEnabled[dayIndex]" @onchange="e => OnScheduleDayToggled(dayIndex, e)" />
-                            <label class="form-check-label" for="@("schedule-day-" + dayIndex)">@DayLabels[dayIndex]</label>
+                <div class="schedule-days">
+                    @for (int day = 0; day < 7; day++)
+                    {
+                        int dayIndex = day;
+                        <div class="schedule-day">
+                            <div class="form-check form-switch schedule-day-toggle">
+                                <input class="form-check-input" type="checkbox" role="switch" id="@("schedule-day-" + dayIndex)" checked="@DialogDayEnabled[dayIndex]" @onchange="e => OnScheduleDayToggled(dayIndex, e)" />
+                                <label class="form-check-label" for="@("schedule-day-" + dayIndex)">@DayLabels[dayIndex]</label>
+                            </div>
+                            <input type="time" class="form-control form-control-sm" aria-label="Début, @DayLabels[dayIndex]" disabled="@(!DialogDayEnabled[dayIndex])" @bind="DialogDayStart[dayIndex]" />
+                            <span class="schedule-day-sep" aria-hidden="true">→</span>
+                            <input type="time" class="form-control form-control-sm" aria-label="Fin, @DayLabels[dayIndex]" disabled="@(!DialogDayEnabled[dayIndex])" @bind="DialogDayEnd[dayIndex]" />
                         </div>
-                        <input type="time" class="form-control form-control-sm" disabled="@(!DialogDayEnabled[dayIndex])" @bind="DialogDayStart[dayIndex]" />
-                        <span>—</span>
-                        <input type="time" class="form-control form-control-sm" disabled="@(!DialogDayEnabled[dayIndex])" @bind="DialogDayEnd[dayIndex]" />
-                    </div>
-                }
+                    }
+                </div>
 
                 @if (!string.IsNullOrEmpty(ScheduleDialogError))
                 {
-                    <div class="alert alert-danger py-2 mb-0 mt-2">@ScheduleDialogError</div>
+                    <div class="alert alert-danger mb-0 mt-3">@ScheduleDialogError</div>
                 }
             </div>
             <div class="card-footer">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-success" @onclick="SaveScheduleAsync">Enregistrer</button>
                     <button type="button" class="btn btn-outline-secondary" @onclick="CloseScheduleDialog">Annuler</button>
+                    <button type="button" class="btn btn-primary" @onclick="SaveScheduleAsync">Enregistrer</button>
                 </div>
             </div>
         </div>

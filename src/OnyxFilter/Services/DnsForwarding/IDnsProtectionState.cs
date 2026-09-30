@@ -25,4 +25,9 @@ public interface IDnsProtectionState
 
     // Réactive le filtrage immédiatement et annule toute réactivation automatique programmée.
     void Enable();
+
+    // Levé après chaque changement d'état (Disable, DisableUntil, Enable ou réactivation automatique à
+    // l'échéance), hors verrou, depuis le thread qui a provoqué le changement (thread du pool pour la
+    // réactivation automatique) : les composants Blazor abonnés doivent repasser par InvokeAsync.
+    event EventHandler? Changed;
 }

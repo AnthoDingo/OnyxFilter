@@ -1,14 +1,18 @@
-<div class="panel">
-    <div class="panel-header">
+<section class="panel @Class">
+    <header class="panel-header">
         <div class="panel-heading">
             <h2 class="panel-title">@Title</h2>
-            <p class="panel-subtitle">@Subtitle</p>
+            @if (!string.IsNullOrEmpty(Caption))
+            {
+                <p class="panel-caption">@Caption</p>
+            }
         </div>
-        <button type="button" class="panel-refresh" @onclick="HandleRefreshAsync" aria-label="Actualiser">
-            <span class="panel-refresh-icon" aria-hidden="true"></span>
-        </button>
-    </div>
+        @if (Aside is not null)
+        {
+            <div class="panel-aside">@Aside</div>
+        }
+    </header>
     <div class="panel-body">
         @ChildContent
     </div>
-</div>
+</section>

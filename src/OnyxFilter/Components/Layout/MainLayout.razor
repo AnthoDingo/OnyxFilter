@@ -1,19 +1,30 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
-<div class="page">
+<div class="shell" data-shell>
     <NavMenu />
 
-    <main>
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+    <div class="shell-scrim" data-nav-close aria-hidden="true"></div>
 
-    <Footer />
+    <div class="shell-main">
+        <header class="shell-topbar">
+            <button type="button" class="shell-burger" data-nav-toggle aria-controls="app-sidebar" aria-expanded="false" aria-label="Ouvrir le menu">
+                <Icon Name="menu" />
+            </button>
+            <a href="" class="shell-topbar-brand">
+                <BrandMark />
+                <span>Onyx<strong>Filter</strong></span>
+            </a>
+        </header>
+
+        <main class="shell-content">
+            @Body
+        </main>
+    </div>
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
+    <Icon Name="alert" />
+    <span>Une erreur inattendue est survenue.</span>
+    <a href="." class="reload">Recharger la page</a>
+    <button type="button" class="dismiss" aria-label="Masquer"><Icon Name="close" /></button>
 </div>

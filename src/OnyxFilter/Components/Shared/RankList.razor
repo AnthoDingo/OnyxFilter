@@ -1,0 +1,18 @@
+@if (Items.Count == 0)
+{
+    <p class="rank-empty">@EmptyText</p>
+}
+else
+{
+    <ol class="rank-list rank-tone-@Tone.ToString().ToLowerInvariant()">
+        @for (int index = 0; index < Items.Count; index++)
+        {
+            RankItem item = Items[index];
+            <li class="rank-row" style="--share: @ShareOf(item)">
+                <span class="rank-position">@(index + 1)</span>
+                <span class="rank-label" title="@item.Label">@item.Label</span>
+                <span class="rank-count">@FormatCount(item.Count)</span>
+            </li>
+        }
+    </ol>
+}

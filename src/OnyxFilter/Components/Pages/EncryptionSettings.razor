@@ -2,179 +2,196 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
-<PageTitle>Paramètres de chiffrement - OnyxFilter</PageTitle>
+<PageTitle>Chiffrement · OnyxFilter</PageTitle>
 
-<h1 class="page-title">Paramètres de chiffrement</h1>
-
-<div class="settings-page">
-
-    <div class="card mb-4">
-        <div class="card-body">
-            <h2 class="card-title fs-5">Chiffrement</h2>
-            <p class="text-body-secondary">
-                Le support du chiffrement (HTTPS/QUIC/TLS) pour les DNS et l'interface web administrateur
-            </p>
-
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="enable-encryption" checked="@EnableEncryption" @onchange="OnEnableEncryptionChanged" />
-                <label class="form-check-label fw-semibold" for="enable-encryption">Activer le chiffrement (HTTPS, DNS-over-HTTPS et DNS-over-TLS)</label>
-                <div class="form-text">
-                    Si le chiffrement est activé, l'interface administrateur OnyxFilter fonctionnera via HTTPS et
-                    le serveur DNS écoutera les requêtes via DNS-over-HTTPS et DNS-over-TLS.
-                </div>
-            </div>
-
-            <hr />
-
-            <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" id="enable-plain-dns" checked="@EnablePlainDns" @onchange="OnEnablePlainDnsChanged" />
-                <label class="form-check-label fw-semibold" for="enable-plain-dns">Activer le DNS simple</label>
-                <div class="form-text">
-                    Le DNS simple est activé par défaut. Vous pouvez le désactiver pour forcer tous les appareils
-                    à utiliser un DNS crypté. Pour faire ça, vous devez activer au moins un protocole DNS crypté.
-                </div>
-            </div>
-
-            <hr />
-
-            <div class="row g-3 mb-3">
-                <div class="col-md-6">
-                    <label class="form-label" for="server-name">Nom du serveur</label>
-                    <input id="server-name" type="text" class="form-control" placeholder="exemple.com" @bind="ServerName" @bind:event="oninput" />
-                    <div class="form-text">
-                        Si cette option est définie, OnyxFilter détecte les ClientID, répond aux requêtes DDR et
-                        effectue des validations de connexion supplémentaires. Si elle n'est pas définie, ces
-                        fonctions sont désactivées. Doit correspondre à l'un des noms DNS du certificat.
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="auto-redirect-https" checked="@AutoRedirectToHttps" @onchange="OnAutoRedirectToHttpsChanged" />
-                        <label class="form-check-label fw-semibold" for="auto-redirect-https">Redirection automatiquement vers HTTPS</label>
-                        <div class="form-text">Si coché, OnyxFilter vous redirigera automatiquement d'adresses HTTP vers HTTPS.</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row g-3 mb-3">
-                <div class="col-md-6">
-                    <label class="form-label" for="https-port">Port HTTPS</label>
-                    <input id="https-port" type="number" min="1" max="65535" class="form-control" @bind="HttpsPort" @bind:event="oninput" />
-                    <div class="form-text">
-                        Si le port HTTPS est configuré, l'interface administrateur de OnyxFilter sera accessible
-                        via HTTPS et fournira aussi un service DNS-over-HTTPS sur l'emplacement « /dns-query ».
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label" for="dot-port">Port DNS-over-TLS</label>
-                    <input id="dot-port" type="number" min="1" max="65535" class="form-control" @bind="DnsOverTlsPort" @bind:event="oninput" />
-                    <div class="form-text">Si ce port est configuré, OnyxFilter exécutera un serveur DNS-over-TLS sur ce port.</div>
-                </div>
-            </div>
-
-            <div class="mb-3" style="max-width: 20rem;">
-                <label class="form-label" for="doq-port">Port DNS sur QUIC</label>
-                <input id="doq-port" type="number" min="1" max="65535" class="form-control" @bind="DnsOverQuicPort" @bind:event="oninput" />
-                <div class="form-text">Si ce port est configuré, OnyxFilter exécutera un serveur DNS sur QUIC sur ce port.</div>
-            </div>
-
-            <hr />
-
-            <h3 class="fs-6 fw-semibold">Certificats</h3>
-            <p class="text-body-secondary">
-                Pour utiliser le chiffrement, vous devez fournir une chaîne de certificats SSL valide pour votre
-                domaine. Vous pouvez en obtenir une gratuitement sur
-                <a href="https://letsencrypt.org" target="_blank" rel="noopener noreferrer">letsencrypt.org</a>
-                ou vous pouvez en acheter une via les Autorités de Certification de confiance.
-            </p>
-
-            <div class="mb-2">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="certificate-source" id="cert-source-path" checked="@(CertificateSource == CertificateInputSource.FilePath)" @onchange="() => SetCertificateSource(CertificateInputSource.FilePath)" />
-                    <label class="form-check-label" for="cert-source-path">Définir un emplacement du fichier des certificats</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="certificate-source" id="cert-source-paste" checked="@(CertificateSource == CertificateInputSource.PastedContent)" @onchange="() => SetCertificateSource(CertificateInputSource.PastedContent)" />
-                    <label class="form-check-label" for="cert-source-paste">Coller les contenus des certificats</label>
-                </div>
-            </div>
-
-            @if (CertificateSource == CertificateInputSource.FilePath)
-            {
-                <input type="text"
-                       class="form-control mb-2"
-                       placeholder="/etc/letsencrypt/live/votredomaine.com/fullchain.pem"
-                       @bind="CertificateFilePath"
-                       @bind:event="oninput" />
-            }
-            else
-            {
-                <textarea class="form-control font-monospace mb-2"
-                          rows="4"
-                          placeholder="Collez ici le contenu du certificat (PEM)"
-                          @bind="CertificateContent"
-                          @bind:event="oninput"></textarea>
-            }
-
-            @if (!string.IsNullOrWhiteSpace(CertificateFilePath) || !string.IsNullOrWhiteSpace(CertificateContent))
-            {
-                <div class="alert alert-secondary py-2 mb-3">
-                    <p class="fw-semibold mb-1">État :</p>
-                    <p class="mb-0 text-body-secondary">La validation du certificat sera disponible une fois le moteur de chiffrement branché.</p>
-                </div>
-            }
-
-            <hr />
-
-            <h3 class="fs-6 fw-semibold">Clé privée</h3>
-
-            <div class="mb-2">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="private-key-source" id="key-source-path" checked="@(PrivateKeySource == CertificateInputSource.FilePath)" @onchange="() => SetPrivateKeySource(CertificateInputSource.FilePath)" />
-                    <label class="form-check-label" for="key-source-path">Définir le chemin d'accès au fichier de clé privée</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="private-key-source" id="key-source-paste" checked="@(PrivateKeySource == CertificateInputSource.PastedContent)" @onchange="() => SetPrivateKeySource(CertificateInputSource.PastedContent)" />
-                    <label class="form-check-label" for="key-source-paste">Coller les contenus de la clef privée</label>
-                </div>
-            </div>
-
-            @if (PrivateKeySource == CertificateInputSource.FilePath)
-            {
-                <input type="text"
-                       class="form-control mb-2"
-                       placeholder="/etc/letsencrypt/live/votredomaine.com/privkey.pem"
-                       @bind="PrivateKeyFilePath"
-                       @bind:event="oninput" />
-            }
-            else
-            {
-                <textarea class="form-control font-monospace mb-2"
-                          rows="4"
-                          placeholder="Collez ici le contenu de la clé privée (PEM)"
-                          @bind="PrivateKeyContent"
-                          @bind:event="oninput"></textarea>
-            }
-
-            @if (!string.IsNullOrWhiteSpace(PrivateKeyFilePath) || !string.IsNullOrWhiteSpace(PrivateKeyContent))
-            {
-                <div class="alert alert-secondary py-2 mb-3">
-                    <p class="fw-semibold mb-1">État :</p>
-                    <p class="mb-0 text-body-secondary">La validation de la clé privée sera disponible une fois le moteur de chiffrement branché.</p>
-                </div>
-            }
-
-            <div class="d-flex gap-2">
-                <button type="button" class="btn btn-success" @onclick="SaveEncryptionConfigurationAsync">Sauvegarder la configuration</button>
-                <button type="button" class="btn btn-outline-secondary" @onclick="ResetEncryptionSettingsAsync">Réinitialiser les paramètres</button>
-            </div>
-            @if (!string.IsNullOrEmpty(EncryptionStatusMessage))
-            {
-                <div class="alert @(EncryptionStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mt-3 mb-0">@EncryptionStatusMessage</div>
-            }
-        </div>
+<header class="page-header">
+    <div class="page-heading">
+        <p class="page-eyebrow">Configuration</p>
+        <h1 class="page-title">Chiffrement</h1>
+        <p class="page-lead">HTTPS pour l'interface d'administration, DNS-over-HTTPS, DNS-over-TLS et DNS-over-QUIC pour les appareils.</p>
     </div>
+</header>
+
+<div class="settings-sections">
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Protocoles</h2>
+            <p class="settings-intro-text">
+                Activez le chiffrement puis fournissez un certificat valide pour le nom du serveur.
+            </p>
+        </div>
+
+        <div class="card settings-panel">
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="enable-encryption">Activer le chiffrement</label>
+                    <p class="setting-help">
+                        L'interface passe en HTTPS et le serveur DNS accepte aussi les requêtes en DNS-over-HTTPS et
+                        DNS-over-TLS.
+                    </p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="enable-encryption" checked="@EnableEncryption" @onchange="OnEnableEncryptionChanged" />
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="enable-plain-dns">Accepter le DNS non chiffré</label>
+                    <p class="setting-help">
+                        Désactivez-le pour imposer un protocole chiffré à tous les appareils (au moins un protocole
+                        chiffré doit alors être actif).
+                    </p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="enable-plain-dns" checked="@EnablePlainDns" @onchange="OnEnablePlainDnsChanged" />
+                </div>
+            </div>
+
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="auto-redirect-https">Rediriger HTTP vers HTTPS</label>
+                    <p class="setting-help">Les visites de l'interface en HTTP sont renvoyées automatiquement vers HTTPS.</p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="auto-redirect-https" checked="@AutoRedirectToHttps" @onchange="OnAutoRedirectToHttpsChanged" />
+                </div>
+            </div>
+
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <label class="setting-label" for="server-name">Nom du serveur</label>
+                    <p class="setting-help">
+                        Doit figurer parmi les noms du certificat. Renseigné, il active la détection des identifiants
+                        de client, les réponses DDR et des contrôles de connexion supplémentaires.
+                    </p>
+                </div>
+                <div class="setting-nested field-narrow">
+                    <input id="server-name" type="text" class="form-control font-monospace" placeholder="dns.exemple.fr" @bind="ServerName" @bind:event="oninput" />
+                </div>
+            </div>
+
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <span class="setting-label">Ports d'écoute</span>
+                    <p class="setting-help">
+                        Pris en compte lorsque le chiffrement est activé. Le port HTTPS sert aussi le DNS-over-HTTPS
+                        sur <code>/dns-query</code>.
+                    </p>
+                </div>
+                <div class="setting-nested field-grid">
+                    <div>
+                        <label class="form-label" for="https-port">HTTPS</label>
+                        <input id="https-port" type="number" min="1" max="65535" class="form-control" @bind="HttpsPort" @bind:event="oninput" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="dot-port">DNS-over-TLS</label>
+                        <input id="dot-port" type="number" min="1" max="65535" class="form-control" @bind="DnsOverTlsPort" @bind:event="oninput" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="doq-port">DNS-over-QUIC</label>
+                        <input id="doq-port" type="number" min="1" max="65535" class="form-control" @bind="DnsOverQuicPort" @bind:event="oninput" />
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="setting-group-title">Certificat et clé</h3>
+
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <span class="setting-label">Chaîne de certificats</span>
+                    <p class="setting-help">
+                        Certificat valide pour votre domaine, par exemple obtenu gratuitement auprès de
+                        <a href="https://letsencrypt.org" target="_blank" rel="noopener noreferrer">Let's Encrypt</a>.
+                    </p>
+                </div>
+                <div class="setting-nested">
+                    <div class="segmented mb-3" role="radiogroup" aria-label="Source du certificat">
+                        <input class="btn-check" type="radio" name="certificate-source" id="cert-source-path" checked="@(CertificateSource == CertificateInputSource.FilePath)" @onchange="() => SetCertificateSource(CertificateInputSource.FilePath)" />
+                        <label class="segmented-option" for="cert-source-path">Chemin du fichier</label>
+                        <input class="btn-check" type="radio" name="certificate-source" id="cert-source-paste" checked="@(CertificateSource == CertificateInputSource.PastedContent)" @onchange="() => SetCertificateSource(CertificateInputSource.PastedContent)" />
+                        <label class="segmented-option" for="cert-source-paste">Contenu PEM</label>
+                    </div>
+
+                    @if (CertificateSource == CertificateInputSource.FilePath)
+                    {
+                        <input type="text"
+                               class="form-control font-monospace"
+                               aria-label="Chemin du fichier de certificats"
+                               placeholder="/etc/letsencrypt/live/dns.exemple.fr/fullchain.pem"
+                               @bind="CertificateFilePath"
+                               @bind:event="oninput" />
+                    }
+                    else
+                    {
+                        <textarea class="form-control font-monospace"
+                                  rows="4"
+                                  aria-label="Contenu du certificat"
+                                  placeholder="-----BEGIN CERTIFICATE-----"
+                                  @bind="CertificateContent"
+                                  @bind:event="oninput"></textarea>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(CertificateFilePath) || !string.IsNullOrWhiteSpace(CertificateContent))
+                    {
+                        <div class="alert alert-secondary mt-3 mb-0">
+                            La validation du certificat sera disponible une fois le moteur de chiffrement branché.
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="setting setting-stacked">
+                <div class="setting-text">
+                    <span class="setting-label">Clé privée</span>
+                    <p class="setting-help">Clé associée au certificat ci-dessus.</p>
+                </div>
+                <div class="setting-nested">
+                    <div class="segmented mb-3" role="radiogroup" aria-label="Source de la clé privée">
+                        <input class="btn-check" type="radio" name="private-key-source" id="key-source-path" checked="@(PrivateKeySource == CertificateInputSource.FilePath)" @onchange="() => SetPrivateKeySource(CertificateInputSource.FilePath)" />
+                        <label class="segmented-option" for="key-source-path">Chemin du fichier</label>
+                        <input class="btn-check" type="radio" name="private-key-source" id="key-source-paste" checked="@(PrivateKeySource == CertificateInputSource.PastedContent)" @onchange="() => SetPrivateKeySource(CertificateInputSource.PastedContent)" />
+                        <label class="segmented-option" for="key-source-paste">Contenu PEM</label>
+                    </div>
+
+                    @if (PrivateKeySource == CertificateInputSource.FilePath)
+                    {
+                        <input type="text"
+                               class="form-control font-monospace"
+                               aria-label="Chemin du fichier de clé privée"
+                               placeholder="/etc/letsencrypt/live/dns.exemple.fr/privkey.pem"
+                               @bind="PrivateKeyFilePath"
+                               @bind:event="oninput" />
+                    }
+                    else
+                    {
+                        <textarea class="form-control font-monospace"
+                                  rows="4"
+                                  aria-label="Contenu de la clé privée"
+                                  placeholder="-----BEGIN PRIVATE KEY-----"
+                                  @bind="PrivateKeyContent"
+                                  @bind:event="oninput"></textarea>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(PrivateKeyFilePath) || !string.IsNullOrWhiteSpace(PrivateKeyContent))
+                    {
+                        <div class="alert alert-secondary mt-3 mb-0">
+                            La validation de la clé privée sera disponible une fois le moteur de chiffrement branché.
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="settings-panel-footer">
+                <button type="button" class="btn btn-primary" @onclick="SaveEncryptionConfigurationAsync">Enregistrer</button>
+                <button type="button" class="btn btn-outline-secondary" @onclick="ResetEncryptionSettingsAsync">Réinitialiser</button>
+                @if (!string.IsNullOrEmpty(EncryptionStatusMessage))
+                {
+                    <div class="alert @(EncryptionStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@EncryptionStatusMessage</div>
+                }
+            </div>
+        </div>
+    </section>
 
 </div>

@@ -1,0 +1,49 @@
+.check-card {
+    max-width: 52rem;
+}
+
+.check-search {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.35rem 0.35rem 0.35rem 0.9rem;
+    border: 1px solid var(--of-line-strong);
+    border-radius: 12px;
+    background-color: var(--of-surface-2);
+    color: var(--of-text-3);
+}
+
+    .check-search:focus-within {
+        border-color: color-mix(in srgb, var(--of-accent) 70%, transparent);
+        box-shadow: 0 0 0 3px var(--of-ring);
+    }
+
+    .check-search .check-host {
+        flex: 1;
+        min-width: 0;
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        font-family: var(--of-mono);
+        font-size: 1rem;
+        padding-left: 0.2rem;
+    }
+
+        .check-search .check-host:focus {
+            box-shadow: none;
+            background: transparent;
+        }
+
+.check-result {
+    padding: 1.1rem 1.5rem 1.35rem;
+    border-top: 1px solid var(--of-line);
+}
+
+.check-result-label {
+    margin: 0 0 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--of-text-3);
+}

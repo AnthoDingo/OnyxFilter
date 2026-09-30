@@ -16,6 +16,10 @@ public partial class ClientSettings : ComponentBase
 {
     private static readonly int[] PageSizeOptions = { 10, 25, 50, 100 };
 
+    // Exemple de la zone « Adresses IP ou plages CIDR » : chaîne C# plutôt qu'entité HTML (&#10;), que
+    // Blazor encoderait telle quelle dans l'attribut.
+    private const string IdentifiersPlaceholder = "192.168.1.42\n192.168.1.0/24";
+
     [Inject]
     public ILocalSettingsStore SettingsStore { get; set; } = default!;
 
