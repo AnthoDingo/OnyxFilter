@@ -1,5 +1,0 @@
-.custom-rules-textarea {
-    min-height: 22rem;
-    font-family: var(--bs-font-monospace, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
-    resize: vertical;
-}

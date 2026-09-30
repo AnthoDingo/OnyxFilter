@@ -1,0 +1,162 @@
+@page "/filters/rewrites"
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+<PageTitle>Réécritures DNS - OnyxFilter</PageTitle>
+
+<div class="page-title-row">
+    <h1 class="page-title">Réécritures DNS</h1>
+    <span class="page-title-badge @(RewritesEnabled ? "page-title-badge-on" : "page-title-badge-off")">
+        @(RewritesEnabled ? "Activé" : "Désactivé")
+    </span>
+</div>
+<p class="text-body-secondary">
+    Permet de configurer facilement la réponse DNS personnalisée pour un nom de domaine spécifique.
+</p>
+
+<div class="settings-page">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-12">
+
+            <div class="card mb-4 table-card">
+                <div class="card-body">
+                    <div class="table-responsive mb-3">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Activé</th>
+                                    <th>Domaine</th>
+                                    <th>Réponse</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Entries.Count == 0)
+                                {
+                                    <tr>
+                                        <td colspan="4" class="empty-state-cell">Aucune réécriture DNS trouvée</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    @foreach (DnsRewriteEntry entry in PagedEntries)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <input class="form-check-input" type="checkbox" checked="@entry.Enabled" @onchange="e => ToggleEnabledAsync(entry, e)" />
+                                            </td>
+                                            <td>@entry.Domain</td>
+                                            <td>@entry.Answer</td>
+                                            <td>
+                                                <div class="rewrite-actions">
+                                                    <button type="button" class="btn btn-sm btn-outline-primary" title="Modifier" @onclick="() => OpenEditDialog(entry)">
+                                                        <icon class="rewrite-icon icon-edit" aria-hidden="true"></icon>
+                                                    </button>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" title="Supprimer" @onclick="() => RequestDelete(entry)">
+                                                        <icon class="rewrite-icon icon-trash" aria-hidden="true"></icon>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="pagination-bar">
+                        <button type="button" class="btn btn-outline-secondary" disabled="@(CurrentPage <= 1)" @onclick="GoToPreviousPage">Précédent</button>
+
+                        <div class="pagination-bar-center">
+                            <span>Page @CurrentPage / @TotalPages</span>
+
+                            <select class="form-select form-select-sm" style="width:auto;" value="@PageSize" @onchange="OnPageSizeChanged">
+                                @foreach (int option in PageSizeOptions)
+                                {
+                                    <option value="@option">@option lignes</option>
+                                }
+                            </select>
+                        </div>
+
+                        <button type="button" class="btn btn-outline-secondary" disabled="@(CurrentPage >= TotalPages)" @onclick="GoToNextPage">Suivant</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mb-4">
+                <button type="button" class="btn btn-success" @onclick="OpenAddDialog">Ajouter une réécriture DNS</button>
+                <button type="button" class="btn btn-primary" @onclick="ToggleRewritesEnabledAsync">
+                    @(RewritesEnabled ? "Désactiver les règles de réécriture" : "Activer les règles de réécriture")
+                </button>
+            </div>
+            <p class="form-text">
+                Une réécriture s'applique avant toute autre vérification (listes de blocage/autorisation,
+                Sécurité de navigation, Contrôle parental, Recherche Sécurisée) : la réponse configurée ici
+                l'emporte toujours pour le domaine concerné.
+            </p>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(StatusMessage))
+    {
+        <div class="alert @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mb-4">@StatusMessage</div>
+    }
+
+</div>
+
+@if (ShowDialog)
+{
+    <div class="modal-backdrop-static" @onclick="CloseDialog"></div>
+
+    <div class="modal-static">
+        <div class="card" style="width: 32rem; max-width: 90vw;">
+            <div class="card-body">
+                <h2 class="card-title fs-5">@(IsEditMode ? "Modifier la réécriture DNS" : "Ajouter une réécriture DNS")</h2>
+
+                <div class="mb-3">
+                    <label class="form-label" for="dialog-rewrite-domain">Domaine</label>
+                    <input id="dialog-rewrite-domain" type="text" class="form-control" placeholder="example.com ou *.example.com" @bind="DialogDomain" @bind:event="oninput" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="dialog-rewrite-answer">Réponse</label>
+                    <input id="dialog-rewrite-answer" type="text" class="form-control" placeholder="203.0.113.10, ::1, ou cible.example.com" @bind="DialogAnswer" @bind:event="oninput" />
+                </div>
+
+                @if (!string.IsNullOrEmpty(DialogError))
+                {
+                    <div class="alert alert-danger py-2 mb-3">@DialogError</div>
+                }
+            </div>
+            <div class="card-footer">
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-success" @onclick="SaveDialogAsync" disabled="@IsSavingDialog">Enregistrer</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDialog" disabled="@IsSavingDialog">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (ShowDeleteConfirm && EntryPendingDeletion is not null)
+{
+    <div class="modal-backdrop-static" @onclick="CancelDelete"></div>
+
+    <div class="modal-static">
+        <div class="card" style="width: 28rem; max-width: 90vw;">
+            <div class="card-body">
+                <h2 class="card-title fs-5">Supprimer la réécriture DNS</h2>
+                <p class="mb-0">
+                    Voulez-vous vraiment supprimer la réécriture pour « @EntryPendingDeletion.Domain » ? Cette
+                    action ne peut pas être annulée.
+                </p>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeleteAsync">Supprimer</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

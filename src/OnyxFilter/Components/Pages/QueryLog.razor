@@ -1,0 +1,195 @@
+@page "/query-log"
+@attribute [Authorize]
+@rendermode InteractiveServer
+@using OnyxFilter.Services.QueryLog
+
+<PageTitle>Journal des requêtes - OnyxFilter</PageTitle>
+
+<div class="querylog-header">
+    <div>
+        <h1>Journal des requêtes</h1>
+        <p class="text-body-secondary mb-0">Historique des requêtes DNS traitées par OnyxFilter.</p>
+    </div>
+    <div class="d-flex align-items-center flex-wrap gap-3">
+        <button type="button" class="btn btn-outline-primary" @onclick="RefreshAsync" disabled="@IsLoading">Actualiser</button>
+        <div class="auto-refresh-toggle">
+            <div class="form-check form-switch mb-0">
+                <input class="form-check-input" type="checkbox" role="switch" id="auto-refresh-switch" checked="@AutoRefreshEnabled" @onchange="OnAutoRefreshToggled" />
+            </div>
+            <label class="form-check-label" for="auto-refresh-switch">Actualisation automatique (5 s)</label>
+        </div>
+    </div>
+</div>
+
+<div class="settings-page">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-12">
+
+            @if (!IsLogEnabled)
+            {
+                <div class="alert alert-warning py-2 mb-3">
+                    Le journal des requêtes est désactivé. Vous pouvez l'activer dans les
+                    <a href="/settings/general">Paramètres généraux</a>.
+                </div>
+            }
+
+            @if (FallbackFilePath is not null)
+            {
+                <div class="alert alert-danger py-2 mb-3">
+                    Base de données inaccessible : les nouvelles requêtes sont écrites dans un fichier de secours
+                    (<code>@FallbackFilePath</code>) et n'apparaissent pas ci-dessous tant que la base n'est pas
+                    rétablie. La résolution DNS n'est pas affectée.
+                </div>
+            }
+            else if (!IsDatabaseHealthy)
+            {
+                <div class="alert alert-warning py-2 mb-3">
+                    Base de données temporairement inaccessible : nouvelle tentative en cours. Les requêtes récentes
+                    peuvent manquer ci-dessous.
+                </div>
+            }
+
+            <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+                <div class="input-group" style="max-width: 420px;">
+                    <span class="input-group-text"><svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></span>
+                    <input type="search" class="form-control form-control-sm"
+                           placeholder="Domaine ou client"
+                           value="@SearchText"
+                           @oninput="OnSearchChanged" />
+                </div>
+
+                <select class="form-select form-select-sm" style="max-width: 220px;"
+                        @onchange="OnStatusFilterChanged">
+                    <option value="">Toutes les requêtes</option>
+                    <option value="Resolved">Traité</option>
+                    <option value="Cached">Mis en cache</option>
+                    <option value="Rewritten">Réécrit</option>
+                    <option value="SafeSearch">Recherche Sécurisée</option>
+                    <option value="CustomRule">Règle personnalisée</option>
+                    <option value="Filtered">Bloqué (liste de filtres)</option>
+                    <option value="BlockedService">Services bloqués</option>
+                    <option value="SecurityThreat">Menaces bloquées</option>
+                    <option value="ParentalControl">Contrôle Parental</option>
+                </select>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    @if (IsLoading)
+                    {
+                        <p class="text-body-secondary mb-0">Chargement...</p>
+                    }
+                    else if (Entries.Count == 0)
+                    {
+                        <p class="text-body-secondary mb-0">Aucune requête à afficher pour le moment.</p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive mb-3">
+                            <table class="table align-middle querylog-table">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th class="col-temps">Temps</th>
+                                        <th class="col-requete">Requête</th>
+                                        <th class="col-reponse">Réponse</th>
+                                        <th class="col-client">Client</th>
+                                        <th class="col-actions">
+                                            <div class="querylog-view-toggle">
+                                                <button type="button" class="querylog-view-btn @(IsCompact ? "active" : "")" @onclick="() => IsCompact = true" title="Vue compacte" aria-label="Vue compacte">
+                                                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                                        <path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+                                                    </svg>
+                                                </button>
+                                                <button type="button" class="querylog-view-btn @(!IsCompact ? "active" : "")" @onclick="() => IsCompact = false" title="Vue détaillée" aria-label="Vue détaillée">
+                                                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm0 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm0 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2z"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (DnsQueryLogRecord entry in Entries)
+                                    {
+                                        <tr class="@GetRowClass(entry.Reason)">
+                                            <td class="col-temps text-body-secondary small text-center">
+                                                <p>@entry.TimestampUtc.ToLocalTime().ToString("HH:mm:ss")</p>
+                                                <p>@entry.TimestampUtc.ToLocalTime().ToString("dd/MM/yyyy")</p>
+                                            </td>
+                                            <td class="col-requete">
+                                                <span class="fw-medium">@entry.Domain</span>
+                                                <span class="badge bg-secondary ms-1 fw-normal">@entry.QueryType</span>
+                                            </td>
+                                            <td class="col-reponse text-center">
+                                                @switch (entry.Reason)
+                                                {
+                                                    case QueryLogReason.Filtered:
+                                                        <span class="badge text-bg-danger">Liste de filtres</span>
+                                                        break;
+                                                    case QueryLogReason.CustomRule:
+                                                        <span class="badge text-bg-danger">Règle perso.</span>
+                                                        break;
+                                                    case QueryLogReason.BlockedService:
+                                                        <span class="badge text-bg-danger">Service bloqué</span>
+                                                        break;
+                                                    case QueryLogReason.SecurityThreat:
+                                                        <span class="badge text-bg-warning text-dark">Menace</span>
+                                                        break;
+                                                    case QueryLogReason.ParentalControl:
+                                                        <span class="badge text-bg-warning text-dark">Contrôle parental</span>
+                                                        break;
+                                                    case QueryLogReason.Rewritten:
+                                                        <span class="badge text-bg-info text-dark">Réécrit</span>
+                                                        break;
+                                                    case QueryLogReason.SafeSearch:
+                                                        <span class="badge text-bg-info text-dark">Safe Search</span>
+                                                        break;
+                                                    case QueryLogReason.Cached:
+                                                        <span class="badge text-bg-secondary">Mis en cache</span>
+                                                        break;
+                                                    default:
+                                                        <span class="badge text-bg-success">Traité</span>
+                                                        break;
+                                                }
+                                                @if (!string.IsNullOrEmpty(entry.ReasonDetail))
+                                                {
+                                                    <div class="querylog-reason-detail">@entry.ReasonDetail</div>
+                                                }
+                                                <div class="text-body-secondary small mt-1">@entry.ProcessingTimeMs ms</div>
+                                            </td>
+                                            <td class="col-client text-body-secondary small">@entry.ClientKey</td>
+                                            <td class="col-actions"></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="pagination-bar">
+                            <button type="button" class="btn btn-outline-secondary" disabled="@(CurrentPageIndex <= 0 || IsLoading)" @onclick="GoToPreviousPageAsync">Précédent</button>
+
+                            <div class="pagination-bar-center">
+                                <span>@DisplayedRangeText</span>
+
+                                <select class="form-select form-select-sm" style="width:auto;" value="@PageSize" @onchange="OnPageSizeChanged" disabled="@IsLoading">
+                                    @foreach (int option in PageSizeOptions)
+                                    {
+                                        <option value="@option">@option lignes</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <button type="button" class="btn btn-outline-secondary" disabled="@(!HasNextPage || IsLoading)" @onclick="GoToNextPageAsync">Suivant</button>
+                        </div>
+                    }
+                </div>
+            </div>
+            
+            <p class="form-text">
+                Le contenu et la durée de conservation du journal se configurent dans les
+                <a href="/settings/general">Paramètres généraux</a> ("Configuration du journal").
+            </p>
+        </div>
+    </div>
+</div>

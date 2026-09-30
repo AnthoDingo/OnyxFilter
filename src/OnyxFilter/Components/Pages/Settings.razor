@@ -1,0 +1,262 @@
+@page "/settings/general"
+@attribute [Authorize]
+@rendermode InteractiveServer
+
+<PageTitle>Paramètres généraux - OnyxFilter</PageTitle>
+
+<h1 class="page-title">Paramètres généraux</h1>
+
+<div class="settings-page">
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="block-domains" checked="@BlockDomainsWithFilters" @onchange="OnBlockDomainsWithFiltersChanged" />
+                <label class="form-check-label" for="block-domains">Bloquez les domaines à l'aide des filtres et fichiers hosts</label>
+            </div>
+            <p class="form-text ms-4">
+                Vous pouvez configurer les règles de filtrage dans les paramètres des
+                <a href="/filters/blocklists">Filtres</a>.
+            </p>
+
+            <div class="ms-4 mb-3" style="max-width: 16rem;">
+                <label class="form-label" for="filter-update-interval">Intervalle de mise à jour des filtres</label>
+                <select id="filter-update-interval" class="form-select" @bind="FilterUpdateIntervalHours">
+                    <option value="0">Jamais</option>
+                    <option value="1">1 heure</option>
+                    <option value="12">12 heures</option>
+                    <option value="24">1 jour</option>
+                    <option value="72">3 jours</option>
+                    <option value="168">7 jours</option>
+                </select>
+            </div>
+
+            <hr />
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="use-browsing-security" checked="@UseBrowsingSecurity" @onchange="OnUseBrowsingSecurityChanged" />
+                <label class="form-check-label" for="use-browsing-security">Utilisez le service Sécurité de navigation d'OnyxFilter</label>
+            </div>
+            <p class="form-text ms-4 mb-0">
+                OnyxFilter vérifiera si le domaine est bloqué par le service web de sécurité de la navigation. Il
+                utilisera une API de recherche respectueuse de la vie privée pour effectuer la vérification :
+                seul un préfixe court du hachage SHA256 du nom de domaine est envoyé au serveur.
+            </p>
+            @if (!string.IsNullOrEmpty(BrowsingSecurityStatusMessage))
+            {
+                <div class="alert @(BrowsingSecurityStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mt-2 ms-4 mb-0">@BrowsingSecurityStatusMessage</div>
+            }
+
+            <hr />
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="use-parental-control" checked="@UseParentalControl" @onchange="OnUseParentalControlChanged" />
+                <label class="form-check-label" for="use-parental-control">Utiliser le contrôle parental d'OnyxFilter</label>
+            </div>
+            <p class="form-text ms-4 mb-0">
+                OnyxFilter va vérifier s'il y a du contenu pour adultes sur le domaine. Ce sera fait par aide du
+                même API discret que celui utilisé par le service de Sécurité de navigation.
+            </p>
+            @if (!string.IsNullOrEmpty(ParentalControlStatusMessage))
+            {
+                <div class="alert @(ParentalControlStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mt-2 ms-4 mb-0">@ParentalControlStatusMessage</div>
+            }
+
+            <hr />
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="use-safe-search" checked="@UseSafeSearch" @onchange="OnUseSafeSearchChanged" />
+                <label class="form-check-label" for="use-safe-search">Utiliser la Recherche Sécurisée</label>
+            </div>
+            <p class="form-text ms-4">
+                OnyxFilter appliquera la recherche sécurisée dans les moteurs de recherche suivants : Google,
+                YouTube, Bing, DuckDuckGo, Ecosia, Yandex, Pixabay.
+            </p>
+            @if (!string.IsNullOrEmpty(SafeSearchStatusMessage))
+            {
+                <div class="alert @(SafeSearchStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mb-3 ms-4">@SafeSearchStatusMessage</div>
+            }
+
+            <div class="ms-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="safe-search-bing" checked="@SafeSearchBing" disabled="@(!UseSafeSearch)" @onchange="e => OnSafeSearchEngineChanged(e, engine => SafeSearchBing = engine)" />
+                    <label class="form-check-label" for="safe-search-bing">Bing</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="safe-search-duckduckgo" checked="@SafeSearchDuckDuckGo" disabled="@(!UseSafeSearch)" @onchange="e => OnSafeSearchEngineChanged(e, engine => SafeSearchDuckDuckGo = engine)" />
+                    <label class="form-check-label" for="safe-search-duckduckgo">Duckduckgo</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="safe-search-ecosia" checked="@SafeSearchEcosia" disabled="@(!UseSafeSearch)" @onchange="e => OnSafeSearchEngineChanged(e, engine => SafeSearchEcosia = engine)" />
+                    <label class="form-check-label" for="safe-search-ecosia">Ecosia</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="safe-search-google" checked="@SafeSearchGoogle" disabled="@(!UseSafeSearch)" @onchange="e => OnSafeSearchEngineChanged(e, engine => SafeSearchGoogle = engine)" />
+                    <label class="form-check-label" for="safe-search-google">Google</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="safe-search-pixabay" checked="@SafeSearchPixabay" disabled="@(!UseSafeSearch)" @onchange="e => OnSafeSearchEngineChanged(e, engine => SafeSearchPixabay = engine)" />
+                    <label class="form-check-label" for="safe-search-pixabay">Pixabay</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="safe-search-yandex" checked="@SafeSearchYandex" disabled="@(!UseSafeSearch)" @onchange="e => OnSafeSearchEngineChanged(e, engine => SafeSearchYandex = engine)" />
+                    <label class="form-check-label" for="safe-search-yandex">Yandex</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="safe-search-youtube" checked="@SafeSearchYoutube" disabled="@(!UseSafeSearch)" @onchange="e => OnSafeSearchEngineChanged(e, engine => SafeSearchYoutube = engine)" />
+                    <label class="form-check-label" for="safe-search-youtube">Youtube</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title fs-5">Configuration du journal</h2>
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="enable-query-log" checked="@EnableQueryLog" @onchange="OnEnableQueryLogChanged" />
+                <label class="form-check-label" for="enable-query-log">Activer le journal</label>
+            </div>
+
+            <hr />
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="anonymize-client-ip" checked="@AnonymizeClientIp" @onchange="OnAnonymizeClientIpChanged" />
+                <label class="form-check-label" for="anonymize-client-ip">Anonymiser l'IP du client</label>
+            </div>
+            <p class="form-text ms-4 mb-0">Ne pas enregistrer l'adresse IP complète du client dans les journaux et statistiques</p>
+
+            <hr />
+
+            <p class="fw-semibold mb-2">Rotation des journaux de requêtes</p>
+
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="log-rotation" id="log-rotation-custom" checked="@(LogRetention == RetentionPeriod.Custom)" @onchange="() => SetLogRetention(RetentionPeriod.Custom)" />
+                    <label class="form-check-label" for="log-rotation-custom">Personnalisé</label>
+                </div>
+                @if (LogRetention == RetentionPeriod.Custom)
+                {
+                    <div class="ms-4 mb-2 d-flex align-items-center gap-2" style="max-width: 16rem;">
+                        <input id="log-rotation-custom-hours" type="number" min="1" class="form-control" style="max-width: 8rem;" @bind="LogRetentionCustomHours" @bind:event="oninput" />
+                        <label class="form-label mb-0" for="log-rotation-custom-hours">heure(s)</label>
+                    </div>
+                }
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="log-rotation" id="log-rotation-6h" checked="@(LogRetention == RetentionPeriod.SixHours)" @onchange="() => SetLogRetention(RetentionPeriod.SixHours)" />
+                    <label class="form-check-label" for="log-rotation-6h">6 heures</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="log-rotation" id="log-rotation-24h" checked="@(LogRetention == RetentionPeriod.TwentyFourHours)" @onchange="() => SetLogRetention(RetentionPeriod.TwentyFourHours)" />
+                    <label class="form-check-label" for="log-rotation-24h">24 heures</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="log-rotation" id="log-rotation-7d" checked="@(LogRetention == RetentionPeriod.SevenDays)" @onchange="() => SetLogRetention(RetentionPeriod.SevenDays)" />
+                    <label class="form-check-label" for="log-rotation-7d">7 jours</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="log-rotation" id="log-rotation-30d" checked="@(LogRetention == RetentionPeriod.ThirtyDays)" @onchange="() => SetLogRetention(RetentionPeriod.ThirtyDays)" />
+                    <label class="form-check-label" for="log-rotation-30d">30 jours</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="log-rotation" id="log-rotation-90d" checked="@(LogRetention == RetentionPeriod.NinetyDays)" @onchange="() => SetLogRetention(RetentionPeriod.NinetyDays)" />
+                    <label class="form-check-label" for="log-rotation-90d">90 jours</label>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="ignore-log-domains" checked="@IgnoreDomainsInLog" @onchange="OnIgnoreDomainsInLogChanged" />
+                <label class="form-check-label" for="ignore-log-domains">Domaines ignorés</label>
+            </div>
+            <p class="form-text ms-4">Les requêtes correspondantes à ces règles ne sont pas écrites dans le journal des requêtes</p>
+
+            <textarea class="form-control font-monospace mb-3"
+                      rows="6"
+                      placeholder="Domaines ignorés (séparés par une nouvelle ligne)"
+                      @bind="IgnoredLogDomainsText"
+                      @bind:event="oninput"></textarea>
+
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-success" @onclick="SaveQueryLogConfigurationAsync">Enregistrer</button>
+                <button type="button" class="btn btn-outline-secondary" @onclick="ClearQueryLogAsync">Effacer journal des requêtes</button>
+            </div>
+            @if (!string.IsNullOrEmpty(QueryLogStatusMessage))
+            {
+                <div class="alert @(QueryLogStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mt-3 mb-0">@QueryLogStatusMessage</div>
+            }
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title fs-5">Configuration des statistiques</h2>
+
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="enable-statistics" checked="@EnableStatistics" @onchange="OnEnableStatisticsChanged" />
+                <label class="form-check-label" for="enable-statistics">Activer les statistiques</label>
+            </div>
+
+            <hr />
+
+            <p class="fw-semibold mb-1">Maintien des statistiques</p>
+            <p class="form-text">Si vous baissez la valeur de l'intervalle, des données seront perdues</p>
+
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="stats-retention" id="stats-retention-custom" checked="@(StatisticsRetention == RetentionPeriod.Custom)" @onchange="() => SetStatisticsRetention(RetentionPeriod.Custom)" />
+                    <label class="form-check-label" for="stats-retention-custom">Personnalisé</label>
+                </div>
+                @if (StatisticsRetention == RetentionPeriod.Custom)
+                {
+                    <div class="ms-4 mb-2 d-flex align-items-center gap-2" style="max-width: 16rem;">
+                        <input id="stats-retention-custom-hours" type="number" min="1" class="form-control" style="max-width: 8rem;" @bind="StatisticsRetentionCustomHours" @bind:event="oninput" />
+                        <label class="form-label mb-0" for="stats-retention-custom-hours">heure(s)</label>
+                    </div>
+                }
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="stats-retention" id="stats-retention-24h" checked="@(StatisticsRetention == RetentionPeriod.TwentyFourHours)" @onchange="() => SetStatisticsRetention(RetentionPeriod.TwentyFourHours)" />
+                    <label class="form-check-label" for="stats-retention-24h">24 heures</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="stats-retention" id="stats-retention-7d" checked="@(StatisticsRetention == RetentionPeriod.SevenDays)" @onchange="() => SetStatisticsRetention(RetentionPeriod.SevenDays)" />
+                    <label class="form-check-label" for="stats-retention-7d">7 jours</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="stats-retention" id="stats-retention-30d" checked="@(StatisticsRetention == RetentionPeriod.ThirtyDays)" @onchange="() => SetStatisticsRetention(RetentionPeriod.ThirtyDays)" />
+                    <label class="form-check-label" for="stats-retention-30d">30 jours</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="stats-retention" id="stats-retention-90d" checked="@(StatisticsRetention == RetentionPeriod.NinetyDays)" @onchange="() => SetStatisticsRetention(RetentionPeriod.NinetyDays)" />
+                    <label class="form-check-label" for="stats-retention-90d">90 jours</label>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="ignore-stats-domains" checked="@IgnoreDomainsInStatistics" @onchange="OnIgnoreDomainsInStatisticsChanged" />
+                <label class="form-check-label" for="ignore-stats-domains">Domaines ignorés</label>
+            </div>
+            <p class="form-text ms-4">Les requêtes correspondantes à ces règles ne sont pas écrites dans les statistiques</p>
+
+            <textarea class="form-control font-monospace mb-3"
+                      rows="6"
+                      placeholder="Domaines ignorés (séparés par une nouvelle ligne)"
+                      @bind="IgnoredStatisticsDomainsText"
+                      @bind:event="oninput"></textarea>
+
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-success" @onclick="SaveStatisticsConfigurationAsync">Enregistrer</button>
+                <button type="button" class="btn btn-outline-secondary" @onclick="ClearStatisticsAsync">Effacer les statistiques</button>
+            </div>
+            @if (!string.IsNullOrEmpty(StatisticsStatusMessage))
+            {
+                <div class="alert @(StatisticsStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") py-2 mt-3 mb-0">@StatisticsStatusMessage</div>
+            }
+        </div>
+    </div>
+
+</div>

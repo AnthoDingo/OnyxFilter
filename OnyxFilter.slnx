@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="src/OnyxFilter.csproj" />
+  <Folder Name="/src/">
+    <Project Path="src/OnyxTool/OnyxTool.csproj" />
+  </Folder>
+  <Project Path="src/OnyxFilter/OnyxFilter.csproj" />
 </Solution>
