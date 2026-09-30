@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -71,6 +72,17 @@ public class Program
             Args = args,
             ContentRootPath = contentRoot,
         });
+
+        // Sans appsettings.json dans le dossier des données (ex. --data-dir vers un dossier vide), la base reste
+        // OnyxFilter.db : une chaîne de connexion vide ouvrirait une base SQLite temporaire, différente à chaque
+        // connexion, et les tables créées par les migrations seraient aussitôt perdues.
+        if (string.IsNullOrEmpty(builder.Configuration.GetConnectionString("DefaultConnection")))
+        {
+            builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["ConnectionStrings:DefaultConnection"] = "Data Source=OnyxFilter.db",
+            });
+        }
 
         if (commandLineMode)
         {

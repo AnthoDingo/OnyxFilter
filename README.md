@@ -46,8 +46,10 @@ créé avec un mot de passe aléatoire, affiché dans le journal du service :
 sudo journalctl -u onyxfilter | grep -A3 'Compte administrateur'
 ```
 
-Changez-le ensuite depuis « Mon compte », ou en ligne de commande (voir plus bas). Il reste à indiquer
-l'adresse du serveur comme DNS dans les réglages DHCP de votre box ou de votre routeur.
+Changez-le ensuite depuis « Mon compte », ou en ligne de commande (voir plus bas). Mot de passe perdu ou
+introuvable dans le journal : définissez-en un nouveau avec
+`sudo -u onyxfilter /opt/onyxfilter/OnyxFilter user:reset-password admin`. Il reste à indiquer l'adresse du
+serveur comme DNS dans les réglages DHCP de votre box ou de votre routeur.
 
 ### Port 53 déjà utilisé
 
