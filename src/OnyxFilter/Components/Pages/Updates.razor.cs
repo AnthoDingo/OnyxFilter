@@ -12,7 +12,7 @@ namespace OnyxFilter.Components.Pages;
 
 public partial class Updates : ComponentBase, IDisposable
 {
-    private static readonly CultureInfo DisplayCulture = CultureInfo.GetCultureInfo("fr-FR");
+    private static CultureInfo DisplayCulture => CultureInfo.CurrentCulture;
 
     [Inject]
     public IUpdateService UpdateService { get; set; } = default!;
@@ -119,32 +119,32 @@ public partial class Updates : ComponentBase, IDisposable
                 settings.Updates.AutoCheck = AutoCheck;
                 settings.Updates.IncludePreReleases = IncludePreReleases;
             });
-            SettingsMessage = "Préférences enregistrées.";
+            SettingsMessage = L["Préférences enregistrées."];
             return true;
         }
         catch (Exception ex)
         {
-            SettingsMessage = "Erreur lors de l'enregistrement : " + ex.Message;
+            SettingsMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
             return false;
         }
     }
 
-    private static string FormatDate(DateTimeOffset? date)
+    private string FormatDate(DateTimeOffset? date)
     {
-        return date is null ? "—" : date.Value.ToLocalTime().ToString("d MMMM yyyy 'à' HH:mm", DisplayCulture);
+        return date is null ? "—" : date.Value.ToLocalTime().ToString(L["d MMMM yyyy 'à' HH:mm"], DisplayCulture);
     }
 
-    private static string FormatSize(long bytes)
+    private string FormatSize(long bytes)
     {
-        return bytes <= 0 ? string.Empty : (bytes / (1024.0 * 1024.0)).ToString("0.#", DisplayCulture) + " Mo";
+        return bytes <= 0 ? string.Empty : L["{0} Mo", (bytes / (1024.0 * 1024.0)).ToString("0.#", DisplayCulture)];
     }
 
     private string StateLabel => Status.State switch
     {
-        UpdateState.Downloading => "Téléchargement de l'archive…",
-        UpdateState.Verifying => "Vérification de l'empreinte SHA-256…",
-        UpdateState.Installing => "Installation des nouveaux fichiers…",
-        UpdateState.Restarting => "Redémarrage d'OnyxFilter…",
+        UpdateState.Downloading => L["Téléchargement de l'archive…"],
+        UpdateState.Verifying => L["Vérification de l'empreinte SHA-256…"],
+        UpdateState.Installing => L["Installation des nouveaux fichiers…"],
+        UpdateState.Restarting => L["Redémarrage d'OnyxFilter…"],
         _ => string.Empty,
     };
 

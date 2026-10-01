@@ -19,7 +19,7 @@ public enum RankTone
 // proportionnelle à la première entrée du classement.
 public partial class RankList : ComponentBase
 {
-    private static readonly CultureInfo DisplayCulture = CultureInfo.GetCultureInfo("fr-FR");
+    private static CultureInfo DisplayCulture => CultureInfo.CurrentCulture;
 
     [Parameter]
     public IReadOnlyList<RankItem> Items { get; set; } = Array.Empty<RankItem>();
@@ -28,7 +28,7 @@ public partial class RankList : ComponentBase
     public RankTone Tone { get; set; } = RankTone.Accent;
 
     [Parameter]
-    public string EmptyText { get; set; } = "Aucune donnée pour le moment.";
+    public string? EmptyText { get; set; }
 
     private long MaxCount => Items.Count == 0 ? 0 : Items.Max(item => item.Count);
 

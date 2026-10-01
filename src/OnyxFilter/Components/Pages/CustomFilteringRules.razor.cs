@@ -31,11 +31,11 @@ public partial class CustomFilteringRules : ComponentBase
         try
         {
             await SettingsStore.UpdateAsync(settings => settings.CustomFilterRules.RulesText = textSnapshot);
-            StatusMessage = "Règles de filtrage personnalisées enregistrées.";
+            StatusMessage = L["Règles de filtrage personnalisées enregistrées."];
         }
         catch (Exception ex)
         {
-            StatusMessage = "Erreur lors de l'enregistrement : " + ex.Message;
+            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
         }
         finally
         {

@@ -95,7 +95,7 @@ public partial class DnsRewrites : ComponentBase
 
         if (domain.Length == 0 || answer.Length == 0)
         {
-            DialogError = "Le domaine et la réponse sont obligatoires.";
+            DialogError = L["Le domaine et la réponse sont obligatoires."];
             return;
         }
 
@@ -184,11 +184,11 @@ public partial class DnsRewrites : ComponentBase
                 settings.Rewrites.Entries = entriesSnapshot;
                 settings.Rewrites.Enabled = enabledSnapshot;
             });
-            StatusMessage = "Réécritures DNS enregistrées.";
+            StatusMessage = L["Réécritures DNS enregistrées."];
         }
         catch (Exception ex)
         {
-            StatusMessage = "Erreur lors de l'enregistrement : " + ex.Message;
+            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
         }
     }
 

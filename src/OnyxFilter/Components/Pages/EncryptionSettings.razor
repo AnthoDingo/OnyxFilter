@@ -3,13 +3,13 @@
 @rendermode InteractiveServer
 @using OnyxFilter.Services.Encryption
 
-<PageTitle>Chiffrement · OnyxFilter</PageTitle>
+<PageTitle>@L["Chiffrement"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Configuration</p>
-        <h1 class="page-title">Chiffrement</h1>
-        <p class="page-lead">HTTPS pour l'interface d'administration, DNS-over-HTTPS, DNS-over-TLS et DNS-over-QUIC pour les appareils.</p>
+        <p class="page-eyebrow">@L["Configuration"]</p>
+        <h1 class="page-title">@L["Chiffrement"]</h1>
+        <p class="page-lead">@L["HTTPS pour l'interface d'administration, DNS-over-HTTPS, DNS-over-TLS et DNS-over-QUIC pour les appareils."]</p>
     </div>
 </header>
 
@@ -17,20 +17,18 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Protocoles</h2>
+            <h2 class="settings-intro-title">@L["Protocoles"]</h2>
             <p class="settings-intro-text">
-                Activez le chiffrement puis fournissez un certificat valide pour le nom du serveur, ou laissez
-                Let's Encrypt s'en charger (section suivante).
+                @L["Activez le chiffrement puis fournissez un certificat valide pour le nom du serveur, ou laissez Let's Encrypt s'en charger (section suivante)."]
             </p>
         </div>
 
         <div class="card settings-panel">
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="enable-encryption">Activer le chiffrement</label>
+                    <label class="setting-label" for="enable-encryption">@L["Activer le chiffrement"]</label>
                     <p class="setting-help">
-                        Dès qu'un certificat valide est en place, l'interface est aussi servie en HTTPS et le serveur
-                        DNS accepte les requêtes en DNS-over-HTTPS, DNS-over-TLS et DNS-over-QUIC.
+                        @L["Dès qu'un certificat valide est en place, l'interface est aussi servie en HTTPS et le serveur DNS accepte les requêtes en DNS-over-HTTPS, DNS-over-TLS et DNS-over-QUIC."]
                     </p>
                 </div>
                 <div class="form-check form-switch setting-control">
@@ -40,10 +38,9 @@
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="enable-plain-dns">Accepter le DNS non chiffré</label>
+                    <label class="setting-label" for="enable-plain-dns">@L["Accepter le DNS non chiffré"]</label>
                     <p class="setting-help">
-                        Désactivez-le pour imposer un protocole chiffré à tous les appareils (au moins un protocole
-                        chiffré doit alors être actif).
+                        @L["Désactivez-le pour imposer un protocole chiffré à tous les appareils (au moins un protocole chiffré doit alors être actif)."]
                     </p>
                 </div>
                 <div class="form-check form-switch setting-control">
@@ -53,10 +50,9 @@
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="auto-redirect-https">Rediriger HTTP vers HTTPS</label>
+                    <label class="setting-label" for="auto-redirect-https">@L["Rediriger HTTP vers HTTPS"]</label>
                     <p class="setting-help">
-                        Une fois HTTPS actif, les visites en HTTP sont renvoyées vers HTTPS et le navigateur retient de
-                        n'utiliser que HTTPS pour ce nom (HSTS, 30 jours).
+                        @L["Une fois HTTPS actif, les visites en HTTP sont renvoyées vers HTTPS et le navigateur retient de n'utiliser que HTTPS pour ce nom (HSTS, 30 jours)."]
                     </p>
                 </div>
                 <div class="form-check form-switch setting-control">
@@ -66,23 +62,21 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <label class="setting-label" for="server-name">Nom du serveur</label>
+                    <label class="setting-label" for="server-name">@L["Nom du serveur"]</label>
                     <p class="setting-help">
-                        Doit figurer parmi les noms du certificat. Renseigné, il active la détection des identifiants
-                        de client, les réponses DDR et des contrôles de connexion supplémentaires.
+                        @L["Doit figurer parmi les noms du certificat. Renseigné, il active la détection des identifiants de client, les réponses DDR et des contrôles de connexion supplémentaires."]
                     </p>
                 </div>
                 <div class="setting-nested field-narrow">
-                    <input id="server-name" type="text" class="form-control font-monospace" placeholder="dns.exemple.fr" @bind="ServerName" @bind:event="oninput" />
+                    <input id="server-name" type="text" class="form-control font-monospace" placeholder="@L["dns.exemple.fr"]" @bind="ServerName" @bind:event="oninput" />
                 </div>
             </div>
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <span class="setting-label">Ports d'écoute</span>
+                    <span class="setting-label">@L["Ports d'écoute"]</span>
                     <p class="setting-help">
-                        Pris en compte lorsque le chiffrement est activé. Le port HTTPS sert aussi le DNS-over-HTTPS
-                        sur <code>/dns-query</code>.
+                        @L["Pris en compte lorsque le chiffrement est activé. Le port HTTPS sert aussi le DNS-over-HTTPS sur"] <code>/dns-query</code>.
                     </p>
                 </div>
                 <div class="setting-nested field-grid">
@@ -107,29 +101,28 @@
                     <div class="https-status" role="status">
                         @if (HttpsStatus.Active)
                         {
-                            <span class="state-pill state-pill-on">HTTPS actif</span>
+                            <span class="state-pill state-pill-on">@L["HTTPS actif"]</span>
                             <span>
-                                Interface : <a href="@HttpsBaseUrl">@HttpsBaseUrl</a> · DNS-over-HTTPS :
+                                @L["Interface :"] <a href="@HttpsBaseUrl">@HttpsBaseUrl</a> · DNS-over-HTTPS :
                                 <span class="mono">@(HttpsBaseUrl)dns-query</span>
                             </span>
                         }
                         else
                         {
-                            <span class="state-pill state-pill-off">HTTPS inactif</span>
-                            <span>@(string.IsNullOrEmpty(HttpsStatus.Reason) ? "vérification en cours…" : char.ToUpperInvariant(HttpsStatus.Reason[0]) + HttpsStatus.Reason[1..] + ".")</span>
+                            <span class="state-pill state-pill-off">@L["HTTPS inactif"]</span>
+                            <span>@(string.IsNullOrEmpty(HttpsStatus.Reason) ? L["vérification en cours…"] : char.ToUpperInvariant(HttpsStatus.Reason[0]) + HttpsStatus.Reason[1..] + ".")</span>
                         }
                     </div>
                 </div>
             }
 
-            <h3 class="setting-group-title">Certificat et clé</h3>
+            <h3 class="setting-group-title">@L["Certificat et clé"]</h3>
 
             @if (LetsEncryptEnabled)
             {
                 <div class="setting setting-stacked">
                     <p class="setting-help mb-0">
-                        Le certificat Let's Encrypt (section suivante) remplace le certificat et la clé fournis à la
-                        main, conservés pour le cas où vous le désactiveriez.
+                        @L["Le certificat Let's Encrypt (section suivante) remplace le certificat et la clé fournis à la main, conservés pour le cas où vous le désactiveriez."]
                     </p>
                 </div>
             }
@@ -137,25 +130,24 @@
             {
                 <div class="setting setting-stacked">
                     <div class="setting-text">
-                        <span class="setting-label">Chaîne de certificats</span>
+                        <span class="setting-label">@L["Chaîne de certificats"]</span>
                         <p class="setting-help">
-                            Certificat valide pour votre domaine (PEM, ou PKCS#12 sans mot de passe). Les certificats
-                            intermédiaires du fichier sont envoyés aux appareils.
+                            @L["Certificat valide pour votre domaine (PEM, ou PKCS#12 sans mot de passe). Les certificats intermédiaires du fichier sont envoyés aux appareils."]
                         </p>
                     </div>
                     <div class="setting-nested">
-                        <div class="segmented mb-3" role="radiogroup" aria-label="Source du certificat">
+                        <div class="segmented mb-3" role="radiogroup" aria-label="@L["Source du certificat"]">
                             <input class="btn-check" type="radio" name="certificate-source" id="cert-source-path" checked="@(CertificateSource == CertificateInputSource.FilePath)" @onchange="() => SetCertificateSource(CertificateInputSource.FilePath)" />
-                            <label class="segmented-option" for="cert-source-path">Chemin du fichier</label>
+                            <label class="segmented-option" for="cert-source-path">@L["Chemin du fichier"]</label>
                             <input class="btn-check" type="radio" name="certificate-source" id="cert-source-paste" checked="@(CertificateSource == CertificateInputSource.PastedContent)" @onchange="() => SetCertificateSource(CertificateInputSource.PastedContent)" />
-                            <label class="segmented-option" for="cert-source-paste">Contenu PEM</label>
+                            <label class="segmented-option" for="cert-source-paste">@L["Contenu PEM"]</label>
                         </div>
 
                         @if (CertificateSource == CertificateInputSource.FilePath)
                         {
                             <input type="text"
                                    class="form-control font-monospace"
-                                   aria-label="Chemin du fichier de certificats"
+                                   aria-label="@L["Chemin du fichier de certificats"]"
                                    placeholder="/etc/letsencrypt/live/dns.exemple.fr/fullchain.pem"
                                    @bind="CertificateFilePath"
                                    @bind:event="oninput" />
@@ -164,7 +156,7 @@
                         {
                             <textarea class="form-control font-monospace"
                                       rows="4"
-                                      aria-label="Contenu du certificat"
+                                      aria-label="@L["Contenu du certificat"]"
                                       placeholder="-----BEGIN CERTIFICATE-----"
                                       @bind="CertificateContent"
                                       @bind:event="oninput"></textarea>
@@ -175,24 +167,24 @@
 
                 <div class="setting setting-stacked">
                     <div class="setting-text">
-                        <span class="setting-label">Clé privée</span>
+                        <span class="setting-label">@L["Clé privée"]</span>
                         <p class="setting-help">
-                            Clé associée au certificat ci-dessus. Laissez vide si elle figure dans le même fichier.
+                            @L["Clé associée au certificat ci-dessus. Laissez vide si elle figure dans le même fichier."]
                         </p>
                     </div>
                     <div class="setting-nested">
-                        <div class="segmented mb-3" role="radiogroup" aria-label="Source de la clé privée">
+                        <div class="segmented mb-3" role="radiogroup" aria-label="@L["Source de la clé privée"]">
                             <input class="btn-check" type="radio" name="private-key-source" id="key-source-path" checked="@(PrivateKeySource == CertificateInputSource.FilePath)" @onchange="() => SetPrivateKeySource(CertificateInputSource.FilePath)" />
-                            <label class="segmented-option" for="key-source-path">Chemin du fichier</label>
+                            <label class="segmented-option" for="key-source-path">@L["Chemin du fichier"]</label>
                             <input class="btn-check" type="radio" name="private-key-source" id="key-source-paste" checked="@(PrivateKeySource == CertificateInputSource.PastedContent)" @onchange="() => SetPrivateKeySource(CertificateInputSource.PastedContent)" />
-                            <label class="segmented-option" for="key-source-paste">Contenu PEM</label>
+                            <label class="segmented-option" for="key-source-paste">@L["Contenu PEM"]</label>
                         </div>
 
                         @if (PrivateKeySource == CertificateInputSource.FilePath)
                         {
                             <input type="text"
                                    class="form-control font-monospace"
-                                   aria-label="Chemin du fichier de clé privée"
+                                   aria-label="@L["Chemin du fichier de clé privée"]"
                                    placeholder="/etc/letsencrypt/live/dns.exemple.fr/privkey.pem"
                                    @bind="PrivateKeyFilePath"
                                    @bind:event="oninput" />
@@ -201,7 +193,7 @@
                         {
                             <textarea class="form-control font-monospace"
                                       rows="4"
-                                      aria-label="Contenu de la clé privée"
+                                      aria-label="@L["Contenu de la clé privée"]"
                                       placeholder="-----BEGIN PRIVATE KEY-----"
                                       @bind="PrivateKeyContent"
                                       @bind:event="oninput"></textarea>
@@ -213,7 +205,7 @@
                 @if (ManualCertificateError is not null)
                 {
                     <div class="setting setting-stacked">
-                        <div class="alert alert-danger mb-0">Certificat enregistré inutilisable : @ManualCertificateError</div>
+                        <div class="alert alert-danger mb-0">@L["Certificat enregistré inutilisable : {0}", ManualCertificateError]</div>
                     </div>
                 }
                 else if (ManualCertificate is { } manual)
@@ -225,11 +217,11 @@
             }
 
             <div class="settings-panel-footer">
-                <button type="button" class="btn btn-primary" @onclick="SaveEncryptionConfigurationAsync">Enregistrer</button>
-                <button type="button" class="btn btn-outline-secondary" @onclick="ResetEncryptionSettingsAsync">Réinitialiser</button>
+                <button type="button" class="btn btn-primary" @onclick="SaveEncryptionConfigurationAsync">@L["Enregistrer"]</button>
+                <button type="button" class="btn btn-outline-secondary" @onclick="ResetEncryptionSettingsAsync">@L["Réinitialiser"]</button>
                 @if (!string.IsNullOrEmpty(EncryptionStatusMessage))
                 {
-                    <div class="alert @(EncryptionStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@EncryptionStatusMessage</div>
+                    <div class="alert @(EncryptionStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@EncryptionStatusMessage</div>
                 }
             </div>
         </div>
@@ -237,10 +229,9 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Certificat Let's Encrypt</h2>
+            <h2 class="settings-intro-title">@L["Certificat Let's Encrypt"]</h2>
             <p class="settings-intro-text">
-                Obtenu gratuitement et renouvelé sans intervention : OnyxFilter vérifie le certificat toutes les
-                12 heures et en demande un nouveau 15 jours avant son expiration.
+                @L["Obtenu gratuitement et renouvelé sans intervention : OnyxFilter vérifie le certificat toutes les 12 heures et en demande un nouveau 15 jours avant son expiration."]
             </p>
         </div>
 
@@ -249,30 +240,30 @@
             {
                 <div class="setting setting-stacked le-status" role="status">
                     <div class="le-status-head">
-                        <span class="setting-label">État</span>
+                        <span class="setting-label">@L["État"]</span>
                         @switch (LetsEncryptStatus.State)
                         {
                             case LetsEncryptState.Valid:
-                                <span class="state-pill state-pill-on">Valide</span>
+                                <span class="state-pill state-pill-on">@L["Valide"]</span>
                                 break;
                             case LetsEncryptState.Issuing:
-                                <span class="state-pill state-pill-busy">En cours</span>
+                                <span class="state-pill state-pill-busy">@L["En cours"]</span>
                                 break;
                             case LetsEncryptState.Error:
-                                <span class="state-pill state-pill-bad">Échec</span>
+                                <span class="state-pill state-pill-bad">@L["Échec"]</span>
                                 break;
                             case LetsEncryptState.NotConfigured:
-                                <span class="state-pill state-pill-warn">À compléter</span>
+                                <span class="state-pill state-pill-warn">@L["À compléter"]</span>
                                 break;
                             default:
-                                <span class="state-pill state-pill-off">Désactivé</span>
+                                <span class="state-pill state-pill-off">@L["Désactivé"]</span>
                                 break;
                         }
 
                         @if (SavedSettings.LetsEncrypt.Enabled && LetsEncryptStatus.State != LetsEncryptState.NotConfigured)
                         {
                             <button type="button" class="btn btn-secondary btn-sm le-renew" @onclick="RenewNow" disabled="@LetsEncryptStatus.IsBusy">
-                                <Icon Name="refresh" />@(LetsEncryptStatus.Certificate is null ? "Obtenir le certificat" : "Renouveler maintenant")
+                                <Icon Name="refresh" />@(LetsEncryptStatus.Certificate is null ? L["Obtenir le certificat"] : L["Renouveler maintenant"])
                             </button>
                         }
                     </div>
@@ -281,7 +272,7 @@
                     {
                         <div class="le-progress">
                             <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-                            <span>@(LetsEncryptStatus.Message ?? "Demande en cours…")</span>
+                            <span>@(LetsEncryptStatus.Message ?? L["Demande en cours…"])</span>
                         </div>
                     }
                     else if (LetsEncryptStatus.State == LetsEncryptState.Error)
@@ -290,7 +281,7 @@
                             @LetsEncryptStatus.Message
                             @if (LetsEncryptStatus.NextCheckUtc is { } retry)
                             {
-                                <span> Nouvel essai le @FormatDate(retry).</span>
+                                <span> @L["Nouvel essai le {0}.", FormatDate(retry)]</span>
                             }
                         </div>
                     }
@@ -306,24 +297,24 @@
                         @if (LetsEncryptStatus.State == LetsEncryptState.Valid && LetsEncryptStatus.RenewalDueUtc is { } due)
                         {
                             <p class="setting-help mb-0">
-                                Renouvellement prévu le @FormatDay(due) ; prochaine vérification le @FormatDate(LetsEncryptStatus.NextCheckUtc).
-                                Let's Encrypt limite à 5 par semaine les certificats demandés pour les mêmes noms.
+                                @L["Renouvellement prévu le {0} ; prochaine vérification le {1}.", FormatDay(due), FormatDate(LetsEncryptStatus.NextCheckUtc)]
+                                @L["Let's Encrypt limite à 5 par semaine les certificats demandés pour les mêmes noms."]
                             </p>
                         }
                     }
                     else if (LetsEncryptStatus.State is LetsEncryptState.Valid or LetsEncryptState.Disabled)
                     {
-                        <p class="setting-help mb-0">Aucun certificat obtenu pour l'instant.</p>
+                        <p class="setting-help mb-0">@L["Aucun certificat obtenu pour l'instant."]</p>
                     }
                 </div>
             }
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="le-enabled">Certificat automatique</label>
+                    <label class="setting-label" for="le-enabled">@L["Certificat automatique"]</label>
                     <p class="setting-help">
-                        Obtient un certificat Let's Encrypt pour <strong>@(string.IsNullOrWhiteSpace(ServerName) ? "le nom du serveur" : ServerName.Trim())</strong>
-                        et l'utilise à la place du certificat fourni à la main.
+                        @L["Obtient un certificat Let's Encrypt pour"] <strong>@(string.IsNullOrWhiteSpace(ServerName) ? L["le nom de ce serveur"] : ServerName.Trim())</strong>
+                        @L["et l'utilise à la place du certificat fourni à la main."]
                     </p>
                 </div>
                 <div class="form-check form-switch setting-control">
@@ -335,17 +326,15 @@
             {
                 <div class="setting setting-stacked">
                     <div class="alert alert-info mb-0">
-                        Conditions : le nom du serveur doit pointer, dans le DNS public, vers l'adresse publique de cette
-                        machine, et le port 80 doit lui parvenir depuis Internet (redirection de port sur la box) :
-                        Let's Encrypt s'y connecte pour vérifier que le domaine vous appartient.
+                        @L["Conditions : le nom du serveur doit pointer, dans le DNS public, vers l'adresse publique de cette machine, et le port 80 doit lui parvenir depuis Internet (redirection de port sur la box) : Let's Encrypt s'y connecte pour vérifier que le domaine vous appartient."]
                     </div>
                 </div>
 
                 <div class="setting setting-stacked">
                     <div class="setting-text">
-                        <label class="setting-label" for="le-domains">Noms supplémentaires</label>
+                        <label class="setting-label" for="le-domains">@L["Noms supplémentaires"]</label>
                         <p class="setting-help">
-                            Facultatif, un par ligne. Certificat demandé pour :
+                            @L["Facultatif, un par ligne. Certificat demandé pour :"]
                             <span class="mono">@(LetsEncryptDomains.Count == 0 ? "—" : string.Join(", ", LetsEncryptDomains))</span>.
                         </p>
                     </div>
@@ -359,39 +348,36 @@
 
                 <div class="setting setting-stacked">
                     <div class="setting-text">
-                        <label class="setting-label" for="le-email">Adresse e-mail</label>
-                        <p class="setting-help">Facultative, associée au compte Let's Encrypt.</p>
+                        <label class="setting-label" for="le-email">@L["Adresse e-mail"]</label>
+                        <p class="setting-help">@L["Facultative, associée au compte Let's Encrypt."]</p>
                     </div>
                     <div class="setting-nested field-narrow">
-                        <input id="le-email" type="email" class="form-control" placeholder="vous@exemple.fr" @bind="LetsEncryptEmail" @bind:event="oninput" />
+                        <input id="le-email" type="email" class="form-control" placeholder="@L["vous@exemple.fr"]" @bind="LetsEncryptEmail" @bind:event="oninput" />
                     </div>
                 </div>
 
                 <div class="setting setting-stacked">
                     <div class="setting-text">
-                        <span class="setting-label">Environnement</span>
+                        <span class="setting-label">@L["Environnement"]</span>
                         <p class="setting-help">
-                            L'environnement de test délivre des certificats non reconnus par les appareils, mais sans
-                            les limites d'émission : pratique pour vérifier la configuration.
+                            @L["L'environnement de test délivre des certificats non reconnus par les appareils, mais sans les limites d'émission : pratique pour vérifier la configuration."]
                         </p>
                     </div>
                     <div class="setting-nested">
-                        <div class="segmented" role="radiogroup" aria-label="Environnement Let's Encrypt">
+                        <div class="segmented" role="radiogroup" aria-label="@L["Environnement Let's Encrypt"]">
                             <input class="btn-check" type="radio" name="le-environment" id="le-production" checked="@(!LetsEncryptUseStaging)" @onchange="() => SetLetsEncryptStaging(false)" />
-                            <label class="segmented-option" for="le-production">Production</label>
+                            <label class="segmented-option" for="le-production">@L["Production"]</label>
                             <input class="btn-check" type="radio" name="le-environment" id="le-staging" checked="@LetsEncryptUseStaging" @onchange="() => SetLetsEncryptStaging(true)" />
-                            <label class="segmented-option" for="le-staging">Test</label>
+                            <label class="segmented-option" for="le-staging">@L["Test"]</label>
                         </div>
                     </div>
                 </div>
 
                 <div class="setting setting-stacked">
                     <div class="setting-text">
-                        <label class="setting-label" for="le-port">Port de validation</label>
+                        <label class="setting-label" for="le-port">@L["Port de validation"]</label>
                         <p class="setting-help">
-                            Port ouvert sur cette machine le temps de la validation. Let's Encrypt contacte toujours le
-                            port 80 : ne changez ce réglage que si la box redirige ce port vers un autre port de cette
-                            machine. S'il est déjà occupé, la validation passe par l'interface web.
+                            @L["Port ouvert sur cette machine le temps de la validation. Let's Encrypt contacte toujours le port 80 : ne changez ce réglage que si la box redirige ce port vers un autre port de cette machine. S'il est déjà occupé, la validation passe par l'interface web."]
                         </p>
                     </div>
                     <div class="setting-nested field-narrow">
@@ -401,11 +387,11 @@
 
                 <div class="setting">
                     <div class="setting-text">
-                        <label class="setting-label" for="le-terms">Conditions d'utilisation</label>
+                        <label class="setting-label" for="le-terms">@L["Conditions d'utilisation"]</label>
                         <p class="setting-help">
-                            J'accepte les
-                            <a href="@LetsEncryptPolicy.TermsOfServiceUrl" target="_blank" rel="noopener noreferrer">conditions d'utilisation de Let's Encrypt</a>
-                            (obligatoire).
+                            @L["J'accepte les"]
+                            <a href="@LetsEncryptPolicy.TermsOfServiceUrl" target="_blank" rel="noopener noreferrer">@L["conditions d'utilisation de Let's Encrypt"]</a>
+                            @L["(obligatoire)."]
                         </p>
                     </div>
                     <div class="form-check form-switch setting-control">
@@ -415,10 +401,10 @@
             }
 
             <div class="settings-panel-footer">
-                <button type="button" class="btn btn-primary" @onclick="SaveLetsEncryptConfigurationAsync">Enregistrer</button>
+                <button type="button" class="btn btn-primary" @onclick="SaveLetsEncryptConfigurationAsync">@L["Enregistrer"]</button>
                 @if (!string.IsNullOrEmpty(LetsEncryptSaveMessage))
                 {
-                    <div class="alert @(LetsEncryptSaveMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@LetsEncryptSaveMessage</div>
+                    <div class="alert @(LetsEncryptSaveMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@LetsEncryptSaveMessage</div>
                 }
             </div>
         </div>

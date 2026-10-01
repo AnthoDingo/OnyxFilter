@@ -2,13 +2,13 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
-<PageTitle>Serveur DNS · OnyxFilter</PageTitle>
+<PageTitle>@L["Serveur DNS"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Configuration</p>
-        <h1 class="page-title">Serveur DNS</h1>
-        <p class="page-lead">Résolveurs en amont, comportement du serveur, cache et contrôle d'accès.</p>
+        <p class="page-eyebrow">@L["Configuration"]</p>
+        <h1 class="page-title">@L["Serveur DNS"]</h1>
+        <p class="page-lead">@L["Résolveurs en amont, comportement du serveur, cache et contrôle d'accès."]</p>
     </div>
 </header>
 
@@ -16,42 +16,42 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Résolveurs en amont</h2>
+            <h2 class="settings-intro-title">@L["Résolveurs en amont"]</h2>
             <p class="settings-intro-text">
-                Serveurs auxquels OnyxFilter transmet les requêtes qu'il ne bloque pas et ne connaît pas déjà.
+                @L["Serveurs auxquels OnyxFilter transmet les requêtes qu'il ne bloque pas et ne connaît pas déjà."]
             </p>
         </div>
 
         <div class="card settings-panel">
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <label class="setting-label" for="upstream-servers">Serveurs principaux</label>
-                    <p class="setting-help">Un serveur par ligne.</p>
+                    <label class="setting-label" for="upstream-servers">@L["Serveurs principaux"]</label>
+                    <p class="setting-help">@L["Un serveur par ligne."]</p>
                 </div>
                 <div class="setting-nested">
                     <textarea id="upstream-servers" class="form-control font-monospace" rows="6" @bind="UpstreamServersText" @bind:event="oninput"></textarea>
 
                     <details class="help-disclosure">
-                        <summary>Syntaxes acceptées</summary>
+                        <summary>@L["Syntaxes acceptées"]</summary>
                         <dl class="syntax-list">
                             <dt><code>9.9.9.9</code></dt>
-                            <dd>DNS classique, port 53</dd>
+                            <dd>@L["DNS classique, port 53"]</dd>
                             <dt><code>[2620:fe::fe]:53</code></dt>
-                            <dd>Adresse IPv6, entre crochets pour préciser le port</dd>
+                            <dd>@L["Adresse IPv6, entre crochets pour préciser le port"]</dd>
                             <dt><code>udp://9.9.9.9:5353</code></dt>
-                            <dd>UDP uniquement, port personnalisé</dd>
+                            <dd>@L["UDP uniquement, port personnalisé"]</dd>
                             <dt><code>tcp://9.9.9.9</code></dt>
-                            <dd>TCP uniquement</dd>
+                            <dd>@L["TCP uniquement"]</dd>
                             <dt><code>tls://dns.quad9.net</code></dt>
-                            <dd>DNS-over-TLS chiffré (port 853 par défaut)</dd>
+                            <dd>@L["DNS-over-TLS chiffré (port 853 par défaut)"]</dd>
                             <dt><code>https://dns.quad9.net/dns-query</code></dt>
-                            <dd>DNS-over-HTTPS chiffré</dd>
+                            <dd>@L["DNS-over-HTTPS chiffré"]</dd>
                             <dt><code># note</code></dt>
-                            <dd>Commentaire, ligne ignorée</dd>
+                            <dd>@L["Commentaire, ligne ignorée"]</dd>
                         </dl>
                         <p class="form-text px-3 pb-3 mb-0">
-                            Pas encore pris en charge (ligne ignorée) : <code>h3://</code>, <code>quic://</code>,
-                            <code>sdns://</code> et le routage par domaine <code>[/domaine/]serveur</code>.
+                            @L["Pas encore pris en charge (ligne ignorée) :"] <code>h3://</code>, <code>quic://</code>,
+                            <code>sdns://</code> @L["et le routage par domaine"] <code>@L["[/domaine/]serveur"]</code>.
                         </p>
                     </details>
                 </div>
@@ -59,32 +59,31 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <span class="setting-label">Stratégie d'interrogation</span>
-                    <p class="setting-help">Comment répartir les requêtes entre les serveurs principaux.</p>
+                    <span class="setting-label">@L["Stratégie d'interrogation"]</span>
+                    <p class="setting-help">@L["Comment répartir les requêtes entre les serveurs principaux."]</p>
                 </div>
                 <div class="setting-nested choice-grid">
                     <label class="choice" for="mode-load-balancing">
                         <input class="form-check-input choice-input" type="radio" name="resolution-mode" id="mode-load-balancing"
                                checked="@(ResolutionMode == UpstreamResolutionMode.LoadBalancing)"
                                @onchange="() => SetResolutionMode(UpstreamResolutionMode.LoadBalancing)" />
-                        <span class="choice-title">Répartition</span>
-                        <span class="choice-desc">Un serveur à la fois, choisi au hasard en privilégiant les plus rapides et les plus fiables.</span>
+                        <span class="choice-title">@L["Répartition"]</span>
+                        <span class="choice-desc">@L["Un serveur à la fois, choisi au hasard en privilégiant les plus rapides et les plus fiables."]</span>
                     </label>
                     <label class="choice" for="mode-parallel">
                         <input class="form-check-input choice-input" type="radio" name="resolution-mode" id="mode-parallel"
                                checked="@(ResolutionMode == UpstreamResolutionMode.Parallel)"
                                @onchange="() => SetResolutionMode(UpstreamResolutionMode.Parallel)" />
-                        <span class="choice-title">En parallèle</span>
-                        <span class="choice-desc">Tous les serveurs sont interrogés en même temps ; la première réponse l'emporte.</span>
+                        <span class="choice-title">@L["En parallèle"]</span>
+                        <span class="choice-desc">@L["Tous les serveurs sont interrogés en même temps ; la première réponse l'emporte."]</span>
                     </label>
                     <label class="choice" for="mode-fastest">
                         <input class="form-check-input choice-input" type="radio" name="resolution-mode" id="mode-fastest"
                                checked="@(ResolutionMode == UpstreamResolutionMode.FastestAddress)"
                                @onchange="() => SetResolutionMode(UpstreamResolutionMode.FastestAddress)" />
-                        <span class="choice-title">Adresse la plus rapide</span>
+                        <span class="choice-title">@L["Adresse la plus rapide"]</span>
                         <span class="choice-desc">
-                            Attend toutes les réponses puis renvoie l'adresse IP la plus rapide à joindre en TCP. Plus lent
-                            si un serveur tarde à répondre.
+                            @L["Attend toutes les réponses puis renvoie l'adresse IP la plus rapide à joindre en TCP. Plus lent si un serveur tarde à répondre."]
                         </span>
                     </label>
                 </div>
@@ -92,12 +91,12 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <label class="setting-label" for="fallback-servers">Serveurs de secours</label>
-                    <p class="setting-help">Utilisés uniquement si aucun serveur principal ne répond. Même syntaxe que ci-dessus.</p>
+                    <label class="setting-label" for="fallback-servers">@L["Serveurs de secours"]</label>
+                    <p class="setting-help">@L["Utilisés uniquement si aucun serveur principal ne répond. Même syntaxe que ci-dessus."]</p>
                 </div>
                 <div class="setting-nested">
                     <textarea id="fallback-servers" class="form-control font-monospace" rows="3"
-                              placeholder="Un serveur de secours par ligne"
+                              placeholder="@L["Un serveur de secours par ligne"]"
                               @bind="FallbackServersText"
                               @bind:event="oninput"></textarea>
                 </div>
@@ -105,10 +104,10 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <label class="setting-label" for="bootstrap-servers">Serveurs d'amorçage</label>
+                    <label class="setting-label" for="bootstrap-servers">@L["Serveurs d'amorçage"]</label>
                     <p class="setting-help">
-                        Adresses IP servant à résoudre le nom des serveurs chiffrés (<code>tls://</code>,
-                        <code>https://</code>) indiqués ci-dessus. Commentaires non autorisés.
+                        @L["Adresses IP servant à résoudre le nom des serveurs chiffrés"] (<code>tls://</code>,
+                        <code>https://</code>) @L["indiqués ci-dessus. Commentaires non autorisés."]
                     </p>
                 </div>
                 <div class="setting-nested">
@@ -118,16 +117,14 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <label class="setting-label" for="reverse-private-servers">Résolveurs inverses privés</label>
+                    <label class="setting-label" for="reverse-private-servers">@L["Résolveurs inverses privés"]</label>
                     <p class="setting-help">
-                        Serveurs interrogés pour les requêtes PTR, SOA et NS portant sur des adresses privées (par
-                        exemple 192.168.x.x) et émises par un client du réseau local. Laissé vide, OnyxFilter utilise
-                        les résolveurs du système (par défaut <code>8.8.4.4:53</code> et <code>8.8.8.8:53</code>).
+                        @L["Serveurs interrogés pour les requêtes PTR, SOA et NS portant sur des adresses privées (par exemple 192.168.x.x) et émises par un client du réseau local. Laissé vide, OnyxFilter utilise les résolveurs du système (par défaut"] <code>8.8.4.4:53</code> @L["et"] <code>8.8.8.8:53</code>).
                     </p>
                 </div>
                 <div class="setting-nested">
                     <textarea id="reverse-private-servers" class="form-control font-monospace" rows="3"
-                              placeholder="Une adresse IP par ligne"
+                              placeholder="@L["Une adresse IP par ligne"]"
                               @bind="ReversePrivateServersText"
                               @bind:event="oninput"></textarea>
                 </div>
@@ -135,10 +132,9 @@
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="use-private-reverse-resolvers">Résoudre les adresses privées</label>
+                    <label class="setting-label" for="use-private-reverse-resolvers">@L["Résoudre les adresses privées"]</label>
                     <p class="setting-help">
-                        Répond aux requêtes inverses sur les adresses privées via les résolveurs ci-dessus, le DHCP ou
-                        /etc/hosts. Désactivé, OnyxFilter leur répond NXDOMAIN.
+                        @L["Répond aux requêtes inverses sur les adresses privées via les résolveurs ci-dessus, le DHCP ou /etc/hosts. Désactivé, OnyxFilter leur répond NXDOMAIN."]
                     </p>
                 </div>
                 <div class="form-check form-switch setting-control">
@@ -148,10 +144,9 @@
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="enable-client-ip-reverse-resolution">Nommer les clients automatiquement</label>
+                    <label class="setting-label" for="enable-client-ip-reverse-resolution">@L["Nommer les clients automatiquement"]</label>
                     <p class="setting-help">
-                        Retrouve le nom d'hôte des clients à partir de leur adresse IP (requête PTR auprès des
-                        résolveurs privés pour le réseau local, des serveurs principaux sinon).
+                        @L["Retrouve le nom d'hôte des clients à partir de leur adresse IP (requête PTR auprès des résolveurs privés pour le réseau local, des serveurs principaux sinon)."]
                     </p>
                 </div>
                 <div class="form-check form-switch setting-control">
@@ -160,12 +155,12 @@
             </div>
 
             <div class="settings-panel-footer">
-                <button type="button" class="btn btn-primary" @onclick="ValidateDnsServerSettingsAsync">Enregistrer</button>
-                <button type="button" class="btn btn-secondary">Tester les serveurs</button>
-                <button type="button" class="btn btn-outline-secondary" @onclick="ResetDnsServerSettingsAsync">Réinitialiser</button>
+                <button type="button" class="btn btn-primary" @onclick="ValidateDnsServerSettingsAsync">@L["Enregistrer"]</button>
+                <button type="button" class="btn btn-secondary">@L["Tester les serveurs"]</button>
+                <button type="button" class="btn btn-outline-secondary" @onclick="ResetDnsServerSettingsAsync">@L["Réinitialiser"]</button>
                 @if (!string.IsNullOrEmpty(DnsServersStatusMessage))
                 {
-                    <div class="alert @(DnsServersStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@DnsServersStatusMessage</div>
+                    <div class="alert @(DnsServersStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@DnsServersStatusMessage</div>
                 }
             </div>
         </div>
@@ -173,30 +168,29 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Comportement du serveur</h2>
-            <p class="settings-intro-text">Limitation de débit, extensions DNS et réponse renvoyée pour un domaine bloqué.</p>
+            <h2 class="settings-intro-title">@L["Comportement du serveur"]</h2>
+            <p class="settings-intro-text">@L["Limitation de débit, extensions DNS et réponse renvoyée pour un domaine bloqué."]</p>
         </div>
 
         <div class="card settings-panel">
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <span class="setting-label">Limitation de débit</span>
+                    <span class="setting-label">@L["Limitation de débit"]</span>
                     <p class="setting-help">
-                        Nombre maximal de requêtes par seconde pour un même client (0 = illimité). Les adresses sont
-                        regroupées par sous-réseau selon les longueurs de préfixe indiquées.
+                        @L["Nombre maximal de requêtes par seconde pour un même client (0 = illimité). Les adresses sont regroupées par sous-réseau selon les longueurs de préfixe indiquées."]
                     </p>
                 </div>
                 <div class="setting-nested field-grid">
                     <div>
-                        <label class="form-label" for="rate-limit">Requêtes / seconde</label>
+                        <label class="form-label" for="rate-limit">@L["Requêtes / seconde"]</label>
                         <input id="rate-limit" type="number" min="0" class="form-control" @bind="RateLimitPerSecond" @bind:event="oninput" />
                     </div>
                     <div>
-                        <label class="form-label" for="subnet-ipv4">Préfixe IPv4</label>
+                        <label class="form-label" for="subnet-ipv4">@L["Préfixe IPv4"]</label>
                         <input id="subnet-ipv4" type="number" min="0" max="32" class="form-control" @bind="RateLimitSubnetLengthIpv4" @bind:event="oninput" />
                     </div>
                     <div>
-                        <label class="form-label" for="subnet-ipv6">Préfixe IPv6</label>
+                        <label class="form-label" for="subnet-ipv6">@L["Préfixe IPv6"]</label>
                         <input id="subnet-ipv6" type="number" min="0" max="128" class="form-control" @bind="RateLimitSubnetLengthIpv6" @bind:event="oninput" />
                     </div>
                 </div>
@@ -204,8 +198,8 @@
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="enable-edns">Transmettre le sous-réseau du client (EDNS)</label>
-                    <p class="setting-help">Envoie une partie de l'adresse du client aux serveurs en amont pour obtenir des réponses géographiquement proches.</p>
+                    <label class="setting-label" for="enable-edns">@L["Transmettre le sous-réseau du client (EDNS)"]</label>
+                    <p class="setting-help">@L["Envoie une partie de l'adresse du client aux serveurs en amont pour obtenir des réponses géographiquement proches."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="enable-edns" checked="@EnableEdnsClientSubnet" @onchange="OnEnableEdnsClientSubnetChanged" />
@@ -214,8 +208,8 @@
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="enable-dnssec">Valider DNSSEC</label>
-                    <p class="setting-help">Vérifie la signature des réponses lorsque les serveurs en amont la fournissent.</p>
+                    <label class="setting-label" for="enable-dnssec">@L["Valider DNSSEC"]</label>
+                    <p class="setting-help">@L["Vérifie la signature des réponses lorsque les serveurs en amont la fournissent."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="enable-dnssec" checked="@EnableDnssec" @onchange="OnEnableDnssecChanged" />
@@ -224,8 +218,8 @@
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="disable-ipv6">Ignorer IPv6</label>
-                    <p class="setting-help">Les requêtes AAAA reçoivent une réponse vide.</p>
+                    <label class="setting-label" for="disable-ipv6">@L["Ignorer IPv6"]</label>
+                    <p class="setting-help">@L["Les requêtes AAAA reçoivent une réponse vide."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="disable-ipv6" checked="@DisableIpv6Resolution" @onchange="OnDisableIpv6ResolutionChanged" />
@@ -234,45 +228,45 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <span class="setting-label">Réponse aux domaines bloqués</span>
-                    <p class="setting-help">Ce que reçoit un appareil lorsqu'il demande un domaine bloqué.</p>
+                    <span class="setting-label">@L["Réponse aux domaines bloqués"]</span>
+                    <p class="setting-help">@L["Ce que reçoit un appareil lorsqu'il demande un domaine bloqué."]</p>
                 </div>
                 <div class="setting-nested choice-grid">
                     <label class="choice" for="blocking-default">
                         <input class="form-check-input choice-input" type="radio" name="blocking-mode" id="blocking-default" checked="@(BlockingMode == DnsBlockingMode.Default)" @onchange="() => SetBlockingMode(DnsBlockingMode.Default)" />
-                        <span class="choice-title">Automatique</span>
-                        <span class="choice-desc">NXDOMAIN ou adresse nulle selon la règle qui a bloqué.</span>
+                        <span class="choice-title">@L["Automatique"]</span>
+                        <span class="choice-desc">@L["NXDOMAIN ou adresse nulle selon la règle qui a bloqué."]</span>
                     </label>
                     <label class="choice" for="blocking-nxdomain">
                         <input class="form-check-input choice-input" type="radio" name="blocking-mode" id="blocking-nxdomain" checked="@(BlockingMode == DnsBlockingMode.NxDomain)" @onchange="() => SetBlockingMode(DnsBlockingMode.NxDomain)" />
                         <span class="choice-title">NXDOMAIN</span>
-                        <span class="choice-desc">Le domaine est présenté comme inexistant.</span>
+                        <span class="choice-desc">@L["Le domaine est présenté comme inexistant."]</span>
                     </label>
                     <label class="choice" for="blocking-refused">
                         <input class="form-check-input choice-input" type="radio" name="blocking-mode" id="blocking-refused" checked="@(BlockingMode == DnsBlockingMode.Refused)" @onchange="() => SetBlockingMode(DnsBlockingMode.Refused)" />
                         <span class="choice-title">REFUSED</span>
-                        <span class="choice-desc">Le serveur refuse explicitement de répondre.</span>
+                        <span class="choice-desc">@L["Le serveur refuse explicitement de répondre."]</span>
                     </label>
                     <label class="choice" for="blocking-nullip">
                         <input class="form-check-input choice-input" type="radio" name="blocking-mode" id="blocking-nullip" checked="@(BlockingMode == DnsBlockingMode.NullIp)" @onchange="() => SetBlockingMode(DnsBlockingMode.NullIp)" />
-                        <span class="choice-title">Adresse nulle</span>
-                        <span class="choice-desc">Répond <code>0.0.0.0</code> ou <code>::</code>.</span>
+                        <span class="choice-title">@L["Adresse nulle"]</span>
+                        <span class="choice-desc">@L["Répond"] <code>0.0.0.0</code> @L["ou"] <code>::</code>.</span>
                     </label>
                     <label class="choice" for="blocking-customip">
                         <input class="form-check-input choice-input" type="radio" name="blocking-mode" id="blocking-customip" checked="@(BlockingMode == DnsBlockingMode.CustomIp)" @onchange="() => SetBlockingMode(DnsBlockingMode.CustomIp)" />
-                        <span class="choice-title">Adresse personnalisée</span>
-                        <span class="choice-desc">Répond avec les adresses IPv4/IPv6 de votre choix.</span>
+                        <span class="choice-title">@L["Adresse personnalisée"]</span>
+                        <span class="choice-desc">@L["Répond avec les adresses IPv4/IPv6 de votre choix."]</span>
                     </label>
                 </div>
                 @if (BlockingMode == DnsBlockingMode.CustomIp)
                 {
                     <div class="setting-nested field-grid">
                         <div>
-                            <label class="form-label" for="custom-blocking-ipv4">Adresse IPv4 renvoyée</label>
+                            <label class="form-label" for="custom-blocking-ipv4">@L["Adresse IPv4 renvoyée"]</label>
                             <input id="custom-blocking-ipv4" type="text" class="form-control font-monospace" @bind="CustomBlockingIpv4" @bind:event="oninput" />
                         </div>
                         <div>
-                            <label class="form-label" for="custom-blocking-ipv6">Adresse IPv6 renvoyée</label>
+                            <label class="form-label" for="custom-blocking-ipv6">@L["Adresse IPv6 renvoyée"]</label>
                             <input id="custom-blocking-ipv6" type="text" class="form-control font-monospace" @bind="CustomBlockingIpv6" @bind:event="oninput" />
                         </div>
                     </div>
@@ -280,10 +274,10 @@
             </div>
 
             <div class="settings-panel-footer">
-                <button type="button" class="btn btn-primary" @onclick="SaveDnsServerConfigurationAsync">Enregistrer</button>
+                <button type="button" class="btn btn-primary" @onclick="SaveDnsServerConfigurationAsync">@L["Enregistrer"]</button>
                 @if (!string.IsNullOrEmpty(ServerConfigStatusMessage))
                 {
-                    <div class="alert @(ServerConfigStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@ServerConfigStatusMessage</div>
+                    <div class="alert @(ServerConfigStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@ServerConfigStatusMessage</div>
                 }
             </div>
         </div>
@@ -291,15 +285,15 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Cache</h2>
-            <p class="settings-intro-text">Garde les réponses en mémoire pour répondre instantanément aux requêtes répétées.</p>
+            <h2 class="settings-intro-title">@L["Cache"]</h2>
+            <p class="settings-intro-text">@L["Garde les réponses en mémoire pour répondre instantanément aux requêtes répétées."]</p>
         </div>
 
         <div class="card settings-panel">
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="enable-cache">Activer le cache</label>
-                    <p class="setting-help">Conserve les réponses des serveurs en amont pendant leur durée de validité (TTL).</p>
+                    <label class="setting-label" for="enable-cache">@L["Activer le cache"]</label>
+                    <p class="setting-help">@L["Conserve les réponses des serveurs en amont pendant leur durée de validité (TTL)."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="enable-cache" checked="@EnableCache" @onchange="OnEnableCacheChanged" />
@@ -308,23 +302,22 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <span class="setting-label">Taille et durée de vie</span>
+                    <span class="setting-label">@L["Taille et durée de vie"]</span>
                     <p class="setting-help">
-                        Taille à 0 : valeur par défaut choisie par OnyxFilter. TTL à 0 : pas de réécriture de la durée
-                        de validité reçue.
+                        @L["Taille à 0 : valeur par défaut choisie par OnyxFilter. TTL à 0 : pas de réécriture de la durée de validité reçue."]
                     </p>
                 </div>
                 <div class="setting-nested field-grid">
                     <div>
-                        <label class="form-label" for="cache-size">Taille (octets)</label>
+                        <label class="form-label" for="cache-size">@L["Taille (octets)"]</label>
                         <input id="cache-size" type="number" min="0" class="form-control" @bind="CacheSizeBytes" @bind:event="oninput" />
                     </div>
                     <div>
-                        <label class="form-label" for="cache-ttl-min">TTL minimal (s)</label>
+                        <label class="form-label" for="cache-ttl-min">@L["TTL minimal (s)"]</label>
                         <input id="cache-ttl-min" type="number" min="0" class="form-control" @bind="CacheTtlMinSeconds" @bind:event="oninput" />
                     </div>
                     <div>
-                        <label class="form-label" for="cache-ttl-max">TTL maximal (s)</label>
+                        <label class="form-label" for="cache-ttl-max">@L["TTL maximal (s)"]</label>
                         <input id="cache-ttl-max" type="number" min="0" class="form-control" @bind="CacheTtlMaxSeconds" @bind:event="oninput" />
                     </div>
                 </div>
@@ -332,8 +325,8 @@
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="optimistic-cache">Cache optimiste</label>
-                    <p class="setting-help">Sert une réponse expirée immédiatement, puis la rafraîchit en arrière-plan.</p>
+                    <label class="setting-label" for="optimistic-cache">@L["Cache optimiste"]</label>
+                    <p class="setting-help">@L["Sert une réponse expirée immédiatement, puis la rafraîchit en arrière-plan."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="optimistic-cache" checked="@OptimisticCache" @onchange="OnOptimisticCacheChanged" />
@@ -341,11 +334,11 @@
             </div>
 
             <div class="settings-panel-footer">
-                <button type="button" class="btn btn-primary" @onclick="SaveCacheConfigurationAsync">Enregistrer</button>
-                <button type="button" class="btn btn-outline-danger" @onclick="ClearCacheAsync">Vider le cache</button>
+                <button type="button" class="btn btn-primary" @onclick="SaveCacheConfigurationAsync">@L["Enregistrer"]</button>
+                <button type="button" class="btn btn-outline-danger" @onclick="ClearCacheAsync">@L["Vider le cache"]</button>
                 @if (!string.IsNullOrEmpty(CacheStatusMessage))
                 {
-                    <div class="alert @(CacheStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@CacheStatusMessage</div>
+                    <div class="alert @(CacheStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@CacheStatusMessage</div>
                 }
             </div>
         </div>
@@ -353,17 +346,16 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Contrôle d'accès</h2>
-            <p class="settings-intro-text">Qui peut utiliser ce serveur, et quels domaines ne sont jamais traités.</p>
+            <h2 class="settings-intro-title">@L["Contrôle d'accès"]</h2>
+            <p class="settings-intro-text">@L["Qui peut utiliser ce serveur, et quels domaines ne sont jamais traités."]</p>
         </div>
 
         <div class="card settings-panel">
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <label class="setting-label" for="allowed-clients">Clients autorisés</label>
+                    <label class="setting-label" for="allowed-clients">@L["Clients autorisés"]</label>
                     <p class="setting-help">
-                        Adresses IP ou sous-réseaux CIDR, un par ligne. Si la liste n'est pas vide, seuls ces clients
-                        (et les clients toujours autorisés) sont servis.
+                        @L["Adresses IP ou sous-réseaux CIDR, un par ligne. Si la liste n'est pas vide, seuls ces clients (et les clients toujours autorisés) sont servis."]
                     </p>
                 </div>
                 <div class="setting-nested">
@@ -376,12 +368,12 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <label class="setting-label" for="disallowed-clients">Clients refusés</label>
-                    <p class="setting-help">Ignoré tant que la liste des clients autorisés n'est pas vide.</p>
+                    <label class="setting-label" for="disallowed-clients">@L["Clients refusés"]</label>
+                    <p class="setting-help">@L["Ignoré tant que la liste des clients autorisés n'est pas vide."]</p>
                 </div>
                 <div class="setting-nested">
                     <textarea id="disallowed-clients" class="form-control font-monospace" rows="4"
-                              placeholder="Un client par ligne"
+                              placeholder="@L["Un client par ligne"]"
                               @bind="DisallowedClientsText"
                               @bind:event="oninput"></textarea>
                 </div>
@@ -389,10 +381,9 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <label class="setting-label" for="always-allowed-clients">Clients toujours autorisés</label>
+                    <label class="setting-label" for="always-allowed-clients">@L["Clients toujours autorisés"]</label>
                     <p class="setting-help">
-                        Servis dans tous les cas, même couverts par une règle des clients refusés : par exemple une
-                        adresse précise dans un sous-réseau bloqué. Ne restreint pas l'accès des autres clients.
+                        @L["Servis dans tous les cas, même couverts par une règle des clients refusés : par exemple une adresse précise dans un sous-réseau bloqué. Ne restreint pas l'accès des autres clients."]
                     </p>
                 </div>
                 <div class="setting-nested">
@@ -405,22 +396,22 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <label class="setting-label" for="disallowed-domains">Domaines ignorés</label>
-                    <p class="setting-help">Ces requêtes ne sont pas traitées du tout, ni comptées, ni journalisées.</p>
+                    <label class="setting-label" for="disallowed-domains">@L["Domaines ignorés"]</label>
+                    <p class="setting-help">@L["Ces requêtes ne sont pas traitées du tout, ni comptées, ni journalisées."]</p>
                 </div>
                 <div class="setting-nested">
                     <textarea id="disallowed-domains" class="form-control font-monospace" rows="4"
-                              placeholder="Un domaine par ligne"
+                              placeholder="@L["Un domaine par ligne"]"
                               @bind="DisallowedDomainsText"
                               @bind:event="oninput"></textarea>
                 </div>
             </div>
 
             <div class="settings-panel-footer">
-                <button type="button" class="btn btn-primary" @onclick="SaveAccessSettingsAsync">Enregistrer</button>
+                <button type="button" class="btn btn-primary" @onclick="SaveAccessSettingsAsync">@L["Enregistrer"]</button>
                 @if (!string.IsNullOrEmpty(AccessStatusMessage))
                 {
-                    <div class="alert @(AccessStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@AccessStatusMessage</div>
+                    <div class="alert @(AccessStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@AccessStatusMessage</div>
                 }
             </div>
         </div>

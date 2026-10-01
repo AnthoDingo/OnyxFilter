@@ -1,21 +1,20 @@
 @page "/Error"
 @attribute [AllowAnonymous]
 
-<PageTitle>Erreur · OnyxFilter</PageTitle>
+<PageTitle>@L["Erreur"] · OnyxFilter</PageTitle>
 
 <div class="card placeholder-card">
     <span class="placeholder-icon placeholder-icon-danger" aria-hidden="true"><Icon Name="alert" /></span>
-    <h1 class="placeholder-title">Une erreur est survenue</h1>
-    <p class="placeholder-text">La requête n'a pas pu être traitée.</p>
+    <h1 class="placeholder-title">@L["Une erreur est survenue"]</h1>
+    <p class="placeholder-text">@L["La requête n'a pas pu être traitée."]</p>
 
     @if (ShowRequestId)
     {
-        <p class="placeholder-text">Identifiant de la requête : <code>@RequestId</code></p>
+        <p class="placeholder-text">@L["Identifiant de la requête :"] <code>@RequestId</code></p>
     }
 
     <p class="placeholder-hint">
-        Pour obtenir le détail de l'erreur, démarrez l'application avec la variable d'environnement
-        <code>ASPNETCORE_ENVIRONMENT=Development</code>. Ne laissez jamais ce mode actif sur une installation
-        exposée : il peut afficher des informations sensibles.
+        @L["Pour obtenir le détail de l'erreur, démarrez l'application avec la variable d'environnement"]
+        <code>ASPNETCORE_ENVIRONMENT=Development</code>. @L["Ne laissez jamais ce mode actif sur une installation exposée : il peut afficher des informations sensibles."]
     </p>
 </div>

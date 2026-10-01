@@ -1,13 +1,13 @@
 @page "/account/passkeys"
 @attribute [Authorize]
 
-<PageTitle>Clés d'accès · OnyxFilter</PageTitle>
+<PageTitle>@L["Clés d'accès"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Compte</p>
-        <h1 class="page-title">Clés d'accès</h1>
-        <p class="page-lead">Connexion sans mot de passe via l'empreinte, le visage ou une clé de sécurité.</p>
+        <p class="page-eyebrow">@L["Compte"]</p>
+        <h1 class="page-title">@L["Clés d'accès"]</h1>
+        <p class="page-lead">@L["Connexion sans mot de passe via l'empreinte, le visage ou une clé de sécurité."]</p>
     </div>
 </header>
 
@@ -22,8 +22,8 @@
                 {
                     <tr>
                         <td>
-                            <span class="list-name">@(passkey.Name ?? "Clé d'accès")</span>
-                            <span class="text-body-secondary small">Ajoutée le @FormatCreatedAt(passkey.CreatedAt)</span>
+                            <span class="list-name">@L[passkey.Name ?? "Clé d'accès"]</span>
+                            <span class="text-body-secondary small">@L["Ajoutée le {0}", FormatCreatedAt(passkey.CreatedAt)]</span>
                         </td>
                         <td>
                             @{
@@ -32,7 +32,7 @@
                             <form class="row-actions" @formname="@($"delete-passkey-{credentialId}")" @onsubmit="DeletePasskeyAsync" method="post">
                                 <AntiforgeryToken />
                                 <input type="hidden" name="CredentialId" value="@credentialId" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                <button type="submit" class="btn btn-sm btn-outline-danger">@L["Supprimer"]</button>
                             </form>
                         </td>
                     </tr>
@@ -43,8 +43,8 @@
     else
     {
         <p class="empty-state mb-0">
-            <span class="empty-state-title">Aucune clé d'accès</span>
-            Ajoutez-en une pour vous connecter sans mot de passe.
+            <span class="empty-state-title">@L["Aucune clé d'accès"]</span>
+            @L["Ajoutez-en une pour vous connecter sans mot de passe."]
         </p>
     }
 
@@ -52,12 +52,12 @@
         <AntiforgeryToken />
         @if (CurrentPasskeys is { Count: >= MaxPasskeyCount })
         {
-            <p class="text-danger mb-0">Nombre maximal de clés atteint : supprimez-en une avant d'en ajouter une autre.</p>
+            <p class="text-danger mb-0">@L["Nombre maximal de clés atteint : supprimez-en une avant d'en ajouter une autre."]</p>
         }
         else
         {
             <PasskeySubmit Operation="PasskeyOperation.Create" Name="Input" class="btn btn-secondary">
-                <Icon Name="plus" />Ajouter une clé d'accès
+                <Icon Name="plus" />@L["Ajouter une clé d'accès"]
             </PasskeySubmit>
         }
     </form>

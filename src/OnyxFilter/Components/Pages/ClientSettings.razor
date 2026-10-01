@@ -3,46 +3,45 @@
 @rendermode InteractiveServer
 @using OnyxFilter.Services.Statistics
 
-<PageTitle>Clients · OnyxFilter</PageTitle>
+<PageTitle>@L["Clients"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Configuration</p>
-        <h1 class="page-title">Clients</h1>
+        <p class="page-eyebrow">@L["Configuration"]</p>
+        <h1 class="page-title">@L["Clients"]</h1>
         <p class="page-lead">
-            Donnez un nom aux appareils du réseau et, si besoin, des réglages propres : protections, services bloqués,
-            serveurs en amont.
+            @L["Donnez un nom aux appareils du réseau et, si besoin, des réglages propres : protections, services bloqués, serveurs en amont."]
         </p>
     </div>
     <div class="page-actions">
         <button type="button" class="btn btn-primary" @onclick="OpenAddDialog">
-            <Icon Name="plus" />Ajouter un client
+            <Icon Name="plus" />@L["Ajouter un client"]
         </button>
     </div>
 </header>
 
 @if (!string.IsNullOrEmpty(StatusMessage))
 {
-    <div class="alert page-status @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
+    <div class="alert page-status @(StatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
 }
 
 <div class="card table-panel mb-4">
     <div class="table-panel-head">
         <div>
-            <h2 class="table-panel-title">Clients déclarés</h2>
-            <p class="table-panel-desc">Identifiés par adresse IP ou plage CIDR.</p>
+            <h2 class="table-panel-title">@L["Clients déclarés"]</h2>
+            <p class="table-panel-desc">@L["Identifiés par adresse IP ou plage CIDR."]</p>
         </div>
     </div>
     <div class="table-responsive">
         <table class="table align-middle">
             <thead>
                 <tr>
-                    <th scope="col">Client</th>
-                    <th scope="col">Réglages</th>
-                    <th scope="col">Services bloqués</th>
-                    <th scope="col">Amont</th>
-                    <th scope="col">Requêtes</th>
-                    <th scope="col"><span class="visually-hidden">Actions</span></th>
+                    <th scope="col">@L["Client"]</th>
+                    <th scope="col">@L["Réglages"]</th>
+                    <th scope="col">@L["Services bloqués"]</th>
+                    <th scope="col">@L["Amont"]</th>
+                    <th scope="col">@L["Requêtes"]</th>
+                    <th scope="col"><span class="visually-hidden">@L["Actions"]</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -50,8 +49,8 @@
                 {
                     <tr>
                         <td colspan="6" class="empty-state">
-                            <span class="empty-state-title">Aucun client déclaré</span>
-                            Les appareils apparaissent ci-dessous dès leurs premières requêtes.
+                            <span class="empty-state-title">@L["Aucun client déclaré"]</span>
+                            @L["Les appareils apparaissent ci-dessous dès leurs premières requêtes."]
                         </td>
                     </tr>
                 }
@@ -76,22 +75,22 @@
                             <td>
                                 @if (entry.UseGlobalSettings)
                                 {
-                                    <span class="badge text-bg-secondary">Globaux</span>
+                                    <span class="badge text-bg-secondary">@L["Globaux"]</span>
                                 }
                                 else
                                 {
-                                    <span class="badge text-bg-primary">Personnalisés</span>
+                                    <span class="badge text-bg-primary">@L["Personnalisés"]</span>
                                 }
                             </td>
-                            <td class="text-body-secondary">@(entry.UseGlobalBlockedServices ? "Globaux" : entry.BlockedServiceIds.Count + " service(s)")</td>
-                            <td class="text-body-secondary">@(entry.UpstreamServers.Count == 0 ? "Globaux" : entry.UpstreamServers.Count + " serveur(s)")</td>
-                            <td class="mono">@GetQueryCount(entry).ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))</td>
+                            <td class="text-body-secondary">@(entry.UseGlobalBlockedServices ? L["Globaux"] : L["{0} service(s)", entry.BlockedServiceIds.Count])</td>
+                            <td class="text-body-secondary">@(entry.UpstreamServers.Count == 0 ? L["Globaux"] : L["{0} serveur(s)", entry.UpstreamServers.Count])</td>
+                            <td class="mono">@GetQueryCount(entry).ToString("N0", System.Globalization.CultureInfo.CurrentCulture)</td>
                             <td>
                                 <div class="row-actions">
-                                    <button type="button" class="btn btn-outline-primary btn-icon" title="Modifier" aria-label="Modifier @entry.Name" @onclick="() => OpenEditDialog(entry)">
+                                    <button type="button" class="btn btn-outline-primary btn-icon" title="@L["Modifier"]" aria-label="@L["Modifier {0}", entry.Name]" @onclick="() => OpenEditDialog(entry)">
                                         <Icon Name="edit" />
                                     </button>
-                                    <button type="button" class="btn btn-outline-danger btn-icon" title="Supprimer" aria-label="Supprimer @entry.Name" @onclick="() => RequestDelete(entry)">
+                                    <button type="button" class="btn btn-outline-danger btn-icon" title="@L["Supprimer"]" aria-label="@L["Supprimer {0}", entry.Name]" @onclick="() => RequestDelete(entry)">
                                         <Icon Name="trash" />
                                     </button>
                                 </div>
@@ -106,19 +105,19 @@
     @if (Clients.Count > 0)
     {
         <div class="pagination-bar">
-            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage <= 1)" @onclick="GoToPreviousPage">Précédent</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage <= 1)" @onclick="GoToPreviousPage">@L["Précédent"]</button>
 
             <div class="pagination-bar-center">
-                <span>Page @CurrentPage sur @TotalPages</span>
-                <select class="form-select form-select-sm" aria-label="Lignes par page" value="@PageSize" @onchange="OnPageSizeChanged">
+                <span>@L["Page {0} sur {1}", CurrentPage, TotalPages]</span>
+                <select class="form-select form-select-sm" aria-label="@L["Lignes par page"]" value="@PageSize" @onchange="OnPageSizeChanged">
                     @foreach (int option in PageSizeOptions)
                     {
-                        <option value="@option">@option par page</option>
+                        <option value="@option">@L["{0} par page", option]</option>
                     }
                 </select>
             </div>
 
-            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage >= TotalPages)" @onclick="GoToNextPage">Suivant</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage >= TotalPages)" @onclick="GoToNextPage">@L["Suivant"]</button>
         </div>
     }
 </div>
@@ -126,19 +125,19 @@
 <div class="card table-panel">
     <div class="table-panel-head">
         <div>
-            <h2 class="table-panel-title">Appareils détectés</h2>
-            <p class="table-panel-desc">Adresses vues dans les statistiques qui ne correspondent à aucun client déclaré.</p>
+            <h2 class="table-panel-title">@L["Appareils détectés"]</h2>
+            <p class="table-panel-desc">@L["Adresses vues dans les statistiques qui ne correspondent à aucun client déclaré."]</p>
         </div>
     </div>
     <div class="table-responsive">
         <table class="table align-middle">
             <thead>
                 <tr>
-                    <th scope="col">Adresse</th>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Source</th>
+                    <th scope="col">@L["Adresse"]</th>
+                    <th scope="col">@L["Nom"]</th>
+                    <th scope="col">@L["Source"]</th>
                     <th scope="col">WHOIS</th>
-                    <th scope="col">Requêtes</th>
+                    <th scope="col">@L["Requêtes"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -146,8 +145,8 @@
                 {
                     <tr>
                         <td colspan="5" class="empty-state">
-                            <span class="empty-state-title">Aucun appareil détecté</span>
-                            Rien n'a encore été observé dans les statistiques.
+                            <span class="empty-state-title">@L["Aucun appareil détecté"]</span>
+                            @L["Rien n'a encore été observé dans les statistiques."]
                         </td>
                     </tr>
                 }
@@ -158,9 +157,9 @@
                         <tr>
                             <td class="mono">@entry.Label</td>
                             <td class="text-body-secondary">—</td>
-                            <td><span class="badge text-bg-secondary">Statistiques</span></td>
+                            <td><span class="badge text-bg-secondary">@L["Statistiques"]</span></td>
                             <td class="text-body-secondary">—</td>
-                            <td class="mono">@entry.Count.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("fr-FR"))</td>
+                            <td class="mono">@entry.Count.ToString("N0", System.Globalization.CultureInfo.CurrentCulture)</td>
                         </tr>
                     }
                 }
@@ -171,19 +170,19 @@
     @if (RuntimeClients.Count > 0)
     {
         <div class="pagination-bar">
-            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(RuntimeCurrentPage <= 1)" @onclick="GoToPreviousRuntimePage">Précédent</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(RuntimeCurrentPage <= 1)" @onclick="GoToPreviousRuntimePage">@L["Précédent"]</button>
 
             <div class="pagination-bar-center">
-                <span>Page @RuntimeCurrentPage sur @RuntimeTotalPages</span>
-                <select class="form-select form-select-sm" aria-label="Lignes par page" value="@RuntimePageSize" @onchange="OnRuntimePageSizeChanged">
+                <span>@L["Page {0} sur {1}", RuntimeCurrentPage, RuntimeTotalPages]</span>
+                <select class="form-select form-select-sm" aria-label="@L["Lignes par page"]" value="@RuntimePageSize" @onchange="OnRuntimePageSizeChanged">
                     @foreach (int option in PageSizeOptions)
                     {
-                        <option value="@option">@option par page</option>
+                        <option value="@option">@L["{0} par page", option]</option>
                     }
                 </select>
             </div>
 
-            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(RuntimeCurrentPage >= RuntimeTotalPages)" @onclick="GoToNextRuntimePage">Suivant</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(RuntimeCurrentPage >= RuntimeTotalPages)" @onclick="GoToNextRuntimePage">@L["Suivant"]</button>
         </div>
     }
 </div>
@@ -195,30 +194,30 @@
     <div class="modal-static" role="dialog" aria-modal="true" aria-labelledby="client-dialog-title">
         <div class="card dialog-card dialog-card-wide">
             <div class="card-body">
-                <h2 class="dialog-title" id="client-dialog-title">@(IsEditMode ? "Modifier le client" : "Nouveau client")</h2>
-                <p class="dialog-lead">Un client regroupe une ou plusieurs adresses sous un même nom et les mêmes réglages.</p>
+                <h2 class="dialog-title" id="client-dialog-title">@(IsEditMode ? L["Modifier le client"] : L["Nouveau client"])</h2>
+                <p class="dialog-lead">@L["Un client regroupe une ou plusieurs adresses sous un même nom et les mêmes réglages."]</p>
 
                 <div class="field-grid mb-3">
                     <div>
-                        <label class="form-label" for="dialog-client-name">Nom</label>
+                        <label class="form-label" for="dialog-client-name">@L["Nom"]</label>
                         <input id="dialog-client-name" type="text" class="form-control" @bind="DialogName" @bind:event="oninput" />
                     </div>
                     <div>
-                        <label class="form-label" for="dialog-client-tags">Étiquettes (une par ligne)</label>
+                        <label class="form-label" for="dialog-client-tags">@L["Étiquettes (une par ligne)"]</label>
                         <textarea id="dialog-client-tags" class="form-control" rows="2" @bind="DialogTagsText" @bind:event="oninput"></textarea>
                     </div>
                 </div>
 
                 <div class="mb-1">
-                    <label class="form-label" for="dialog-client-identifiers">Adresses IP ou plages CIDR (une par ligne)</label>
+                    <label class="form-label" for="dialog-client-identifiers">@L["Adresses IP ou plages CIDR (une par ligne)"]</label>
                     <textarea id="dialog-client-identifiers" class="form-control font-monospace" rows="3" placeholder="@IdentifiersPlaceholder" @bind="DialogIdentifiersText" @bind:event="oninput"></textarea>
                 </div>
 
-                <h3 class="dialog-section-title">Protections</h3>
+                <h3 class="dialog-section-title">@L["Protections"]</h3>
 
                 <div class="form-check form-switch mb-2">
                     <input class="form-check-input" type="checkbox" role="switch" id="dialog-use-global-settings" checked="@DialogUseGlobalSettings" @onchange="e => DialogUseGlobalSettings = e.Value is bool v && v" />
-                    <label class="form-check-label" for="dialog-use-global-settings">Suivre les réglages de la page Général</label>
+                    <label class="form-check-label" for="dialog-use-global-settings">@L["Suivre les réglages de la page Général"]</label>
                 </div>
 
                 @if (!DialogUseGlobalSettings)
@@ -226,28 +225,28 @@
                     <div class="dialog-options">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="dialog-filtering" checked="@DialogFilteringEnabled" @onchange="e => DialogFilteringEnabled = e.Value is bool v && v" />
-                            <label class="form-check-label" for="dialog-filtering">Listes de blocage</label>
+                            <label class="form-check-label" for="dialog-filtering">@L["Listes de blocage"]</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="dialog-browsing-security" checked="@DialogBrowsingSecurityEnabled" @onchange="e => DialogBrowsingSecurityEnabled = e.Value is bool v && v" />
-                            <label class="form-check-label" for="dialog-browsing-security">Sécurité de navigation</label>
+                            <label class="form-check-label" for="dialog-browsing-security">@L["Sécurité de navigation"]</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="dialog-parental-control" checked="@DialogParentalControlEnabled" @onchange="e => DialogParentalControlEnabled = e.Value is bool v && v" />
-                            <label class="form-check-label" for="dialog-parental-control">Contrôle parental</label>
+                            <label class="form-check-label" for="dialog-parental-control">@L["Contrôle parental"]</label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="dialog-safe-search" checked="@DialogSafeSearchEnabled" @onchange="e => DialogSafeSearchEnabled = e.Value is bool v && v" />
-                            <label class="form-check-label" for="dialog-safe-search">Recherche sécurisée</label>
+                            <label class="form-check-label" for="dialog-safe-search">@L["Recherche sécurisée"]</label>
                         </div>
                     </div>
                 }
 
-                <h3 class="dialog-section-title">Services bloqués</h3>
+                <h3 class="dialog-section-title">@L["Services bloqués"]</h3>
 
                 <div class="form-check form-switch mb-2">
                     <input class="form-check-input" type="checkbox" role="switch" id="dialog-use-global-blocked-services" checked="@DialogUseGlobalBlockedServices" @onchange="e => DialogUseGlobalBlockedServices = e.Value is bool v && v" />
-                    <label class="form-check-label" for="dialog-use-global-blocked-services">Suivre la page Services bloqués</label>
+                    <label class="form-check-label" for="dialog-use-global-blocked-services">@L["Suivre la page Services bloqués"]</label>
                 </div>
 
                 @if (!DialogUseGlobalBlockedServices)
@@ -261,21 +260,21 @@
                     </div>
                 }
 
-                <h3 class="dialog-section-title">Résolution et suivi</h3>
+                <h3 class="dialog-section-title">@L["Résolution et suivi"]</h3>
 
                 <div class="mb-3">
-                    <label class="form-label" for="dialog-client-upstreams">Serveurs en amont dédiés (un par ligne, vide = serveurs globaux)</label>
+                    <label class="form-label" for="dialog-client-upstreams">@L["Serveurs en amont dédiés (un par ligne, vide = serveurs globaux)"]</label>
                     <textarea id="dialog-client-upstreams" class="form-control font-monospace" rows="2" @bind="DialogUpstreamServersText" @bind:event="oninput"></textarea>
                 </div>
 
                 <div class="form-check form-switch mb-2">
                     <input class="form-check-input" type="checkbox" role="switch" id="dialog-ignore-query-log" checked="@DialogIgnoreQueryLog" @onchange="e => DialogIgnoreQueryLog = e.Value is bool v && v" />
-                    <label class="form-check-label" for="dialog-ignore-query-log">Ne pas journaliser ses requêtes</label>
+                    <label class="form-check-label" for="dialog-ignore-query-log">@L["Ne pas journaliser ses requêtes"]</label>
                 </div>
 
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="dialog-ignore-statistics" checked="@DialogIgnoreStatistics" @onchange="e => DialogIgnoreStatistics = e.Value is bool v && v" />
-                    <label class="form-check-label" for="dialog-ignore-statistics">L'exclure des statistiques</label>
+                    <label class="form-check-label" for="dialog-ignore-statistics">@L["L'exclure des statistiques"]</label>
                 </div>
 
                 @if (!string.IsNullOrEmpty(DialogError))
@@ -285,9 +284,9 @@
             </div>
             <div class="card-footer">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDialog" disabled="@IsSavingDialog">Annuler</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDialog" disabled="@IsSavingDialog">@L["Annuler"]</button>
                     <button type="button" class="btn btn-primary" @onclick="SaveDialogAsync" disabled="@IsSavingDialog">
-                        @(IsSavingDialog ? "Enregistrement…" : "Enregistrer")
+                        @(IsSavingDialog ? L["Enregistrement…"] : L["Enregistrer"])
                     </button>
                 </div>
             </div>
@@ -302,15 +301,15 @@
     <div class="modal-static" role="alertdialog" aria-modal="true" aria-labelledby="delete-dialog-title">
         <div class="card dialog-card">
             <div class="card-body">
-                <h2 class="dialog-title" id="delete-dialog-title">Supprimer le client ?</h2>
+                <h2 class="dialog-title" id="delete-dialog-title">@L["Supprimer le client ?"]</h2>
                 <p class="dialog-lead mb-0">
-                    « @EntryPendingDeletion.Name » repassera sous les réglages globaux. Cette action est définitive.
+                    @L["« {0} » repassera sous les réglages globaux. Cette action est définitive.", EntryPendingDeletion.Name]
                 </p>
             </div>
             <div class="card-footer">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">Annuler</button>
-                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeleteAsync">Supprimer</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">@L["Annuler"]</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeleteAsync">@L["Supprimer"]</button>
                 </div>
             </div>
         </div>

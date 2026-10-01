@@ -13,7 +13,7 @@ namespace OnyxFilter.Components.Shared;
 // sans calcul de tracé, et léger pour un serveur modeste.
 public partial class ActivityChart : ComponentBase
 {
-    private static readonly CultureInfo DisplayCulture = CultureInfo.GetCultureInfo("fr-FR");
+    private static CultureInfo DisplayCulture => CultureInfo.CurrentCulture;
 
     [Parameter]
     public IReadOnlyList<DnsStatisticsHourlyPoint> Points { get; set; } = Array.Empty<DnsStatisticsHourlyPoint>();
@@ -55,18 +55,14 @@ public partial class ActivityChart : ComponentBase
             {
                 HeightPercent = ToPercent(point.TotalQueries, ScaleMax),
                 BlockedPercent = ToPercent(blocked, point.TotalQueries),
-                HourLabel = start.Hour.ToString(CultureInfo.InvariantCulture) + " h",
-                Tooltip = string.Create(
-                    DisplayCulture,
-                    $"{start:HH} h – {start.AddHours(1):HH} h · {FormatCount(point.TotalQueries)} requête(s), dont {FormatCount(blocked)} bloquée(s)"),
+                HourLabel = L["{0} h", start.Hour.ToString(CultureInfo.InvariantCulture)],
+                Tooltip = L["{0} h – {1} h · {2} requête(s), dont {3} bloquée(s)", start.ToString("HH"), start.AddHours(1).ToString("HH"), FormatCount(point.TotalQueries), FormatCount(blocked)],
             });
         }
 
         long total = Points.Sum(point => point.TotalQueries);
         long totalBlocked = Points.Sum(point => point.BlockedQueries);
-        AriaSummary = string.Create(
-            DisplayCulture,
-            $"Requêtes par heure sur les dernières 24 heures : {FormatCount(total)} au total, dont {FormatCount(totalBlocked)} bloquées.");
+        AriaSummary = L["Requêtes par heure sur les dernières 24 heures : {0} au total, dont {1} bloquées.", FormatCount(total), FormatCount(totalBlocked)];
     }
 
     private static string FormatCount(long value) => value.ToString("N0", DisplayCulture);

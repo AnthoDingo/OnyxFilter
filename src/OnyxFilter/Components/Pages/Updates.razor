@@ -3,20 +3,19 @@
 @rendermode InteractiveServer
 @using OnyxFilter.Services.Updates
 
-<PageTitle>Mises à jour · OnyxFilter</PageTitle>
+<PageTitle>@L["Mises à jour"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Configuration</p>
-        <h1 class="page-title">Mises à jour</h1>
+        <p class="page-eyebrow">@L["Configuration"]</p>
+        <h1 class="page-title">@L["Mises à jour"]</h1>
         <p class="page-lead">
-            OnyxFilter suit ses publications GitHub et s'installe en un clic : archive vérifiée, fichiers actuels
-            sauvegardés, redémarrage automatique.
+            @L["OnyxFilter suit ses publications GitHub et s'installe en un clic : archive vérifiée, fichiers actuels sauvegardés, redémarrage automatique."]
         </p>
     </div>
     <div class="page-actions">
         <button type="button" class="btn btn-secondary" @onclick="CheckNowAsync" disabled="@Status.IsBusy">
-            <Icon Name="refresh" />@(Status.State == UpdateState.Checking ? "Recherche…" : "Rechercher maintenant")
+            <Icon Name="refresh" />@(Status.State == UpdateState.Checking ? L["Recherche…"] : L["Rechercher maintenant"])
         </button>
     </div>
 </header>
@@ -24,7 +23,7 @@
 @if (Status.LastUpdate is { } lastUpdate)
 {
     <div class="alert alert-success page-status">
-        Mise à jour de la version @lastUpdate.From vers @lastUpdate.To installée le @FormatDate(lastUpdate.InstalledAtUtc).
+        @L["Mise à jour de la version {0} vers {1} installée le {2}.", lastUpdate.From, lastUpdate.To, FormatDate(lastUpdate.InstalledAtUtc)]
     </div>
 }
 
@@ -32,25 +31,25 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Version</h2>
+            <h2 class="settings-intro-title">@L["Version"]</h2>
             <p class="settings-intro-text">
-                Publications suivies :
+                @L["Publications suivies :"]
                 <a href="@ReleasesUrl" target="_blank" rel="noopener noreferrer">@UpdateOptions.Value.Repository</a>.
-                Dernière vérification : @FormatDate(Status.LastCheckedUtc).
+                @L["Dernière vérification : {0}.", FormatDate(Status.LastCheckedUtc)]
             </p>
         </div>
 
         <div class="card settings-panel">
             <div class="version-row">
                 <div class="version-block">
-                    <span class="version-label">Installée</span>
+                    <span class="version-label">@L["Installée"]</span>
                     <span class="version-value">@Status.CurrentVersion</span>
                 </div>
 
                 <span class="version-arrow" aria-hidden="true"><Icon Name="arrow-right" /></span>
 
                 <div class="version-block">
-                    <span class="version-label">Dernière publication</span>
+                    <span class="version-label">@L["Dernière publication"]</span>
                     @if (Status.LatestRelease is { } latest)
                     {
                         <span class="version-value @(Status.IsUpdateAvailable ? "is-new" : "")">@latest.Version</span>
@@ -65,18 +64,18 @@
                     @switch (Status.State)
                     {
                         case UpdateState.Checking:
-                            <span class="state-pill state-pill-off">Recherche…</span>
+                            <span class="state-pill state-pill-off">@L["Recherche…"]</span>
                             break;
                         case UpdateState.UpToDate:
-                            <span class="state-pill state-pill-on">À jour</span>
+                            <span class="state-pill state-pill-on">@L["À jour"]</span>
                             break;
                         case UpdateState.Idle:
-                            <span class="state-pill state-pill-off">Non vérifiée</span>
+                            <span class="state-pill state-pill-off">@L["Non vérifiée"]</span>
                             break;
                         default:
                             if (Status.IsUpdateAvailable)
                             {
-                                <span class="state-pill state-pill-new">Nouvelle version</span>
+                                <span class="state-pill state-pill-new">@L["Nouvelle version"]</span>
                             }
                             break;
                     }
@@ -87,8 +86,7 @@
             {
                 <div class="setting setting-stacked">
                     <div class="alert alert-info mb-0">
-                        Compilation de développement : les publications sont signalées ici, mais l'installation
-                        automatique ne concerne que les versions publiées.
+                        @L["Compilation de développement : les publications sont signalées ici, mais l'installation automatique ne concerne que les versions publiées."]
                     </div>
                 </div>
             }
@@ -117,7 +115,7 @@
                         @if (Status.State == UpdateState.Restarting)
                         {
                             <p class="setting-help mb-0">
-                                Le filtrage reprend dans quelques secondes ; cette page se rechargera d'elle-même.
+                                @L["Le filtrage reprend dans quelques secondes ; cette page se rechargera d'elle-même."]
                             </p>
                         }
                     </div>
@@ -132,25 +130,25 @@
                                 @release.Name
                                 @if (release.IsPreRelease)
                                 {
-                                    <span class="badge text-bg-warning ms-2">Préversion</span>
+                                    <span class="badge text-bg-warning ms-2">@L["Préversion"]</span>
                                 }
                             </h3>
                             <p class="setting-help">
-                                Publiée le @FormatDate(release.PublishedAt)
+                                @L["Publiée le {0}", FormatDate(release.PublishedAt)]
                                 @if (release.Package is { Size: > 0 } package)
                                 {
-                                    <span> · archive de @FormatSize(package.Size)</span>
+                                    <span> · @L["archive de {0}", FormatSize(package.Size)]</span>
                                 }
                                 @if (!string.IsNullOrEmpty(release.HtmlUrl))
                                 {
-                                    <span> · <a href="@release.HtmlUrl" target="_blank" rel="noopener noreferrer">voir sur GitHub</a></span>
+                                    <span> · <a href="@release.HtmlUrl" target="_blank" rel="noopener noreferrer">@L["voir sur GitHub"]</a></span>
                                 }
                             </p>
                         </div>
                         @if (Status.CanInstall)
                         {
                             <button type="button" class="btn btn-primary" @onclick="RequestInstall">
-                                <Icon Name="download" />Installer @release.Version
+                                <Icon Name="download" />@L["Installer {0}", release.Version]
                             </button>
                         }
                     </div>
@@ -164,7 +162,7 @@
                     {
                         <div class="alert alert-warning mt-3 mb-0">
                             @blocker
-                            <a href="@ReleasesUrl" target="_blank" rel="noopener noreferrer">Téléchargements</a>
+                            <a href="@ReleasesUrl" target="_blank" rel="noopener noreferrer">@L["Téléchargements"]</a>
                         </div>
                     }
                 </div>
@@ -174,15 +172,15 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Préférences</h2>
-            <p class="settings-intro-text">La recherche automatique ne télécharge ni n'installe jamais rien d'elle-même.</p>
+            <h2 class="settings-intro-title">@L["Préférences"]</h2>
+            <p class="settings-intro-text">@L["La recherche automatique ne télécharge ni n'installe jamais rien d'elle-même."]</p>
         </div>
 
         <div class="card settings-panel">
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="update-auto-check">Rechercher automatiquement</label>
-                    <p class="setting-help">Toutes les 12 heures ; une pastille apparaît dans le menu quand une version est disponible.</p>
+                    <label class="setting-label" for="update-auto-check">@L["Rechercher automatiquement"]</label>
+                    <p class="setting-help">@L["Toutes les 12 heures ; une pastille apparaît dans le menu quand une version est disponible."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="update-auto-check" checked="@AutoCheck" @onchange="OnAutoCheckChanged" />
@@ -191,8 +189,8 @@
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="update-prereleases">Inclure les préversions</label>
-                    <p class="setting-help">Propose aussi les versions de test (bêta, candidates), potentiellement moins stables.</p>
+                    <label class="setting-label" for="update-prereleases">@L["Inclure les préversions"]</label>
+                    <p class="setting-help">@L["Propose aussi les versions de test (bêta, candidates), potentiellement moins stables."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="update-prereleases" checked="@IncludePreReleases" @onchange="OnIncludePreReleasesChanged" />
@@ -202,7 +200,7 @@
             @if (!string.IsNullOrEmpty(SettingsMessage))
             {
                 <div class="settings-panel-footer">
-                    <div class="alert @(SettingsMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@SettingsMessage</div>
+                    <div class="alert @(SettingsMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@SettingsMessage</div>
                 </div>
             }
         </div>
@@ -210,17 +208,16 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Retour arrière</h2>
-            <p class="settings-intro-text">Les fichiers remplacés par la dernière mise à jour sont conservés sur le serveur.</p>
+            <h2 class="settings-intro-title">@L["Retour arrière"]</h2>
+            <p class="settings-intro-text">@L["Les fichiers remplacés par la dernière mise à jour sont conservés sur le serveur."]</p>
         </div>
 
         <div class="card settings-panel">
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <span class="setting-label">Revenir à la version précédente</span>
+                    <span class="setting-label">@L["Revenir à la version précédente"]</span>
                     <p class="setting-help">
-                        Données et réglages (base, <code>appsettings*.json</code>, caches) ne sont jamais touchés par une
-                        mise à jour. Pour restaurer les fichiers de l'application précédente :
+                        @((MarkupString)L["Données et réglages (base, <code>appsettings*.json</code>, caches) ne sont jamais touchés par une mise à jour. Pour restaurer les fichiers de l'application précédente :"].Value)
                     </p>
                 </div>
                 <div class="setting-nested">
@@ -241,14 +238,14 @@ sudo systemctl start onyxfilter</pre>
     <div class="modal-static" role="alertdialog" aria-modal="true" aria-labelledby="install-dialog-title">
         <div class="card dialog-card">
             <div class="card-body">
-                <h2 class="dialog-title" id="install-dialog-title">Installer OnyxFilter @pending.Version ?</h2>
-                <p class="dialog-lead">L'archive est téléchargée depuis GitHub et son empreinte SHA-256 vérifiée ; les fichiers actuels sont sauvegardés, puis OnyxFilter redémarre.</p>
-                <p class="dialog-lead mb-0"><strong>La résolution DNS est interrompue quelques secondes</strong> pendant le redémarrage.</p>
+                <h2 class="dialog-title" id="install-dialog-title">@L["Installer OnyxFilter {0} ?", pending.Version]</h2>
+                <p class="dialog-lead">@L["L'archive est téléchargée depuis GitHub et son empreinte SHA-256 vérifiée ; les fichiers actuels sont sauvegardés, puis OnyxFilter redémarre."]</p>
+                <p class="dialog-lead mb-0"><strong>@L["La résolution DNS est interrompue quelques secondes"]</strong> @L["pendant le redémarrage."]</p>
             </div>
             <div class="card-footer">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelInstall">Annuler</button>
-                    <button type="button" class="btn btn-primary" @onclick="ConfirmInstallAsync">Installer et redémarrer</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelInstall">@L["Annuler"]</button>
+                    <button type="button" class="btn btn-primary" @onclick="ConfirmInstallAsync">@L["Installer et redémarrer"]</button>
                 </div>
             </div>
         </div>

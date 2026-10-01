@@ -223,7 +223,7 @@ public partial class ClientSettings : ComponentBase
 
         if (name.Length == 0)
         {
-            DialogError = "Le nom est obligatoire.";
+            DialogError = L["Le nom est obligatoire."];
             return;
         }
 
@@ -231,7 +231,7 @@ public partial class ClientSettings : ComponentBase
 
         if (identifiers.Length == 0)
         {
-            DialogError = "Au moins une adresse IP ou plage CIDR est obligatoire.";
+            DialogError = L["Au moins une adresse IP ou plage CIDR est obligatoire."];
             return;
         }
 
@@ -239,7 +239,7 @@ public partial class ClientSettings : ComponentBase
 
         if (invalidIdentifiers.Length > 0)
         {
-            DialogError = "Adresse(s) invalide(s) : " + string.Join(", ", invalidIdentifiers) + " (adresse IP ou notation CIDR attendue, ex. 192.168.1.42 ou 192.168.1.0/24).";
+            DialogError = L["Adresse(s) invalide(s) : {0} (adresse IP ou notation CIDR attendue, ex. 192.168.1.42 ou 192.168.1.0/24).", string.Join(", ", invalidIdentifiers)];
             return;
         }
 
@@ -327,11 +327,11 @@ public partial class ClientSettings : ComponentBase
         try
         {
             await SettingsStore.UpdateAsync(settings => settings.Clients.Clients = snapshot);
-            StatusMessage = "Clients persistants enregistrés.";
+            StatusMessage = L["Clients persistants enregistrés."];
         }
         catch (Exception ex)
         {
-            StatusMessage = "Erreur lors de l'enregistrement : " + ex.Message;
+            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
         }
     }
 

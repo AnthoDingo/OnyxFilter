@@ -151,11 +151,11 @@ public partial class Settings : ComponentBase
         {
             GeneralSettingsData data = BuildData();
             await SettingsStore.UpdateAsync(settings => settings.General = data);
-            return "Paramètres enregistrés.";
+            return L["Paramètres enregistrés."];
         }
         catch (Exception ex)
         {
-            return "Erreur lors de l'enregistrement : " + ex.Message;
+            return L["Erreur lors de l'enregistrement : {0}", ex.Message];
         }
     }
 
@@ -250,8 +250,8 @@ public partial class Settings : ComponentBase
     {
         bool cleared = await QueryLogService.ClearAsync();
         QueryLogStatusMessage = cleared
-            ? "Journal des requêtes effacé."
-            : "Erreur : la base est inaccessible, le journal en base n'a pas pu être effacé (il le sera une fois la base rétablie).";
+            ? L["Journal des requêtes effacé."]
+            : L["Erreur : la base est inaccessible, le journal en base n'a pas pu être effacé (il le sera une fois la base rétablie)."];
     }
 
     private async Task SaveStatisticsConfigurationAsync()
@@ -264,7 +264,7 @@ public partial class Settings : ComponentBase
     private Task ClearStatisticsAsync()
     {
         StatisticsService.Clear();
-        StatisticsStatusMessage = "Statistiques effacées.";
+        StatisticsStatusMessage = L["Statistiques effacées."];
         return Task.CompletedTask;
     }
 }

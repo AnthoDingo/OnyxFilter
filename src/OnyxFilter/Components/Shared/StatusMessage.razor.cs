@@ -8,7 +8,7 @@ public partial class StatusMessage : ComponentBase
     [Parameter]
     public string? Message { get; set; }
 
-    private string StatusMessageClass => Message is not null && Message.StartsWith("Erreur", StringComparison.Ordinal)
+    private string StatusMessageClass => Message is not null && (Message.StartsWith("Erreur", StringComparison.Ordinal) || Message.StartsWith("Error", StringComparison.Ordinal))
         ? "danger"
         : "success";
 }

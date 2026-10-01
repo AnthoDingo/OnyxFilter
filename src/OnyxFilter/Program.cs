@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -127,6 +129,9 @@ public class Program
             .AddInteractiveServerComponents();
 
         builder.Services.AddCascadingAuthenticationState();
+        // Traduction de l'interface : textes français comme clés, traductions dans Resources/SharedResource.<langue>.resx.
+        builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
         builder.Services.AddScoped<IdentityRedirectManager>();
         builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
@@ -328,6 +333,12 @@ public class Program
         }
 
         app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+        // Langue : cookie du sélecteur, sinon Accept-Language du navigateur, sinon français.
+        app.UseRequestLocalization(options => options
+            .AddSupportedCultures(SupportedLanguages.All)
+            .AddSupportedUICultures(SupportedLanguages.All)
+            .SetDefaultCulture(SupportedLanguages.Default));
+
 
         // Les réponses d'erreur de l'API restent en JSON : pas de substitution par la page HTML ci-dessus.
         app.Use(async (context, next) =>
@@ -366,6 +377,21 @@ public class Program
         // compte à chaud de chaque enregistrement. Résolution via le même pipeline partagé que le
         // port 53 et le DNS-over-TLS (filtres, cache, amont, statistiques).
         app.MapDnsOverHttps();
+
+        // Sélecteur de langue (barre latérale) : mémorise le choix dans le cookie de culture.
+        app.MapGet("/culture/set", (HttpContext context, string culture, string? redirectUri) =>
+        {
+            if (Array.IndexOf(SupportedLanguages.All, culture) >= 0)
+            {
+                context.Response.Cookies.Append(
+                    CookieRequestCultureProvider.DefaultCookieName,
+                    CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                    new CookieOptions { MaxAge = TimeSpan.FromDays(365), IsEssential = true, SameSite = SameSiteMode.Lax });
+            }
+
+            // Redirection locale uniquement (pas de redirection ouverte).
+            return Results.LocalRedirect(redirectUri is { Length: > 0 } && redirectUri.StartsWith('/') && !redirectUri.StartsWith("//") && !redirectUri.StartsWith("/\\") ? redirectUri : "/");
+        });
 
         // API HTTP d'automatisation : état et suspension temporaire du filtrage, statistiques d'usage,
         // journal des requêtes.

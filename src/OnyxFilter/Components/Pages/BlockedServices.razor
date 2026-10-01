@@ -3,26 +3,26 @@
 @rendermode InteractiveServer
 @using OnyxFilter.Services.BlockedServices
 
-<PageTitle>Services bloqués · OnyxFilter</PageTitle>
+<PageTitle>@L["Services bloqués"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Filtrage</p>
-        <h1 class="page-title">Services bloqués</h1>
-        <p class="page-lead">Coupez l'accès à des plateformes entières en un geste, sans connaître leurs domaines.</p>
+        <p class="page-eyebrow">@L["Filtrage"]</p>
+        <h1 class="page-title">@L["Services bloqués"]</h1>
+        <p class="page-lead">@L["Coupez l'accès à des plateformes entières en un geste, sans connaître leurs domaines."]</p>
     </div>
     <div class="page-actions">
-        <button type="button" class="btn btn-outline-success" @onclick="UnblockAll">Tout autoriser</button>
-        <button type="button" class="btn btn-outline-danger" @onclick="BlockAll">Tout bloquer</button>
+        <button type="button" class="btn btn-outline-success" @onclick="UnblockAll">@L["Tout autoriser"]</button>
+        <button type="button" class="btn btn-outline-danger" @onclick="BlockAll">@L["Tout bloquer"]</button>
         <button type="button" class="btn btn-primary" @onclick="SaveAsync" disabled="@IsSaving">
-            @(IsSaving ? "Enregistrement…" : "Enregistrer")
+            @(IsSaving ? L["Enregistrement…"] : L["Enregistrer"])
         </button>
     </div>
 </header>
 
 @if (!string.IsNullOrEmpty(StatusMessage))
 {
-    <div class="alert page-status @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
+    <div class="alert page-status @(StatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
 }
 
 <div class="service-groups">
@@ -30,10 +30,10 @@
     {
         <section class="service-group">
             <header class="service-group-head">
-                <h2 class="service-group-title">@group.Label <span class="service-group-count">@group.Services.Count</span></h2>
+                <h2 class="service-group-title">@L[group.Label] <span class="service-group-count">@group.Services.Count</span></h2>
                 <div class="service-group-actions">
-                    <button type="button" class="btn btn-link btn-sm" @onclick="() => UnblockAllInGroup(group.Id)">Tout autoriser</button>
-                    <button type="button" class="btn btn-link btn-sm text-danger" @onclick="() => BlockAllInGroup(group.Id)">Tout bloquer</button>
+                    <button type="button" class="btn btn-link btn-sm" @onclick="() => UnblockAllInGroup(group.Id)">@L["Tout autoriser"]</button>
+                    <button type="button" class="btn btn-link btn-sm text-danger" @onclick="() => BlockAllInGroup(group.Id)">@L["Tout bloquer"]</button>
                 </div>
             </header>
 
@@ -45,7 +45,7 @@
                         <span class="service-icon" aria-hidden="true">@((MarkupString)service.Icon)</span>
                         <span class="service-text">
                             <span class="service-name">@service.Name</span>
-                            <span class="service-state">@(IsBlocked(service.Id) ? "Bloqué" : "Autorisé")</span>
+                            <span class="service-state">@(IsBlocked(service.Id) ? L["Bloqué"] : L["Autorisé"])</span>
                         </span>
                         <span class="form-check form-switch cell-switch">
                             <input class="form-check-input" type="checkbox" role="switch" id="@inputId" checked="@IsBlocked(service.Id)" @onchange="e => ToggleService(service.Id, e)" />
@@ -60,14 +60,13 @@
 <section class="card schedule-card">
     <div class="schedule-card-icon" aria-hidden="true"><Icon Name="clock" /></div>
     <div class="schedule-card-text">
-        <h2 class="schedule-card-title">Pause programmée</h2>
+        <h2 class="schedule-card-title">@L["Pause programmée"]</h2>
         <p class="schedule-card-desc">
-            Autorisez temporairement les services bloqués à certaines heures de la semaine (heure locale du
-            serveur).
+            @L["Autorisez temporairement les services bloqués à certaines heures de la semaine (heure locale du serveur)."]
         </p>
     </div>
     <button type="button" class="btn btn-secondary" @onclick="OpenScheduleDialog">
-        <Icon Name="plus" />Nouvel horaire
+        <Icon Name="plus" />@L["Nouvel horaire"]
     </button>
 </section>
 
@@ -78,8 +77,8 @@
     <div class="modal-static" role="dialog" aria-modal="true" aria-labelledby="schedule-dialog-title">
         <div class="card dialog-card">
             <div class="card-body">
-                <h2 class="dialog-title" id="schedule-dialog-title">Pause programmée</h2>
-                <p class="dialog-lead">Pendant ces plages, les services bloqués redeviennent accessibles.</p>
+                <h2 class="dialog-title" id="schedule-dialog-title">@L["Pause programmée"]</h2>
+                <p class="dialog-lead">@L["Pendant ces plages, les services bloqués redeviennent accessibles."]</p>
 
                 <div class="schedule-days">
                     @for (int day = 0; day < 7; day++)
@@ -88,11 +87,11 @@
                         <div class="schedule-day">
                             <div class="form-check form-switch schedule-day-toggle">
                                 <input class="form-check-input" type="checkbox" role="switch" id="@("schedule-day-" + dayIndex)" checked="@DialogDayEnabled[dayIndex]" @onchange="e => OnScheduleDayToggled(dayIndex, e)" />
-                                <label class="form-check-label" for="@("schedule-day-" + dayIndex)">@DayLabels[dayIndex]</label>
+                                <label class="form-check-label" for="@("schedule-day-" + dayIndex)">@L[DayLabels[dayIndex]]</label>
                             </div>
-                            <input type="time" class="form-control form-control-sm" aria-label="Début, @DayLabels[dayIndex]" disabled="@(!DialogDayEnabled[dayIndex])" @bind="DialogDayStart[dayIndex]" />
+                            <input type="time" class="form-control form-control-sm" aria-label="@L["Début, {0}", L[DayLabels[dayIndex]]]" disabled="@(!DialogDayEnabled[dayIndex])" @bind="DialogDayStart[dayIndex]" />
                             <span class="schedule-day-sep" aria-hidden="true">→</span>
-                            <input type="time" class="form-control form-control-sm" aria-label="Fin, @DayLabels[dayIndex]" disabled="@(!DialogDayEnabled[dayIndex])" @bind="DialogDayEnd[dayIndex]" />
+                            <input type="time" class="form-control form-control-sm" aria-label="@L["Fin, {0}", L[DayLabels[dayIndex]]]" disabled="@(!DialogDayEnabled[dayIndex])" @bind="DialogDayEnd[dayIndex]" />
                         </div>
                     }
                 </div>
@@ -104,8 +103,8 @@
             </div>
             <div class="card-footer">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseScheduleDialog">Annuler</button>
-                    <button type="button" class="btn btn-primary" @onclick="SaveScheduleAsync">Enregistrer</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseScheduleDialog">@L["Annuler"]</button>
+                    <button type="button" class="btn btn-primary" @onclick="SaveScheduleAsync">@L["Enregistrer"]</button>
                 </div>
             </div>
         </div>

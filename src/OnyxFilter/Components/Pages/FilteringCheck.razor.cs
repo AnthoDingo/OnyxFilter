@@ -89,7 +89,7 @@ public partial class FilteringCheck : ComponentBase
 
         if (hostName.Length == 0)
         {
-            ErrorMessage = "Le nom d'hôte est obligatoire.";
+            ErrorMessage = L["Le nom d'hôte est obligatoire."];
             return;
         }
 
@@ -109,31 +109,31 @@ public partial class FilteringCheck : ComponentBase
 
             if (rewriteResponse is not null)
             {
-                SetResult("Réécrite par une réécriture DNS (Réécritures DNS) : la réponse configurée est renvoyée sans consulter les serveurs en amont.", "alert-warning");
+                SetResult(L["Réécrite par une réécriture DNS (Réécritures DNS) : la réponse configurée est renvoyée sans consulter les serveurs en amont."], "alert-warning");
                 return;
             }
 
             if (CustomFilterRulesService.IsExcepted(hostName))
             {
-                SetResult("Autorisée par une exception des règles de filtrage personnalisées : ne sera jamais bloquée, y compris par les listes de blocage abonnées.", "alert-success");
+                SetResult(L["Autorisée par une exception des règles de filtrage personnalisées : ne sera jamais bloquée, y compris par les listes de blocage abonnées."], "alert-success");
                 return;
             }
 
             if (CustomFilterRulesService.TryBuildBlockResponse(query, out _, out _))
             {
-                SetResult("Bloquée par les règles de filtrage personnalisées.", "alert-danger");
+                SetResult(L["Bloquée par les règles de filtrage personnalisées."], "alert-danger");
                 return;
             }
 
             if (AllowlistService.IsAllowed(hostName))
             {
-                SetResult("Autorisée par une liste d'autorisation DNS : ne sera pas bloquée par les listes de blocage abonnées.", "alert-success");
+                SetResult(L["Autorisée par une liste d'autorisation DNS : ne sera pas bloquée par les listes de blocage abonnées."], "alert-success");
                 return;
             }
 
             if (FilterService.TryBuildBlockResponse(query, out _, out _))
             {
-                SetResult("Bloquée par les listes de blocage DNS abonnées.", "alert-danger");
+                SetResult(L["Bloquée par les listes de blocage DNS abonnées."], "alert-danger");
                 return;
             }
 
@@ -141,7 +141,7 @@ public partial class FilteringCheck : ComponentBase
 
             if (browsingSecurityResponse is not null)
             {
-                SetResult("Bloquée par la Sécurité de navigation d'OnyxFilter.", "alert-danger");
+                SetResult(L["Bloquée par la Sécurité de navigation d'OnyxFilter."], "alert-danger");
                 return;
             }
 
@@ -149,7 +149,7 @@ public partial class FilteringCheck : ComponentBase
 
             if (parentalControlResponse is not null)
             {
-                SetResult("Bloquée par le Contrôle parental d'OnyxFilter.", "alert-danger");
+                SetResult(L["Bloquée par le Contrôle parental d'OnyxFilter."], "alert-danger");
                 return;
             }
 
@@ -157,15 +157,15 @@ public partial class FilteringCheck : ComponentBase
 
             if (safeSearchResponse is not null)
             {
-                SetResult("Réécrite par la Recherche Sécurisée (redirection vers la variante sécurisée du moteur concerné).", "alert-warning");
+                SetResult(L["Réécrite par la Recherche Sécurisée (redirection vers la variante sécurisée du moteur concerné)."], "alert-warning");
                 return;
             }
 
-            SetResult("Non filtrée : ce nom d'hôte sera résolu normalement auprès des serveurs en amont configurés.", "alert-success");
+            SetResult(L["Non filtrée : ce nom d'hôte sera résolu normalement auprès des serveurs en amont configurés."], "alert-success");
         }
         catch (Exception ex)
         {
-            ErrorMessage = "Erreur lors de la vérification : " + ex.Message;
+            ErrorMessage = L["Erreur lors de la vérification : {0}", ex.Message];
         }
         finally
         {

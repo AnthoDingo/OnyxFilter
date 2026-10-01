@@ -1,6 +1,6 @@
 @if (Items.Count == 0)
 {
-    <p class="rank-empty">@EmptyText</p>
+    <p class="rank-empty">@(EmptyText ?? L["Aucune donnée pour le moment."])</p>
 }
 else
 {

@@ -2,13 +2,13 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
-<PageTitle>Général · OnyxFilter</PageTitle>
+<PageTitle>@L["Général"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Configuration</p>
-        <h1 class="page-title">Général</h1>
-        <p class="page-lead">Protections appliquées à toutes les requêtes, conservation du journal et des statistiques.</p>
+        <p class="page-eyebrow">@L["Configuration"]</p>
+        <h1 class="page-title">@L["Général"]</h1>
+        <p class="page-lead">@L["Protections appliquées à toutes les requêtes, conservation du journal et des statistiques."]</p>
     </div>
 </header>
 
@@ -16,45 +16,43 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Filtrage</h2>
+            <h2 class="settings-intro-title">@L["Filtrage"]</h2>
             <p class="settings-intro-text">
-                Protections appliquées à tous les appareils, sauf ceux dotés de réglages personnalisés (page
-                <a href="/settings/client">Clients</a>).
+                @L["Protections appliquées à tous les appareils, sauf ceux dotés de réglages personnalisés (page"]
+                <a href="/settings/client">@L["Clients"]</a>).
             </p>
         </div>
 
         <div class="card settings-panel">
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="block-domains">Bloquer via les listes et fichiers hosts</label>
+                    <label class="setting-label" for="block-domains">@L["Bloquer via les listes et fichiers hosts"]</label>
                     <p class="setting-help">
-                        Applique les <a href="/filters/blocklists">listes de blocage</a> abonnées et les
-                        <a href="/filters/custom-rules">règles personnalisées</a>.
+                        @L["Applique les"] <a href="/filters/blocklists">@L["listes de blocage abonnées"]</a> @L["et les"]
+                        <a href="/filters/custom-rules">@L["règles de filtrage personnalisées"]</a>.
                     </p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="block-domains" checked="@BlockDomainsWithFilters" @onchange="OnBlockDomainsWithFiltersChanged" />
                 </div>
                 <div class="setting-nested field-narrow">
-                    <label class="form-label" for="filter-update-interval">Actualisation des listes</label>
+                    <label class="form-label" for="filter-update-interval">@L["Actualisation des listes"]</label>
                     <select id="filter-update-interval" class="form-select" @bind="FilterUpdateIntervalHours">
-                        <option value="0">Jamais</option>
-                        <option value="1">Toutes les heures</option>
-                        <option value="12">Toutes les 12 heures</option>
-                        <option value="24">Chaque jour</option>
-                        <option value="72">Tous les 3 jours</option>
-                        <option value="168">Chaque semaine</option>
+                        <option value="0">@L["Jamais"]</option>
+                        <option value="1">@L["Toutes les heures"]</option>
+                        <option value="12">@L["Toutes les 12 heures"]</option>
+                        <option value="24">@L["Chaque jour"]</option>
+                        <option value="72">@L["Tous les 3 jours"]</option>
+                        <option value="168">@L["Chaque semaine"]</option>
                     </select>
                 </div>
             </div>
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="use-browsing-security">Sécurité de navigation</label>
+                    <label class="setting-label" for="use-browsing-security">@L["Sécurité de navigation"]</label>
                     <p class="setting-help">
-                        Bloque les domaines connus pour diffuser des logiciels malveillants ou de l'hameçonnage. La
-                        vérification est anonyme : seul un court préfixe de l'empreinte SHA-256 du domaine quitte le
-                        serveur.
+                        @L["Bloque les domaines connus pour diffuser des logiciels malveillants ou de l'hameçonnage. La vérification est anonyme : seul un court préfixe de l'empreinte SHA-256 du domaine quitte le serveur."]
                     </p>
                 </div>
                 <div class="form-check form-switch setting-control">
@@ -63,17 +61,16 @@
                 @if (!string.IsNullOrEmpty(BrowsingSecurityStatusMessage))
                 {
                     <div class="setting-nested">
-                        <div class="alert @(BrowsingSecurityStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@BrowsingSecurityStatusMessage</div>
+                        <div class="alert @(BrowsingSecurityStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@BrowsingSecurityStatusMessage</div>
                     </div>
                 }
             </div>
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="use-parental-control">Contrôle parental</label>
+                    <label class="setting-label" for="use-parental-control">@L["Contrôle parental"]</label>
                     <p class="setting-help">
-                        Bloque les sites pour adultes, avec le même mécanisme de vérification anonyme que la sécurité
-                        de navigation.
+                        @L["Bloque les sites pour adultes, avec le même mécanisme de vérification anonyme que la sécurité de navigation."]
                     </p>
                 </div>
                 <div class="form-check form-switch setting-control">
@@ -82,15 +79,15 @@
                 @if (!string.IsNullOrEmpty(ParentalControlStatusMessage))
                 {
                     <div class="setting-nested">
-                        <div class="alert @(ParentalControlStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@ParentalControlStatusMessage</div>
+                        <div class="alert @(ParentalControlStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@ParentalControlStatusMessage</div>
                     </div>
                 }
             </div>
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="use-safe-search">Recherche sécurisée</label>
-                    <p class="setting-help">Impose le mode « recherche sécurisée » sur les moteurs sélectionnés ci-dessous.</p>
+                    <label class="setting-label" for="use-safe-search">@L["Recherche sécurisée"]</label>
+                    <p class="setting-help">@L["Impose le mode « recherche sécurisée » sur les moteurs sélectionnés ci-dessous."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="use-safe-search" checked="@UseSafeSearch" @onchange="OnUseSafeSearchChanged" />
@@ -98,9 +95,9 @@
                 <div class="setting-nested">
                     @if (!string.IsNullOrEmpty(SafeSearchStatusMessage))
                     {
-                        <div class="alert @(SafeSearchStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success") mb-3">@SafeSearchStatusMessage</div>
+                        <div class="alert @(SafeSearchStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success") mb-3">@SafeSearchStatusMessage</div>
                     }
-                    <div class="chip-set" role="group" aria-label="Moteurs concernés par la recherche sécurisée">
+                    <div class="chip-set" role="group" aria-label="@L["Moteurs concernés par la recherche sécurisée"]">
                         <input class="btn-check" type="checkbox" id="safe-search-bing" checked="@SafeSearchBing" disabled="@(!UseSafeSearch)" @onchange="e => OnSafeSearchEngineChanged(e, engine => SafeSearchBing = engine)" />
                         <label class="chip-toggle" for="safe-search-bing">Bing</label>
 
@@ -129,17 +126,17 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Journal des requêtes</h2>
+            <h2 class="settings-intro-title">@L["Journal des requêtes"]</h2>
             <p class="settings-intro-text">
-                Ce qui est enregistré dans le <a href="/query-log">journal</a> et pendant combien de temps.
+                @L["Ce qui est enregistré dans le"] <a href="/query-log">@L["journal"]</a> @L["et pendant combien de temps."]
             </p>
         </div>
 
         <div class="card settings-panel">
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="enable-query-log">Enregistrer les requêtes</label>
-                    <p class="setting-help">Conserve une ligne par requête DNS traitée.</p>
+                    <label class="setting-label" for="enable-query-log">@L["Enregistrer les requêtes"]</label>
+                    <p class="setting-help">@L["Conserve une ligne par requête DNS traitée."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="enable-query-log" checked="@EnableQueryLog" @onchange="OnEnableQueryLogChanged" />
@@ -148,8 +145,8 @@
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="anonymize-client-ip">Anonymiser les adresses des clients</label>
-                    <p class="setting-help">L'adresse IP complète n'est conservée ni dans le journal ni dans les statistiques.</p>
+                    <label class="setting-label" for="anonymize-client-ip">@L["Anonymiser les adresses des clients"]</label>
+                    <p class="setting-help">@L["L'adresse IP complète n'est conservée ni dans le journal ni dans les statistiques."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="anonymize-client-ip" checked="@AnonymizeClientIp" @onchange="OnAnonymizeClientIpChanged" />
@@ -158,29 +155,29 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <span class="setting-label">Durée de conservation</span>
-                    <p class="setting-help">Les entrées plus anciennes sont supprimées automatiquement.</p>
+                    <span class="setting-label">@L["Durée de conservation"]</span>
+                    <p class="setting-help">@L["Les entrées plus anciennes sont supprimées automatiquement."]</p>
                 </div>
                 <div class="setting-nested">
-                    <div class="segmented" role="radiogroup" aria-label="Durée de conservation du journal">
+                    <div class="segmented" role="radiogroup" aria-label="@L["Durée de conservation du journal"]">
                         <input class="btn-check" type="radio" name="log-rotation" id="log-rotation-6h" checked="@(LogRetention == RetentionPeriod.SixHours)" @onchange="() => SetLogRetention(RetentionPeriod.SixHours)" />
-                        <label class="segmented-option" for="log-rotation-6h">6 h</label>
+                        <label class="segmented-option" for="log-rotation-6h">@L["6 h"]</label>
                         <input class="btn-check" type="radio" name="log-rotation" id="log-rotation-24h" checked="@(LogRetention == RetentionPeriod.TwentyFourHours)" @onchange="() => SetLogRetention(RetentionPeriod.TwentyFourHours)" />
-                        <label class="segmented-option" for="log-rotation-24h">24 h</label>
+                        <label class="segmented-option" for="log-rotation-24h">@L["24 h"]</label>
                         <input class="btn-check" type="radio" name="log-rotation" id="log-rotation-7d" checked="@(LogRetention == RetentionPeriod.SevenDays)" @onchange="() => SetLogRetention(RetentionPeriod.SevenDays)" />
-                        <label class="segmented-option" for="log-rotation-7d">7 jours</label>
+                        <label class="segmented-option" for="log-rotation-7d">@L["7 jours"]</label>
                         <input class="btn-check" type="radio" name="log-rotation" id="log-rotation-30d" checked="@(LogRetention == RetentionPeriod.ThirtyDays)" @onchange="() => SetLogRetention(RetentionPeriod.ThirtyDays)" />
-                        <label class="segmented-option" for="log-rotation-30d">30 jours</label>
+                        <label class="segmented-option" for="log-rotation-30d">@L["30 jours"]</label>
                         <input class="btn-check" type="radio" name="log-rotation" id="log-rotation-90d" checked="@(LogRetention == RetentionPeriod.NinetyDays)" @onchange="() => SetLogRetention(RetentionPeriod.NinetyDays)" />
-                        <label class="segmented-option" for="log-rotation-90d">90 jours</label>
+                        <label class="segmented-option" for="log-rotation-90d">@L["90 jours"]</label>
                         <input class="btn-check" type="radio" name="log-rotation" id="log-rotation-custom" checked="@(LogRetention == RetentionPeriod.Custom)" @onchange="() => SetLogRetention(RetentionPeriod.Custom)" />
-                        <label class="segmented-option" for="log-rotation-custom">Personnalisée</label>
+                        <label class="segmented-option" for="log-rotation-custom">@L["Personnalisée"]</label>
                     </div>
                     @if (LogRetention == RetentionPeriod.Custom)
                     {
                         <div class="field-inline mt-3">
                             <input id="log-rotation-custom-hours" type="number" min="1" class="form-control" @bind="LogRetentionCustomHours" @bind:event="oninput" />
-                            <label for="log-rotation-custom-hours">heure(s)</label>
+                            <label for="log-rotation-custom-hours">@L["heure(s)"]</label>
                         </div>
                     }
                 </div>
@@ -188,8 +185,8 @@
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="ignore-log-domains">Exclure des domaines du journal</label>
-                    <p class="setting-help">Les requêtes vers ces domaines (un par ligne) ne sont jamais enregistrées.</p>
+                    <label class="setting-label" for="ignore-log-domains">@L["Exclure des domaines du journal"]</label>
+                    <p class="setting-help">@L["Les requêtes vers ces domaines (un par ligne) ne sont jamais enregistrées."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="ignore-log-domains" checked="@IgnoreDomainsInLog" @onchange="OnIgnoreDomainsInLogChanged" />
@@ -197,7 +194,7 @@
                 <div class="setting-nested">
                     <textarea class="form-control font-monospace"
                               rows="5"
-                              aria-label="Domaines exclus du journal"
+                              aria-label="@L["Domaines exclus du journal"]"
                               placeholder="@IgnoredDomainsPlaceholder"
                               @bind="IgnoredLogDomainsText"
                               @bind:event="oninput"></textarea>
@@ -205,11 +202,11 @@
             </div>
 
             <div class="settings-panel-footer">
-                <button type="button" class="btn btn-primary" @onclick="SaveQueryLogConfigurationAsync">Enregistrer</button>
-                <button type="button" class="btn btn-outline-danger" @onclick="ClearQueryLogAsync">Vider le journal</button>
+                <button type="button" class="btn btn-primary" @onclick="SaveQueryLogConfigurationAsync">@L["Enregistrer"]</button>
+                <button type="button" class="btn btn-outline-danger" @onclick="ClearQueryLogAsync">@L["Vider le journal"]</button>
                 @if (!string.IsNullOrEmpty(QueryLogStatusMessage))
                 {
-                    <div class="alert @(QueryLogStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@QueryLogStatusMessage</div>
+                    <div class="alert @(QueryLogStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@QueryLogStatusMessage</div>
                 }
             </div>
         </div>
@@ -217,18 +214,17 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Statistiques</h2>
+            <h2 class="settings-intro-title">@L["Statistiques"]</h2>
             <p class="settings-intro-text">
-                Compteurs agrégés affichés sur la <a href="/">vue d'ensemble</a>. Réduire la durée de conservation
-                supprime les données plus anciennes.
+                @L["Compteurs agrégés affichés sur la"] <a href="/">@L["page d'accueil"]</a>. @L["Réduire la durée de conservation supprime les données plus anciennes."]
             </p>
         </div>
 
         <div class="card settings-panel">
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="enable-statistics">Collecter les statistiques</label>
-                    <p class="setting-help">Alimente la vue d'ensemble (volumes, classements, activité horaire).</p>
+                    <label class="setting-label" for="enable-statistics">@L["Collecter les statistiques"]</label>
+                    <p class="setting-help">@L["Alimente la vue d'ensemble (volumes, classements, activité horaire)."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="enable-statistics" checked="@EnableStatistics" @onchange="OnEnableStatisticsChanged" />
@@ -237,27 +233,27 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <span class="setting-label">Durée de conservation</span>
-                    <p class="setting-help">Attention : baisser cette valeur efface définitivement les données au-delà.</p>
+                    <span class="setting-label">@L["Durée de conservation"]</span>
+                    <p class="setting-help">@L["Attention : baisser cette valeur efface définitivement les données au-delà."]</p>
                 </div>
                 <div class="setting-nested">
-                    <div class="segmented" role="radiogroup" aria-label="Durée de conservation des statistiques">
+                    <div class="segmented" role="radiogroup" aria-label="@L["Durée de conservation des statistiques"]">
                         <input class="btn-check" type="radio" name="stats-retention" id="stats-retention-24h" checked="@(StatisticsRetention == RetentionPeriod.TwentyFourHours)" @onchange="() => SetStatisticsRetention(RetentionPeriod.TwentyFourHours)" />
-                        <label class="segmented-option" for="stats-retention-24h">24 h</label>
+                        <label class="segmented-option" for="stats-retention-24h">@L["24 h"]</label>
                         <input class="btn-check" type="radio" name="stats-retention" id="stats-retention-7d" checked="@(StatisticsRetention == RetentionPeriod.SevenDays)" @onchange="() => SetStatisticsRetention(RetentionPeriod.SevenDays)" />
-                        <label class="segmented-option" for="stats-retention-7d">7 jours</label>
+                        <label class="segmented-option" for="stats-retention-7d">@L["7 jours"]</label>
                         <input class="btn-check" type="radio" name="stats-retention" id="stats-retention-30d" checked="@(StatisticsRetention == RetentionPeriod.ThirtyDays)" @onchange="() => SetStatisticsRetention(RetentionPeriod.ThirtyDays)" />
-                        <label class="segmented-option" for="stats-retention-30d">30 jours</label>
+                        <label class="segmented-option" for="stats-retention-30d">@L["30 jours"]</label>
                         <input class="btn-check" type="radio" name="stats-retention" id="stats-retention-90d" checked="@(StatisticsRetention == RetentionPeriod.NinetyDays)" @onchange="() => SetStatisticsRetention(RetentionPeriod.NinetyDays)" />
-                        <label class="segmented-option" for="stats-retention-90d">90 jours</label>
+                        <label class="segmented-option" for="stats-retention-90d">@L["90 jours"]</label>
                         <input class="btn-check" type="radio" name="stats-retention" id="stats-retention-custom" checked="@(StatisticsRetention == RetentionPeriod.Custom)" @onchange="() => SetStatisticsRetention(RetentionPeriod.Custom)" />
-                        <label class="segmented-option" for="stats-retention-custom">Personnalisée</label>
+                        <label class="segmented-option" for="stats-retention-custom">@L["Personnalisée"]</label>
                     </div>
                     @if (StatisticsRetention == RetentionPeriod.Custom)
                     {
                         <div class="field-inline mt-3">
                             <input id="stats-retention-custom-hours" type="number" min="1" class="form-control" @bind="StatisticsRetentionCustomHours" @bind:event="oninput" />
-                            <label for="stats-retention-custom-hours">heure(s)</label>
+                            <label for="stats-retention-custom-hours">@L["heure(s)"]</label>
                         </div>
                     }
                 </div>
@@ -265,8 +261,8 @@
 
             <div class="setting">
                 <div class="setting-text">
-                    <label class="setting-label" for="ignore-stats-domains">Exclure des domaines des statistiques</label>
-                    <p class="setting-help">Les requêtes vers ces domaines (un par ligne) ne sont pas comptabilisées.</p>
+                    <label class="setting-label" for="ignore-stats-domains">@L["Exclure des domaines des statistiques"]</label>
+                    <p class="setting-help">@L["Les requêtes vers ces domaines (un par ligne) ne sont pas comptabilisées."]</p>
                 </div>
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="ignore-stats-domains" checked="@IgnoreDomainsInStatistics" @onchange="OnIgnoreDomainsInStatisticsChanged" />
@@ -274,7 +270,7 @@
                 <div class="setting-nested">
                     <textarea class="form-control font-monospace"
                               rows="5"
-                              aria-label="Domaines exclus des statistiques"
+                              aria-label="@L["Domaines exclus des statistiques"]"
                               placeholder="@IgnoredDomainsPlaceholder"
                               @bind="IgnoredStatisticsDomainsText"
                               @bind:event="oninput"></textarea>
@@ -282,11 +278,11 @@
             </div>
 
             <div class="settings-panel-footer">
-                <button type="button" class="btn btn-primary" @onclick="SaveStatisticsConfigurationAsync">Enregistrer</button>
-                <button type="button" class="btn btn-outline-danger" @onclick="ClearStatisticsAsync">Effacer les statistiques</button>
+                <button type="button" class="btn btn-primary" @onclick="SaveStatisticsConfigurationAsync">@L["Enregistrer"]</button>
+                <button type="button" class="btn btn-outline-danger" @onclick="ClearStatisticsAsync">@L["Effacer les statistiques"]</button>
                 @if (!string.IsNullOrEmpty(StatisticsStatusMessage))
                 {
-                    <div class="alert @(StatisticsStatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatisticsStatusMessage</div>
+                    <div class="alert @(StatisticsStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatisticsStatusMessage</div>
                 }
             </div>
         </div>

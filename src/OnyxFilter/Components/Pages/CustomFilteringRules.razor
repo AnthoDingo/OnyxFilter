@@ -2,24 +2,24 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
-<PageTitle>Règles personnalisées · OnyxFilter</PageTitle>
+<PageTitle>@L["Règles personnalisées"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Filtrage</p>
-        <h1 class="page-title">Règles personnalisées</h1>
-        <p class="page-lead">Vos propres règles, prioritaires sur toutes les listes abonnées. Une règle par ligne.</p>
+        <p class="page-eyebrow">@L["Filtrage"]</p>
+        <h1 class="page-title">@L["Règles personnalisées"]</h1>
+        <p class="page-lead">@L["Vos propres règles, prioritaires sur toutes les listes abonnées. Une règle par ligne."]</p>
     </div>
     <div class="page-actions">
         <button type="button" class="btn btn-primary" @onclick="ApplyAsync" disabled="@IsSaving">
-            @(IsSaving ? "Enregistrement…" : "Appliquer les règles")
+            @(IsSaving ? L["Enregistrement…"] : L["Appliquer les règles"])
         </button>
     </div>
 </header>
 
 @if (!string.IsNullOrEmpty(StatusMessage))
 {
-    <div class="alert page-status @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
+    <div class="alert page-status @(StatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
 }
 
 <div class="rules-layout">
@@ -28,27 +28,27 @@
             <span class="rules-editor-dot" aria-hidden="true"></span>
             <span class="mono">custom-rules.txt</span>
         </div>
-        <textarea class="rules-textarea" aria-label="Règles personnalisées" spellcheck="false" @bind="RulesText" @bind:event="oninput"></textarea>
+        <textarea class="rules-textarea" aria-label="@L["Règles personnalisées"]" spellcheck="false" @bind="RulesText" @bind:event="oninput"></textarea>
     </div>
 
     <aside class="card rules-help">
         <div class="card-body">
-            <h2 class="rules-help-title">Mémo de syntaxe</h2>
+            <h2 class="rules-help-title">@L["Mémo de syntaxe"]</h2>
             <dl class="rules-syntax">
                 <dt><code>||exemple.org^</code></dt>
-                <dd>Bloque exemple.org et tous ses sous-domaines.</dd>
+                <dd>@L["Bloque exemple.org et tous ses sous-domaines."]</dd>
                 <dt><code>@@@@||exemple.org^</code></dt>
-                <dd>Autorise exemple.org et ses sous-domaines, même s'ils sont bloqués ailleurs.</dd>
+                <dd>@L["Autorise exemple.org et ses sous-domaines, même s'ils sont bloqués ailleurs."]</dd>
                 <dt><code>127.0.0.1 exemple.org</code></dt>
-                <dd>Répond 127.0.0.1 pour exemple.org (sans les sous-domaines), façon fichier hosts.</dd>
+                <dd>@L["Répond 127.0.0.1 pour exemple.org (sans les sous-domaines), façon fichier hosts."]</dd>
                 <dt><code>/pub[0-9]+\./</code></dt>
-                <dd>Bloque les domaines correspondant à l'expression régulière.</dd>
-                <dt><code>! note</code> ou <code># note</code></dt>
-                <dd>Commentaire.</dd>
+                <dd>@L["Bloque les domaines correspondant à l'expression régulière."]</dd>
+                <dt><code>! note</code> @L["ou"] <code># note</code></dt>
+                <dd>@L["Commentaire."]</dd>
             </dl>
             <p class="form-text mb-0">
-                La syntaxe suit le format Adblock des listes de blocage DNS.
-                <a href="https://github.com/AdguardTeam/AdGuardHome/wiki/Hosts-Blocklists" target="_blank" rel="noopener noreferrer">Référence complète</a>.
+                @L["La syntaxe suit le format Adblock des listes de blocage DNS."]
+                <a href="https://github.com/AdguardTeam/AdGuardHome/wiki/Hosts-Blocklists" target="_blank" rel="noopener noreferrer">@L["Référence complète"]</a>.
             </p>
         </div>
     </aside>

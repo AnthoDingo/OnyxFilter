@@ -165,11 +165,11 @@ public partial class DnsSettings : ComponentBase
         {
             DnsSettingsData data = BuildData();
             await SettingsStore.UpdateAsync(settings => settings.Dns = data);
-            return "Paramètres enregistrés.";
+            return L["Paramètres enregistrés."];
         }
         catch (Exception ex)
         {
-            return "Erreur lors de l'enregistrement : " + ex.Message;
+            return L["Erreur lors de l'enregistrement : {0}", ex.Message];
         }
     }
 
@@ -253,7 +253,7 @@ public partial class DnsSettings : ComponentBase
     private Task ClearCacheAsync()
     {
         DnsCache.Clear();
-        CacheStatusMessage = "Cache vidé.";
+        CacheStatusMessage = L["Cache vidé."];
         return Task.CompletedTask;
     }
 

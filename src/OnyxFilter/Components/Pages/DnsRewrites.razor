@@ -2,30 +2,30 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
-<PageTitle>Réécritures DNS · OnyxFilter</PageTitle>
+<PageTitle>@L["Réécritures DNS"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Filtrage</p>
+        <p class="page-eyebrow">@L["Filtrage"]</p>
         <h1 class="page-title">
-            Réécritures DNS
-            <span class="state-pill @(RewritesEnabled ? "state-pill-on" : "state-pill-off")">@(RewritesEnabled ? "Actives" : "En pause")</span>
+            @L["Réécritures DNS"]
+            <span class="state-pill @(RewritesEnabled ? "state-pill-on" : "state-pill-off")">@(RewritesEnabled ? L["Actives"] : L["En pause"])</span>
         </h1>
-        <p class="page-lead">Répondez vous-même pour un domaine : adresse IP fixe ou redirection vers un autre nom.</p>
+        <p class="page-lead">@L["Répondez vous-même pour un domaine : adresse IP fixe ou redirection vers un autre nom."]</p>
     </div>
     <div class="page-actions">
         <button type="button" class="btn btn-secondary" @onclick="ToggleRewritesEnabledAsync">
-            <Icon Name="@(RewritesEnabled ? "pause" : "play")" />@(RewritesEnabled ? "Mettre en pause" : "Réactiver")
+            <Icon Name="@(RewritesEnabled ? "pause" : "play")" />@(RewritesEnabled ? L["Mettre en pause"] : L["Réactiver"])
         </button>
         <button type="button" class="btn btn-primary" @onclick="OpenAddDialog">
-            <Icon Name="plus" />Ajouter une réécriture
+            <Icon Name="plus" />@L["Ajouter une réécriture"]
         </button>
     </div>
 </header>
 
 @if (!string.IsNullOrEmpty(StatusMessage))
 {
-    <div class="alert page-status @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
+    <div class="alert page-status @(StatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
 }
 
 <div class="card table-panel">
@@ -33,11 +33,11 @@
         <table class="table align-middle">
             <thead>
                 <tr>
-                    <th scope="col" style="width: 4rem;">Active</th>
-                    <th scope="col">Domaine</th>
-                    <th scope="col" style="width: 2rem;"><span class="visually-hidden">vers</span></th>
-                    <th scope="col">Réponse</th>
-                    <th scope="col"><span class="visually-hidden">Actions</span></th>
+                    <th scope="col" style="width: 4rem;">@L["Active"]</th>
+                    <th scope="col">@L["Domaine"]</th>
+                    <th scope="col" style="width: 2rem;"><span class="visually-hidden">@L["vers"]</span></th>
+                    <th scope="col">@L["Réponse"]</th>
+                    <th scope="col"><span class="visually-hidden">@L["Actions"]</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -45,8 +45,8 @@
                 {
                     <tr>
                         <td colspan="5" class="empty-state">
-                            <span class="empty-state-title">Aucune réécriture</span>
-                            Ajoutez-en une pour forcer la réponse d'un domaine.
+                            <span class="empty-state-title">@L["Aucune réécriture"]</span>
+                            @L["Ajoutez-en une pour forcer la réponse d'un domaine."]
                         </td>
                     </tr>
                 }
@@ -57,7 +57,7 @@
                         <tr>
                             <td>
                                 <div class="form-check form-switch cell-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" aria-label="Activer la réécriture de @entry.Domain" checked="@entry.Enabled" @onchange="e => ToggleEnabledAsync(entry, e)" />
+                                    <input class="form-check-input" type="checkbox" role="switch" aria-label="@L["Activer la réécriture de {0}", entry.Domain]" checked="@entry.Enabled" @onchange="e => ToggleEnabledAsync(entry, e)" />
                                 </div>
                             </td>
                             <td class="mono">@entry.Domain</td>
@@ -65,10 +65,10 @@
                             <td class="mono">@entry.Answer</td>
                             <td>
                                 <div class="row-actions">
-                                    <button type="button" class="btn btn-outline-primary btn-icon" title="Modifier" aria-label="Modifier la réécriture de @entry.Domain" @onclick="() => OpenEditDialog(entry)">
+                                    <button type="button" class="btn btn-outline-primary btn-icon" title="@L["Modifier"]" aria-label="@L["Modifier la réécriture de {0}", entry.Domain]" @onclick="() => OpenEditDialog(entry)">
                                         <Icon Name="edit" />
                                     </button>
-                                    <button type="button" class="btn btn-outline-danger btn-icon" title="Supprimer" aria-label="Supprimer la réécriture de @entry.Domain" @onclick="() => RequestDelete(entry)">
+                                    <button type="button" class="btn btn-outline-danger btn-icon" title="@L["Supprimer"]" aria-label="@L["Supprimer la réécriture de {0}", entry.Domain]" @onclick="() => RequestDelete(entry)">
                                         <Icon Name="trash" />
                                     </button>
                                 </div>
@@ -83,27 +83,25 @@
     @if (Entries.Count > 0)
     {
         <div class="pagination-bar">
-            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage <= 1)" @onclick="GoToPreviousPage">Précédent</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage <= 1)" @onclick="GoToPreviousPage">@L["Précédent"]</button>
 
             <div class="pagination-bar-center">
-                <span>Page @CurrentPage sur @TotalPages</span>
-                <select class="form-select form-select-sm" aria-label="Lignes par page" value="@PageSize" @onchange="OnPageSizeChanged">
+                <span>@L["Page {0} sur {1}", CurrentPage, TotalPages]</span>
+                <select class="form-select form-select-sm" aria-label="@L["Lignes par page"]" value="@PageSize" @onchange="OnPageSizeChanged">
                     @foreach (int option in PageSizeOptions)
                     {
-                        <option value="@option">@option par page</option>
+                        <option value="@option">@L["{0} par page", option]</option>
                     }
                 </select>
             </div>
 
-            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage >= TotalPages)" @onclick="GoToNextPage">Suivant</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage >= TotalPages)" @onclick="GoToNextPage">@L["Suivant"]</button>
         </div>
     }
 </div>
 
 <p class="page-note">
-    Une réécriture passe avant toute autre vérification (listes de blocage et d'autorisation, sécurité de
-    navigation, contrôle parental, recherche sécurisée) : la réponse configurée ici l'emporte toujours pour le
-    domaine concerné.
+    @L["Une réécriture passe avant toute autre vérification (listes de blocage et d'autorisation, sécurité de navigation, contrôle parental, recherche sécurisée) : la réponse configurée ici l'emporte toujours pour le domaine concerné."]
 </p>
 
 @if (ShowDialog)
@@ -113,17 +111,17 @@
     <div class="modal-static" role="dialog" aria-modal="true" aria-labelledby="rewrite-dialog-title">
         <div class="card dialog-card">
             <div class="card-body">
-                <h2 class="dialog-title" id="rewrite-dialog-title">@(IsEditMode ? "Modifier la réécriture" : "Nouvelle réécriture")</h2>
-                <p class="dialog-lead">Le joker <code>*.</code> couvre tous les sous-domaines.</p>
+                <h2 class="dialog-title" id="rewrite-dialog-title">@(IsEditMode ? L["Modifier la réécriture"] : L["Nouvelle réécriture"])</h2>
+                <p class="dialog-lead">@L["Le joker"] <code>*.</code> @L["couvre tous les sous-domaines."]</p>
 
                 <div class="mb-3">
-                    <label class="form-label" for="dialog-rewrite-domain">Domaine</label>
-                    <input id="dialog-rewrite-domain" type="text" class="form-control font-monospace" placeholder="nas.maison ou *.exemple.fr" @bind="DialogDomain" @bind:event="oninput" />
+                    <label class="form-label" for="dialog-rewrite-domain">@L["Domaine"]</label>
+                    <input id="dialog-rewrite-domain" type="text" class="form-control font-monospace" placeholder="@L["nas.maison ou *.exemple.fr"]" @bind="DialogDomain" @bind:event="oninput" />
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label" for="dialog-rewrite-answer">Réponse</label>
-                    <input id="dialog-rewrite-answer" type="text" class="form-control font-monospace" placeholder="192.168.1.20, ::1 ou autre.exemple.fr" @bind="DialogAnswer" @bind:event="oninput" />
+                    <label class="form-label" for="dialog-rewrite-answer">@L["Réponse"]</label>
+                    <input id="dialog-rewrite-answer" type="text" class="form-control font-monospace" placeholder="@L["192.168.1.20, ::1 ou autre.exemple.fr"]" @bind="DialogAnswer" @bind:event="oninput" />
                 </div>
 
                 @if (!string.IsNullOrEmpty(DialogError))
@@ -133,8 +131,8 @@
             </div>
             <div class="card-footer">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDialog" disabled="@IsSavingDialog">Annuler</button>
-                    <button type="button" class="btn btn-primary" @onclick="SaveDialogAsync" disabled="@IsSavingDialog">Enregistrer</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDialog" disabled="@IsSavingDialog">@L["Annuler"]</button>
+                    <button type="button" class="btn btn-primary" @onclick="SaveDialogAsync" disabled="@IsSavingDialog">@L["Enregistrer"]</button>
                 </div>
             </div>
         </div>
@@ -148,15 +146,15 @@
     <div class="modal-static" role="alertdialog" aria-modal="true" aria-labelledby="delete-dialog-title">
         <div class="card dialog-card">
             <div class="card-body">
-                <h2 class="dialog-title" id="delete-dialog-title">Supprimer la réécriture ?</h2>
+                <h2 class="dialog-title" id="delete-dialog-title">@L["Supprimer la réécriture ?"]</h2>
                 <p class="dialog-lead mb-0">
-                    « @EntryPendingDeletion.Domain » sera de nouveau résolu normalement. Cette action est définitive.
+                    @L["« {0} » sera de nouveau résolu normalement. Cette action est définitive.", EntryPendingDeletion.Domain]
                 </p>
             </div>
             <div class="card-footer">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">Annuler</button>
-                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeleteAsync">Supprimer</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">@L["Annuler"]</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeleteAsync">@L["Supprimer"]</button>
                 </div>
             </div>
         </div>

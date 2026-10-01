@@ -2,13 +2,13 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
-<PageTitle>Tester un domaine · OnyxFilter</PageTitle>
+<PageTitle>@L["Tester un domaine"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Filtrage</p>
-        <h1 class="page-title">Tester un domaine</h1>
-        <p class="page-lead">Simulez une requête pour savoir si un domaine serait bloqué, autorisé ou réécrit, et pourquoi.</p>
+        <p class="page-eyebrow">@L["Filtrage"]</p>
+        <h1 class="page-title">@L["Tester un domaine"]</h1>
+        <p class="page-lead">@L["Simulez une requête pour savoir si un domaine serait bloqué, autorisé ou réécrit, et pourquoi."]</p>
     </div>
 </header>
 
@@ -16,19 +16,19 @@
     <div class="card-body">
         <div class="check-search">
             <Icon Name="search" />
-            <input id="check-host" type="text" class="form-control check-host" placeholder="exemple.fr" aria-label="Nom d'hôte ou domaine à tester" @bind="HostName" @bind:event="oninput" />
+            <input id="check-host" type="text" class="form-control check-host" placeholder="@L["exemple.fr"]" aria-label="@L["Nom d'hôte ou domaine à tester"]" @bind="HostName" @bind:event="oninput" />
             <button type="button" class="btn btn-primary" @onclick="CheckAsync" disabled="@IsChecking">
-                @(IsChecking ? "Vérification…" : "Tester")
+                @(IsChecking ? L["Vérification…"] : L["Tester"])
             </button>
         </div>
 
         <div class="field-grid mt-3">
             <div>
-                <label class="form-label" for="check-client">Client simulé <span class="text-body-secondary fw-normal">(facultatif)</span></label>
-                <input id="check-client" type="text" class="form-control font-monospace" placeholder="192.168.1.42 ou identifiant" @bind="ClientIdentifier" @bind:event="oninput" />
+                <label class="form-label" for="check-client">@L["Client simulé"] <span class="text-body-secondary fw-normal">@L["(facultatif)"]</span></label>
+                <input id="check-client" type="text" class="form-control font-monospace" placeholder="@L["192.168.1.42 ou identifiant"]" @bind="ClientIdentifier" @bind:event="oninput" />
             </div>
             <div>
-                <label class="form-label" for="check-record-type">Type d'enregistrement</label>
+                <label class="form-label" for="check-record-type">@L["Type d'enregistrement"]</label>
                 <select id="check-record-type" class="form-select" value="@SelectedRecordType" @onchange="OnRecordTypeChanged">
                     @foreach ((string Label, ushort Type) option in RecordTypeOptions)
                     {
@@ -47,7 +47,7 @@
     @if (!string.IsNullOrEmpty(ResultMessage))
     {
         <div class="check-result">
-            <p class="check-result-label">Résultat</p>
+            <p class="check-result-label">@L["Résultat"]</p>
             <div class="alert @ResultCssClass mb-0">@ResultMessage</div>
         </div>
     }

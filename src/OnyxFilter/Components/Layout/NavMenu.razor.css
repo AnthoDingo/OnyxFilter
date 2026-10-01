@@ -262,7 +262,8 @@
         color: var(--of-side-text);
     }
 
-    .theme-toggle-option[aria-pressed="true"] {
+    .theme-toggle-option[aria-pressed="true"],
+    .theme-toggle-option[aria-current="true"] {
         background-color: rgba(255, 255, 255, 0.09);
         color: #f6e7c5;
     }
@@ -270,6 +271,16 @@
     .theme-toggle-option:focus-visible {
         outline: 2px solid var(--of-side-accent);
         outline-offset: 1px;
+    }
+
+/* Sélecteur de langue : mêmes pastilles que le thème, en liens. */
+.language-toggle {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 0.4rem;
+}
+
+    .language-toggle .theme-toggle-option {
+        text-decoration: none;
     }
 
 .sidebar-meta {

@@ -14,7 +14,7 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
 {
     private const string AdditionalDomainsPlaceholder = "doh.exemple.fr\nautre.exemple.fr";
 
-    private static readonly CultureInfo DisplayCulture = CultureInfo.GetCultureInfo("fr-FR");
+    private static CultureInfo DisplayCulture => CultureInfo.CurrentCulture;
 
     [Inject]
     public ILocalSettingsStore SettingsStore { get; set; } = default!;
@@ -265,11 +265,11 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
             });
 
             RefreshSavedState(saved ?? data);
-            return "Paramètres enregistrés.";
+            return L["Paramètres enregistrés."];
         }
         catch (Exception ex)
         {
-            return "Erreur lors de l'enregistrement : " + ex.Message;
+            return L["Erreur lors de l'enregistrement : {0}", ex.Message];
         }
     }
 
@@ -304,9 +304,9 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
         });
     }
 
-    private static string FormatDate(DateTime? utc)
+    private string FormatDate(DateTime? utc)
     {
-        return utc is null ? "—" : utc.Value.ToLocalTime().ToString("d MMMM yyyy 'à' HH:mm", DisplayCulture);
+        return utc is null ? "—" : utc.Value.ToLocalTime().ToString(L["d MMMM yyyy 'à' HH:mm"], DisplayCulture);
     }
 
     private static string FormatDay(DateTime utc)
@@ -315,21 +315,21 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
     }
 
     // « dans 74 jours », « dans 5 heures », « expiré ».
-    private static string FormatRemaining(DateTime utc)
+    private string FormatRemaining(DateTime utc)
     {
         TimeSpan remaining = utc - DateTime.UtcNow;
 
         if (remaining <= TimeSpan.Zero)
         {
-            return "expiré";
+            return L["expiré"];
         }
 
         if (remaining.TotalDays >= 2)
         {
-            return $"dans {(int)remaining.TotalDays} jours";
+            return L["dans {0} jours", (int)remaining.TotalDays];
         }
 
-        return remaining.TotalHours >= 2 ? $"dans {(int)remaining.TotalHours} heures" : "dans moins de 2 heures";
+        return remaining.TotalHours >= 2 ? L["dans {0} heures", (int)remaining.TotalHours] : L["dans moins de 2 heures"];
     }
 
     public void Dispose()

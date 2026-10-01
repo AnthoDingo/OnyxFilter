@@ -11,7 +11,7 @@ namespace OnyxFilter.Components.Pages;
 
 public partial class ApiAccess : ComponentBase
 {
-    private static readonly CultureInfo DisplayCulture = CultureInfo.GetCultureInfo("fr-FR");
+    private static CultureInfo DisplayCulture => CultureInfo.CurrentCulture;
 
     [Inject]
     public IApiTokenService TokenService { get; set; } = default!;
@@ -63,11 +63,11 @@ public partial class ApiAccess : ComponentBase
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
         {
-            StatusMessage = "Erreur : " + ex.Message;
+            StatusMessage = L["Erreur : {0}", ex.Message];
         }
         catch (Exception ex)
         {
-            StatusMessage = "Erreur lors de l'enregistrement du jeton : " + ex.Message;
+            StatusMessage = L["Erreur lors de l'enregistrement du jeton : {0}", ex.Message];
         }
         finally
         {
@@ -91,7 +91,7 @@ public partial class ApiAccess : ComponentBase
         }
         catch (JSException)
         {
-            StatusMessage = "Erreur : copie automatique indisponible (HTTPS requis). Sélectionnez le jeton et copiez-le manuellement.";
+            StatusMessage = L["Erreur : copie automatique indisponible (HTTPS requis). Sélectionnez le jeton et copiez-le manuellement."];
         }
     }
 
@@ -125,13 +125,13 @@ public partial class ApiAccess : ComponentBase
         {
             bool revoked = await TokenService.RevokeAsync(TokenPendingRevocation.Id);
             StatusMessage = revoked
-                ? $"Jeton « {name} » révoqué : il ne donne plus accès à l'API."
-                : $"Erreur : le jeton « {name} » n'existe plus.";
+                ? L["Jeton « {0} » révoqué : il ne donne plus accès à l'API.", name]
+                : L["Erreur : le jeton « {0} » n'existe plus.", name];
             Tokens = await TokenService.ListAsync();
         }
         catch (Exception ex)
         {
-            StatusMessage = "Erreur lors de la révocation : " + ex.Message;
+            StatusMessage = L["Erreur lors de la révocation : {0}", ex.Message];
         }
         finally
         {
@@ -139,8 +139,8 @@ public partial class ApiAccess : ComponentBase
         }
     }
 
-    private static string FormatCreatedAt(DateTime createdUtc)
+    private string FormatCreatedAt(DateTime createdUtc)
     {
-        return createdUtc.ToLocalTime().ToString("d MMMM yyyy 'à' HH:mm", DisplayCulture);
+        return createdUtc.ToLocalTime().ToString(L["d MMMM yyyy 'à' HH:mm"], DisplayCulture);
     }
 }

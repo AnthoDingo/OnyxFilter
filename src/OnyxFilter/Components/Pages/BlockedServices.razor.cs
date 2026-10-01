@@ -131,11 +131,11 @@ public partial class BlockedServices : ComponentBase
         try
         {
             await SettingsStore.UpdateAsync(settings => settings.BlockedServices.BlockedServiceIds = idsSnapshot);
-            StatusMessage = "Services bloqués enregistrés.";
+            StatusMessage = L["Services bloqués enregistrés."];
         }
         catch (Exception ex)
         {
-            StatusMessage = "Erreur lors de l'enregistrement : " + ex.Message;
+            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
         }
         finally
         {
@@ -184,7 +184,7 @@ public partial class BlockedServices : ComponentBase
 
             if (endMinutes <= startMinutes)
             {
-                ScheduleDialogError = "Chaque jour activé doit avoir une heure de début antérieure à l'heure de fin.";
+                ScheduleDialogError = L["Chaque jour activé doit avoir une heure de début antérieure à l'heure de fin."];
                 return;
             }
 
@@ -198,11 +198,11 @@ public partial class BlockedServices : ComponentBase
         try
         {
             await SettingsStore.UpdateAsync(settings => settings.BlockedServices.Schedule = scheduleSnapshot);
-            StatusMessage = "Horaire de suspension enregistré.";
+            StatusMessage = L["Horaire de suspension enregistré."];
         }
         catch (Exception ex)
         {
-            StatusMessage = "Erreur lors de l'enregistrement : " + ex.Message;
+            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
         }
 
         ShowScheduleDialog = false;
