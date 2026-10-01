@@ -33,6 +33,20 @@
         </div>
 
         <div class="card settings-panel">
+            <div class="setting">
+                <div class="setting-text">
+                    <span class="setting-label">Connecter un smartphone</span>
+                    <p class="setting-help">
+                        Affiche un QR code à scanner avec l'application OnyxFilter pour Android : elle se connecte sans
+                        saisie. Le code change toutes les @((int)PairingQrRefreshInterval.TotalSeconds) secondes et ne
+                        sert qu'une fois ; le jeton créé apparaît ensuite dans la liste ci-dessous.
+                    </p>
+                </div>
+                <div class="setting-control">
+                    <button type="button" class="btn btn-secondary" @onclick="OpenPairing">Afficher le QR code</button>
+                </div>
+            </div>
+
             <div class="setting setting-stacked">
                 <div class="setting-text">
                     <label class="setting-label" for="new-token-name">Nouveau jeton</label>
@@ -244,6 +258,51 @@ curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" \
     </section>
 
 </div>
+
+@if (ShowPairingDialog)
+{
+    <div class="modal-backdrop-static" @onclick="ClosePairing"></div>
+
+    <div class="modal-static" role="dialog" aria-modal="true" aria-labelledby="pairing-dialog-title">
+        <div class="card dialog-card">
+            <div class="card-body">
+                <h2 class="dialog-title" id="pairing-dialog-title">Connecter un smartphone</h2>
+                <p class="dialog-lead">
+                    Scannez ce code avec l'appareil photo du téléphone, ou depuis l'écran de connexion de
+                    l'application OnyxFilter.
+                </p>
+
+                @if (PairingError is not null)
+                {
+                    <div class="alert alert-danger">@PairingError</div>
+                }
+                else if (PairingQrSvg is not null)
+                {
+                    <div class="pairing-qr" role="img" aria-label="QR code de connexion">@((MarkupString)PairingQrSvg)</div>
+                    <p class="pairing-countdown" aria-live="polite">Nouveau code dans @PairingSecondsLeft s</p>
+                }
+
+                <div class="pairing-fields">
+                    <div>
+                        <label class="form-label" for="pairing-name">Nom de l'appareil</label>
+                        <input id="pairing-name" type="text" class="form-control" maxlength="@ApiTokenService.MaxNameLength" @bind="PairingDeviceName" @bind:after="RegeneratePairing" />
+                    </div>
+                    <div>
+                        <label class="form-label" for="pairing-server">Adresse du serveur, vue du smartphone</label>
+                        <input id="pairing-server" type="url" class="form-control" @bind="PairingServerUrl" @bind:after="RegeneratePairing" />
+                        @if (PairingServerUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
+                        {
+                            <p class="form-text">En HTTP, le jeton circule en clair : réservez-le à votre réseau local.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-secondary" @onclick="ClosePairing">Fermer</button>
+            </div>
+        </div>
+    </div>
+}
 
 @if (TokenPendingRevocation is not null)
 {
