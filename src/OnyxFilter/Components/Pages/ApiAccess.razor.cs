@@ -1,17 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services.Api;
+using QRCoder;
 
 namespace OnyxFilter.Components.Pages;
 
-public partial class ApiAccess : ComponentBase
+public partial class ApiAccess : ComponentBase, IDisposable
 {
     private static readonly CultureInfo DisplayCulture = CultureInfo.GetCultureInfo("fr-FR");
+
+    // Le QR code affiché change toutes les 30 secondes ; chaque jeton reste valable 30 secondes de plus,
+    // pour un code scanné juste avant d'être remplacé.
+    private static readonly TimeSpan PairingQrRefreshInterval = TimeSpan.FromSeconds(30);
+
+    private static readonly TimeSpan PairingTokenLifetime = TimeSpan.FromSeconds(60);
 
     [Inject]
     public IApiTokenService TokenService { get; set; } = default!;
@@ -38,6 +46,26 @@ public partial class ApiAccess : ComponentBase
     private string? StatusMessage { get; set; }
 
     private ApiTokenEntry? TokenPendingRevocation { get; set; }
+
+    private bool ShowPairingDialog { get; set; }
+
+    private string PairingDeviceName { get; set; } = "Smartphone";
+
+    private string PairingServerUrl { get; set; } = string.Empty;
+
+    private string? PairingQrSvg { get; set; }
+
+    private string? PairingError { get; set; }
+
+    private int PairingSecondsLeft { get; set; }
+
+    private DateTime pairingCreatedUtc;
+
+    // Jetons d'appairage créés par cette fenêtre, encore utilisables : surveillés jusqu'à leur expiration,
+    // puis oubliés (et tous oubliés à la fermeture).
+    private readonly List<string> pairingTokenIds = new List<string>();
+
+    private CancellationTokenSource? pairingLoopCts;
 
     private string ApiBaseUrl => NavigationManager.BaseUri.TrimEnd('/') + "/api/v1";
 
@@ -137,6 +165,129 @@ public partial class ApiAccess : ComponentBase
         {
             TokenPendingRevocation = null;
         }
+    }
+
+    private void OpenPairing()
+    {
+        if (Tokens.Count >= ApiTokenService.MaxTokenCount)
+        {
+            StatusMessage = $"Erreur : nombre maximal de jetons atteint ({ApiTokenService.MaxTokenCount}). Révoquez-en un avant de connecter un smartphone.";
+            return;
+        }
+
+        PairingServerUrl = NavigationManager.BaseUri.TrimEnd('/');
+        ShowPairingDialog = true;
+        RegeneratePairing();
+
+        pairingLoopCts?.Cancel();
+        pairingLoopCts?.Dispose();
+        pairingLoopCts = new CancellationTokenSource();
+        _ = RunPairingLoopAsync(pairingLoopCts.Token);
+    }
+
+    // Chaque seconde : compte à rebours, détection de l'utilisation d'un code (fenêtre fermée, liste des
+    // jetons actualisée) et remplacement du code au bout de PairingQrRefreshInterval.
+    private async Task RunPairingLoopAsync(CancellationToken cancellationToken)
+    {
+        using PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+
+        try
+        {
+            while (await timer.WaitForNextTickAsync(cancellationToken))
+            {
+                foreach (string id in pairingTokenIds.ToArray())
+                {
+                    switch (TokenService.GetPairingTokenState(id))
+                    {
+                        case PairingTokenState.Consumed:
+                            ClosePairing();
+                            StatusMessage = $"Smartphone « {PairingDeviceName.Trim()} » connecté : son jeton figure dans la liste.";
+                            Tokens = await TokenService.ListAsync();
+                            await InvokeAsync(StateHasChanged);
+                            return;
+                        case PairingTokenState.Rejected:
+                            PairingError = $"Erreur : nombre maximal de jetons atteint ({ApiTokenService.MaxTokenCount}). Révoquez-en un, puis réessayez.";
+                            pairingTokenIds.Remove(id);
+                            break;
+                        case PairingTokenState.Expired:
+                            TokenService.DiscardPairingToken(id);
+                            pairingTokenIds.Remove(id);
+                            break;
+                    }
+                }
+
+                TimeSpan elapsed = DateTime.UtcNow - pairingCreatedUtc;
+
+                if (elapsed >= PairingQrRefreshInterval && PairingError is null)
+                {
+                    RegeneratePairing();
+                }
+                else
+                {
+                    PairingSecondsLeft = Math.Max(0, (int)Math.Ceiling((PairingQrRefreshInterval - elapsed).TotalSeconds));
+                }
+
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    // Nouveau jeton d'appairage et nouveau QR code (ouverture, expiration, changement du nom ou de
+    // l'adresse). Le code précédent reste valable jusqu'à sa propre expiration.
+    private void RegeneratePairing()
+    {
+        PairingError = null;
+        PairingQrSvg = null;
+
+        try
+        {
+            ApiTokenCreationResult pairing = TokenService.CreatePairingToken(PairingDeviceName, PairingTokenLifetime);
+            pairingTokenIds.Add(pairing.Entry.Id);
+            pairingCreatedUtc = DateTime.UtcNow;
+            PairingSecondsLeft = (int)PairingQrRefreshInterval.TotalSeconds;
+            PairingQrSvg = BuildQrSvg(BuildPairingUri(PairingServerUrl, pairing.Token));
+        }
+        catch (ArgumentException ex)
+        {
+            PairingError = "Erreur : " + ex.Message;
+        }
+    }
+
+    private void ClosePairing()
+    {
+        pairingLoopCts?.Cancel();
+        ShowPairingDialog = false;
+        PairingQrSvg = null;
+
+        foreach (string id in pairingTokenIds)
+        {
+            TokenService.DiscardPairingToken(id);
+        }
+
+        pairingTokenIds.Clear();
+    }
+
+    // Lien lu par l'application Android : adresse de l'instance et jeton, comme sur son écran de connexion.
+    public static string BuildPairingUri(string serverUrl, string token)
+    {
+        return "onyxfilter://pair?server=" + Uri.EscapeDataString(serverUrl.Trim().TrimEnd('/')) + "&token=" + Uri.EscapeDataString(token);
+    }
+
+    // SVG produit par QRCoder à partir de la seule chaîne encodée (aucun balisage utilisateur injecté).
+    private static string BuildQrSvg(string payload)
+    {
+        using QRCodeGenerator generator = new QRCodeGenerator();
+        using QRCodeData data = generator.CreateQrCode(payload, QRCodeGenerator.ECCLevel.M);
+        return new SvgQRCode(data).GetGraphic(8, "#000000", "#ffffff", true, SvgQRCode.SizingMode.ViewBoxAttribute);
+    }
+
+    public void Dispose()
+    {
+        ClosePairing();
+        pairingLoopCts?.Dispose();
     }
 
     private static string FormatCreatedAt(DateTime createdUtc)

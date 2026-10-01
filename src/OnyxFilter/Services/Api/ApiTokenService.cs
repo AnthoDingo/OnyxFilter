@@ -38,6 +38,23 @@ public sealed class ApiTokenService : IApiTokenService
     private int settingsVersion;
     private readonly object cacheLock = new object();
 
+    // Jetons d'appairage en attente (voir CreatePairingToken), par identifiant. Jamais écrits sur le
+    // disque tant qu'ils n'ont pas été utilisés.
+    private readonly Dictionary<string, PairingToken> pairingTokens = new Dictionary<string, PairingToken>(StringComparer.Ordinal);
+    private readonly object pairingLock = new object();
+
+    private sealed class PairingToken(ApiTokenEntry entry, byte[] hash, DateTime expiresUtc)
+    {
+        public ApiTokenEntry Entry { get; } = entry;
+
+        public byte[] Hash { get; } = hash;
+
+        public DateTime ExpiresUtc { get; } = expiresUtc;
+
+        // Pending tant que non utilisé ; passe à Consumed/Rejected à la première utilisation.
+        public PairingTokenState State { get; set; } = PairingTokenState.Pending;
+    }
+
     public ApiTokenService(ILocalSettingsStore settingsStore)
     {
         this.settingsStore = settingsStore;
@@ -58,6 +75,63 @@ public sealed class ApiTokenService : IApiTokenService
     }
 
     public async Task<ApiTokenCreationResult> CreateAsync(string name)
+    {
+        ApiTokenCreationResult result = GenerateToken(name);
+
+        if (!await TryAddAsync(result.Entry))
+        {
+            throw new InvalidOperationException($"Nombre maximal de jetons atteint ({MaxTokenCount}) : révoquez-en un avant d'en créer un autre.");
+        }
+
+        return result;
+    }
+
+    public ApiTokenCreationResult CreatePairingToken(string name, TimeSpan lifetime)
+    {
+        ApiTokenCreationResult result = GenerateToken(name);
+        DateTime now = DateTime.UtcNow;
+
+        lock (pairingLock)
+        {
+            // Nettoyage des jetons expirés depuis longtemps (QR codes abandonnés sans être fermés).
+            foreach (KeyValuePair<string, PairingToken> pair in pairingTokens)
+            {
+                if (now - pair.Value.ExpiresUtc > TimeSpan.FromMinutes(10))
+                {
+                    pairingTokens.Remove(pair.Key);
+                }
+            }
+
+            pairingTokens[result.Entry.Id] = new PairingToken(result.Entry, HashToken(result.Token), now + lifetime);
+        }
+
+        return result;
+    }
+
+    public PairingTokenState GetPairingTokenState(string id)
+    {
+        lock (pairingLock)
+        {
+            if (!pairingTokens.TryGetValue(id, out PairingToken? pairing))
+            {
+                return PairingTokenState.Expired;
+            }
+
+            return pairing.State == PairingTokenState.Pending && pairing.ExpiresUtc <= DateTime.UtcNow
+                ? PairingTokenState.Expired
+                : pairing.State;
+        }
+    }
+
+    public void DiscardPairingToken(string id)
+    {
+        lock (pairingLock)
+        {
+            pairingTokens.Remove(id);
+        }
+    }
+
+    private static ApiTokenCreationResult GenerateToken(string name)
     {
         string trimmedName = (name ?? string.Empty).Trim();
 
@@ -82,6 +156,12 @@ public sealed class ApiTokenService : IApiTokenService
             CreatedUtc = DateTime.UtcNow,
         };
 
+        return new ApiTokenCreationResult(entry, token);
+    }
+
+    // Retourne false si le nombre maximal de jetons est atteint.
+    private async Task<bool> TryAddAsync(ApiTokenEntry entry)
+    {
         bool limitReached = false;
 
         await settingsStore.UpdateAsync(settings =>
@@ -95,12 +175,7 @@ public sealed class ApiTokenService : IApiTokenService
             settings.Api.Tokens.Add(entry);
         });
 
-        if (limitReached)
-        {
-            throw new InvalidOperationException($"Nombre maximal de jetons atteint ({MaxTokenCount}) : révoquez-en un avant d'en créer un autre.");
-        }
-
-        return new ApiTokenCreationResult(entry, token);
+        return !limitReached;
     }
 
     public async Task<bool> RevokeAsync(string id)
@@ -136,7 +211,46 @@ public sealed class ApiTokenService : IApiTokenService
             }
         }
 
-        return match;
+        return match ?? await TryConsumePairingTokenAsync(presentedHash);
+    }
+
+    // Première utilisation d'un jeton d'appairage valable : il est enregistré comme jeton permanent. Marqué
+    // utilisé avant l'écriture (sous verrou), pour qu'une seconde requête simultanée ne l'enregistre pas
+    // une seconde fois : un jeton d'appairage ne sert qu'une fois, même si l'enregistrement échoue.
+    private async Task<ApiTokenEntry?> TryConsumePairingTokenAsync(byte[] presentedHash)
+    {
+        PairingToken? pairing = null;
+
+        lock (pairingLock)
+        {
+            DateTime now = DateTime.UtcNow;
+
+            foreach (PairingToken candidate in pairingTokens.Values)
+            {
+                if (CryptographicOperations.FixedTimeEquals(presentedHash, candidate.Hash)
+                    && candidate.State == PairingTokenState.Pending
+                    && candidate.ExpiresUtc > now)
+                {
+                    pairing = candidate;
+                }
+            }
+
+            if (pairing is null)
+            {
+                return null;
+            }
+
+            pairing.State = PairingTokenState.Rejected;
+        }
+
+        bool added = await TryAddAsync(pairing.Entry);
+
+        lock (pairingLock)
+        {
+            pairing.State = added ? PairingTokenState.Consumed : PairingTokenState.Rejected;
+        }
+
+        return added ? pairing.Entry : null;
     }
 
     private async Task<IReadOnlyList<(ApiTokenEntry Entry, byte[] Hash)>> ReloadAsync()
