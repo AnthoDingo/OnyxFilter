@@ -60,13 +60,14 @@ public sealed class DomainListRepository : IDisposable
 
     // Charge chaque liste activée depuis son fichier de cache disque uniquement (aucun appel réseau) :
     // à appeler une fois au démarrage, avant le premier RefreshAsync en arrière-plan.
-    public async Task<(CompactDomainSet Domains, List<FilterListStatus> Statuses, IReadOnlyList<(string Name, CompactDomainSet Domains)> PerListDomains)> LoadFromDiskCacheAsync(
+    public async Task<(CompactDomainSet Domains, List<FilterListStatus> Statuses, IReadOnlyList<(string Name, CompactDomainSet Domains)> PerListDomains, ListExceptionRules Exceptions)> LoadFromDiskCacheAsync(
         IReadOnlyList<FilterListEntry> lists,
         CancellationToken cancellationToken)
     {
         HashSet<string> merged = new HashSet<string>(StringComparer.Ordinal);
         List<FilterListStatus> statuses = new List<FilterListStatus>(lists.Count);
         List<(string Name, CompactDomainSet Domains)> perList = new List<(string Name, CompactDomainSet Domains)>();
+        ListExceptionRules exceptions = new ListExceptionRules();
 
         foreach (FilterListEntry entry in lists)
         {
@@ -81,7 +82,7 @@ public sealed class DomainListRepository : IDisposable
             if (entry.Enabled)
             {
                 HashSet<string> listDomains = new HashSet<string>(StringComparer.Ordinal);
-                (int DomainCount, DateTime LastUpdatedUtc)? cached = await TryLoadFromDiskCacheAsync(entry.Id, listDomains, cancellationToken);
+                (int DomainCount, DateTime LastUpdatedUtc)? cached = await TryLoadFromDiskCacheAsync(entry.Id, listDomains, exceptions, cancellationToken);
 
                 if (cached is not null)
                 {
@@ -95,24 +96,25 @@ public sealed class DomainListRepository : IDisposable
             statuses.Add(status);
         }
 
-        return (new CompactDomainSet(merged), statuses, perList);
+        return (new CompactDomainSet(merged), statuses, perList, exceptions);
     }
 
     // Retélécharge et réanalyse toutes les listes fournies (les listes désactivées gardent un statut
     // vide, sans être interrogées), puis nettoie les fichiers de cache orphelins (liste supprimée par
     // l'utilisateur depuis le dernier appel).
-    public async Task<(CompactDomainSet Domains, List<FilterListStatus> Statuses, IReadOnlyList<(string Name, CompactDomainSet Domains)> PerListDomains)> RefreshAsync(
+    public async Task<(CompactDomainSet Domains, List<FilterListStatus> Statuses, IReadOnlyList<(string Name, CompactDomainSet Domains)> PerListDomains, ListExceptionRules Exceptions)> RefreshAsync(
         IReadOnlyList<FilterListEntry> lists,
         CancellationToken cancellationToken)
     {
         List<FilterListStatus> statuses = new List<FilterListStatus>(lists.Count);
         HashSet<string> merged = new HashSet<string>(StringComparer.Ordinal);
         List<(string Name, CompactDomainSet Domains)> perList = new List<(string Name, CompactDomainSet Domains)>();
+        ListExceptionRules exceptions = new ListExceptionRules();
 
         foreach (FilterListEntry entry in lists)
         {
             HashSet<string> listDomains = new HashSet<string>(StringComparer.Ordinal);
-            FilterListStatus status = await FetchListAsync(entry, listDomains, cancellationToken);
+            FilterListStatus status = await FetchListAsync(entry, listDomains, exceptions, cancellationToken);
             statuses.Add(status);
 
             if (entry.Enabled && listDomains.Count > 0)
@@ -124,7 +126,7 @@ public sealed class DomainListRepository : IDisposable
 
         CleanupOrphanedCacheFiles(lists);
 
-        return (new CompactDomainSet(merged), statuses, perList);
+        return (new CompactDomainSet(merged), statuses, perList, exceptions);
     }
 
     // Vérifie le domaine demandé, puis remonte ses domaines parents ("sub.ads.example.com" ->
@@ -184,7 +186,7 @@ public sealed class DomainListRepository : IDisposable
     // remplacé qu'une fois le téléchargement intégral réussi), puis l'analyse depuis ce fichier. En cas
     // d'échec réseau, retombe sur le contenu déjà en cache (s'il existe) plutôt que de considérer la
     // liste comme vide.
-    private async Task<FilterListStatus> FetchListAsync(FilterListEntry entry, HashSet<string> destination, CancellationToken cancellationToken)
+    private async Task<FilterListStatus> FetchListAsync(FilterListEntry entry, HashSet<string> destination, ListExceptionRules exceptions, CancellationToken cancellationToken)
     {
         FilterListStatus status = new FilterListStatus
         {
@@ -217,7 +219,7 @@ public sealed class DomainListRepository : IDisposable
 
             File.Move(temporaryFilePath, cacheFilePath, overwrite: true);
 
-            int domainCount = await ParseCacheFileAsync(cacheFilePath, destination, cancellationToken);
+            int domainCount = await ParseCacheFileAsync(cacheFilePath, destination, exceptions, cancellationToken);
 
             status.DomainCount = domainCount;
             status.LastUpdatedUtc = DateTime.UtcNow;
@@ -227,7 +229,7 @@ public sealed class DomainListRepository : IDisposable
         {
             TryDeleteFile(temporaryFilePath);
 
-            (int DomainCount, DateTime LastUpdatedUtc)? cached = await TryLoadFromDiskCacheAsync(entry.Id, destination, cancellationToken);
+            (int DomainCount, DateTime LastUpdatedUtc)? cached = await TryLoadFromDiskCacheAsync(entry.Id, destination, exceptions, cancellationToken);
 
             if (cached is not null)
             {
@@ -254,7 +256,7 @@ public sealed class DomainListRepository : IDisposable
         return status;
     }
 
-    private async Task<(int DomainCount, DateTime LastUpdatedUtc)?> TryLoadFromDiskCacheAsync(string entryId, HashSet<string> destination, CancellationToken cancellationToken)
+    private async Task<(int DomainCount, DateTime LastUpdatedUtc)?> TryLoadFromDiskCacheAsync(string entryId, HashSet<string> destination, ListExceptionRules exceptions, CancellationToken cancellationToken)
     {
         string cacheFilePath = GetCacheFilePath(entryId);
 
@@ -265,7 +267,7 @@ public sealed class DomainListRepository : IDisposable
 
         try
         {
-            int domainCount = await ParseCacheFileAsync(cacheFilePath, destination, cancellationToken);
+            int domainCount = await ParseCacheFileAsync(cacheFilePath, destination, exceptions, cancellationToken);
             DateTime lastUpdatedUtc = File.GetLastWriteTimeUtc(cacheFilePath);
             return (domainCount, lastUpdatedUtc);
         }
@@ -276,7 +278,7 @@ public sealed class DomainListRepository : IDisposable
         }
     }
 
-    private static async Task<int> ParseCacheFileAsync(string cacheFilePath, HashSet<string> destination, CancellationToken cancellationToken)
+    private static async Task<int> ParseCacheFileAsync(string cacheFilePath, HashSet<string> destination, ListExceptionRules exceptions, CancellationToken cancellationToken)
     {
         int domainCount = 0;
 
@@ -287,6 +289,11 @@ public sealed class DomainListRepository : IDisposable
 
         while ((line = await reader.ReadLineAsync(cancellationToken)) is not null)
         {
+            if (exceptions.TryAdd(line.Trim()))
+            {
+                continue;
+            }
+
             if (TryParseDomain(line, out string domain))
             {
                 destination.Add(domain);
@@ -354,8 +361,8 @@ public sealed class DomainListRepository : IDisposable
     }
 
     // Reconnaît les formats usuels des listes publiques : domaine brut (une entrée par ligne), fichier
-    // "hosts" ("0.0.0.0 domaine.tld"), et règles Adblock Plus ("||domaine.tld^"). Les commentaires, règles
-    // d'exception ("@@...") et filtres cosmétiques ("##") sont ignorés.
+    // "hosts" ("0.0.0.0 domaine.tld"), et règles Adblock Plus ("||domaine.tld^"). Les commentaires et filtres
+    // cosmétiques ("##") sont ignorés ; les règles d'exception ("@@...") sont traitées par ListExceptionRules.
     private static bool TryParseDomain(string rawLine, out string domain)
     {
         domain = string.Empty;

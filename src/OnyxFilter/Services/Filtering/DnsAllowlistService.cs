@@ -55,7 +55,7 @@ public sealed class DnsAllowlistService : IDnsAllowlistService, IDisposable
         // Chargement depuis le cache disque uniquement (aucun appel réseau) : l'autorisation est active
         // dès le démarrage du service DNS, même si les serveurs des listes d'autorisation sont
         // injoignables.
-        (CompactDomainSet initialDomains, List<FilterListStatus> initialStatuses, _) = await repository.LoadFromDiskCacheAsync(lists, cancellationToken);
+        (CompactDomainSet initialDomains, List<FilterListStatus> initialStatuses, _, _) = await repository.LoadFromDiskCacheAsync(lists, cancellationToken);
 
         lock (syncRoot)
         {
@@ -122,7 +122,7 @@ public sealed class DnsAllowlistService : IDnsAllowlistService, IDisposable
 
         try
         {
-            (CompactDomainSet merged, List<FilterListStatus> statuses, _) = await repository.RefreshAsync(lists, cancellationToken);
+            (CompactDomainSet merged, List<FilterListStatus> statuses, _, _) = await repository.RefreshAsync(lists, cancellationToken);
 
             lock (syncRoot)
             {

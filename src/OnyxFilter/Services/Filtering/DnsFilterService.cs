@@ -42,6 +42,8 @@ public sealed class DnsFilterService : IDnsFilterService, IDisposable
     // blocage dans TryBuildBlockResponse. Construits en parallèle du merged set lors de chaque
     // rafraîchissement ; la surcharge mémoire reste faible car les listes se chevauchent peu en pratique.
     private IReadOnlyList<(string Name, CompactDomainSet Domains)> blockedDomainsPerList = Array.Empty<(string, CompactDomainSet)>();
+    // Règles "@@..." de toutes les listes : une exception de n'importe quelle liste lève le blocage.
+    private ListExceptionRules exceptionRules = ListExceptionRules.Empty;
     private IReadOnlyList<FilterListStatus> listStatuses = Array.Empty<FilterListStatus>();
     private DateTime? lastRefreshUtc;
 
@@ -69,12 +71,13 @@ public sealed class DnsFilterService : IDnsFilterService, IDisposable
 
         // Chargement depuis le cache disque uniquement (aucun appel réseau) : le blocage est actif dès le
         // démarrage du service DNS, même si les serveurs des listes de blocage sont injoignables.
-        (CompactDomainSet initialDomains, List<FilterListStatus> initialStatuses, IReadOnlyList<(string Name, CompactDomainSet Domains)> initialPerList) = await repository.LoadFromDiskCacheAsync(lists, cancellationToken);
+        (CompactDomainSet initialDomains, List<FilterListStatus> initialStatuses, IReadOnlyList<(string Name, CompactDomainSet Domains)> initialPerList, ListExceptionRules initialExceptions) = await repository.LoadFromDiskCacheAsync(lists, cancellationToken);
 
         lock (syncRoot)
         {
             blockedDomains = initialDomains;
             blockedDomainsPerList = initialPerList;
+            exceptionRules = initialExceptions;
             listStatuses = initialStatuses;
         }
 
@@ -110,6 +113,7 @@ public sealed class DnsFilterService : IDnsFilterService, IDisposable
         string ipv6;
         CompactDomainSet domains;
         IReadOnlyList<(string Name, CompactDomainSet Domains)> perList;
+        ListExceptionRules exceptions;
 
         lock (syncRoot)
         {
@@ -119,6 +123,7 @@ public sealed class DnsFilterService : IDnsFilterService, IDisposable
             ipv6 = customBlockingIpv6;
             domains = blockedDomains;
             perList = blockedDomainsPerList;
+            exceptions = exceptionRules;
         }
 
         if (!enabled || domains.Count == 0)
@@ -127,6 +132,11 @@ public sealed class DnsFilterService : IDnsFilterService, IDisposable
         }
 
         if (!DnsMessageParser.TryReadQuestionName(query, out string name) || !DomainListRepository.ContainsDomainOrParent(name, domains))
+        {
+            return false;
+        }
+
+        if (exceptions.IsExcepted(name))
         {
             return false;
         }
@@ -176,12 +186,13 @@ public sealed class DnsFilterService : IDnsFilterService, IDisposable
 
         try
         {
-            (CompactDomainSet merged, List<FilterListStatus> statuses, IReadOnlyList<(string Name, CompactDomainSet Domains)> perList) = await repository.RefreshAsync(lists, cancellationToken);
+            (CompactDomainSet merged, List<FilterListStatus> statuses, IReadOnlyList<(string Name, CompactDomainSet Domains)> perList, ListExceptionRules exceptions) = await repository.RefreshAsync(lists, cancellationToken);
 
             lock (syncRoot)
             {
                 blockedDomains = merged;
                 blockedDomainsPerList = perList;
+                exceptionRules = exceptions;
                 listStatuses = statuses;
                 lastRefreshUtc = DateTime.UtcNow;
             }
