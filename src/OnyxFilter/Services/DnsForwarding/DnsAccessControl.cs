@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services.ClientLocation;
+using OnyxFilter.Services.CrowdSec;
 
 namespace OnyxFilter.Services.DnsForwarding;
 
@@ -18,6 +19,7 @@ public sealed class DnsAccessControl : IDnsAccessControl, IDisposable
 {
     private readonly ILocalSettingsStore settingsStore;
     private readonly IClientLocationService clientLocationService;
+    private readonly ICrowdSecBouncer crowdSecBouncer;
     private readonly ILogger<DnsAccessControl> logger;
     private readonly object syncRoot = new object();
 
@@ -40,10 +42,11 @@ public sealed class DnsAccessControl : IDnsAccessControl, IDisposable
     private HashSet<string> disallowedDomains = new HashSet<string>(StringComparer.Ordinal);
     private string[] disallowedDomainSuffixes = Array.Empty<string>();
 
-    public DnsAccessControl(ILocalSettingsStore settingsStore, IClientLocationService clientLocationService, ILogger<DnsAccessControl> logger)
+    public DnsAccessControl(ILocalSettingsStore settingsStore, IClientLocationService clientLocationService, ICrowdSecBouncer crowdSecBouncer, ILogger<DnsAccessControl> logger)
     {
         this.settingsStore = settingsStore;
         this.clientLocationService = clientLocationService;
+        this.crowdSecBouncer = crowdSecBouncer;
         this.logger = logger;
         this.settingsStore.SettingsChanged += OnSettingsChanged;
     }
@@ -87,6 +90,12 @@ public sealed class DnsAccessControl : IDnsAccessControl, IDisposable
         if (exceptionRule is not null)
         {
             return new ClientAccessDecision(true, mode, exceptionRule, ClientAccessList.AlwaysAllowed);
+        }
+
+        // Adresse bannie par CrowdSec (/settings/crowdsec) : refusée quelles que soient les autres listes.
+        if (crowdSecBouncer.IsBanned(clientAddress))
+        {
+            return new ClientAccessDecision(false, mode, "CrowdSec", null);
         }
 
         // Liste blanche non vide : seuls les clients listés sont servis, la liste noire est ignorée.

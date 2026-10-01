@@ -2232,4 +2232,79 @@
   <data name="Filtrage par pays enregistré." xml:space="preserve">
     <value>Country filtering saved.</value>
   </data>
+  <data name=" restent servis." xml:space="preserve">
+    <value> remain served.</value>
+  </data>
+  <data name="{0} décision(s) appliquée(s)" xml:space="preserve">
+    <value>{0} decision(s) applied</value>
+  </data>
+  <data name="Actualisation (secondes)" xml:space="preserve">
+    <value>Refresh (seconds)</value>
+  </data>
+  <data name="Adresse de l'API locale" xml:space="preserve">
+    <value>Local API address</value>
+  </data>
+  <data name="Adresse de l'API locale invalide (http:// ou https:// attendu)." xml:space="preserve">
+    <value>Invalid local API address (http:// or https:// expected).</value>
+  </data>
+  <data name="Clé du bouncer" xml:space="preserve">
+    <value>Bouncer key</value>
+  </data>
+  <data name="Clé enregistrée (laisser vide pour la conserver)" xml:space="preserve">
+    <value>Key saved (leave empty to keep it)</value>
+  </data>
+  <data name="Connecté" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="Connexion à CrowdSec réussie." xml:space="preserve">
+    <value>Connected to CrowdSec successfully.</value>
+  </data>
+  <data name="Connexion à l'API locale" xml:space="preserve">
+    <value>Local API connection</value>
+  </data>
+  <data name="Créez la clé sur la machine CrowdSec avec" xml:space="preserve">
+    <value>Create the key on the CrowdSec machine with</value>
+  </data>
+  <data name="dernière synchronisation à {0}" xml:space="preserve">
+    <value>last sync at {0}</value>
+  </data>
+  <data name="Désactivé." xml:space="preserve">
+    <value>Disabled.</value>
+  </data>
+  <data name="Échec de la connexion à CrowdSec : {0}" xml:space="preserve">
+    <value>Could not connect to CrowdSec: {0}</value>
+  </data>
+  <data name="Injoignable" xml:space="preserve">
+    <value>Unreachable</value>
+  </data>
+  <data name="L'actualisation doit être comprise entre 1 et 3600 secondes." xml:space="preserve">
+    <value>Refresh must be between 1 and 3600 seconds.</value>
+  </data>
+  <data name="Les adresses bannies reçoivent une erreur 403 sur l'interface web et l'API." xml:space="preserve">
+    <value>Banned addresses get a 403 error on the web interface and the API.</value>
+  </data>
+  <data name="OnyxFilter interroge l'API locale de CrowdSec et ne répond plus aux adresses bannies. Les clients toujours autorisés des" xml:space="preserve">
+    <value>OnyxFilter queries the CrowdSec local API and stops answering banned addresses. Always allowed clients in the</value>
+  </data>
+  <data name="Paramètres CrowdSec enregistrés." xml:space="preserve">
+    <value>CrowdSec settings saved.</value>
+  </data>
+  <data name="Protéger aussi l'interface web" xml:space="preserve">
+    <value>Also protect the web interface</value>
+  </data>
+  <data name="Refusez l'accès aux adresses bannies par votre instance CrowdSec." xml:space="preserve">
+    <value>Deny access to addresses banned by your CrowdSec instance.</value>
+  </data>
+  <data name="Renseignez la clé du bouncer." xml:space="preserve">
+    <value>Enter the bouncer key.</value>
+  </data>
+  <data name="Test en cours…" xml:space="preserve">
+    <value>Testing…</value>
+  </data>
+  <data name="Tester la connexion" xml:space="preserve">
+    <value>Test connection</value>
+  </data>
+  <data name="Utiliser CrowdSec" xml:space="preserve">
+    <value>Use CrowdSec</value>
+  </data>
 </root>

@@ -1,0 +1,14 @@
+.crowdsec-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.crowdsec-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+    font-size: 0.875rem;
+}

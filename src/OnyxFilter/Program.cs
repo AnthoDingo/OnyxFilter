@@ -28,6 +28,7 @@ using OnyxFilter.Services.Api;
 using OnyxFilter.Services.BlockedServices;
 using OnyxFilter.Services.BrowsingSecurity;
 using OnyxFilter.Services.ClientLocation;
+using OnyxFilter.Services.CrowdSec;
 using OnyxFilter.Services.DnsForwarding;
 using OnyxFilter.Services.Encryption;
 using OnyxFilter.Services.Encryption.Acme;
@@ -279,6 +280,12 @@ public class Program
         builder.Services.AddSingleton<IClientLocationService>(serviceProvider => serviceProvider.GetRequiredService<ClientLocationService>());
         builder.Services.AddHostedService(serviceProvider => serviceProvider.GetRequiredService<ClientLocationService>());
 
+        // Bouncer CrowdSec (/settings/crowdsec, optionnel) : adresses bannies refusées par le DNS
+        // (DnsAccessControl) et, si demandé, par l'interface web et l'API (middleware ci-dessous).
+        builder.Services.AddSingleton<CrowdSecBouncerService>();
+        builder.Services.AddSingleton<ICrowdSecBouncer>(serviceProvider => serviceProvider.GetRequiredService<CrowdSecBouncerService>());
+        builder.Services.AddHostedService(serviceProvider => serviceProvider.GetRequiredService<CrowdSecBouncerService>());
+
         builder.Services.AddHostedService<DnsProxyService>();
 
         // Service DNS-over-TLS (RFC 7858) : actif uniquement si "Activer le chiffrement" est coché dans
@@ -326,6 +333,20 @@ public class Program
         builder.Services.AddHostedService(serviceProvider => serviceProvider.GetRequiredService<HttpsEndpointService>());
 
         WebApplication app = builder.Build();
+
+        // Adresses bannies par CrowdSec : refusées avant tout traitement (si "Protéger aussi l'interface
+        // web" est coché), sans page d'erreur.
+        ICrowdSecBouncer crowdSecBouncer = app.Services.GetRequiredService<ICrowdSecBouncer>();
+        app.Use(async (context, next) =>
+        {
+            if (context.Connection.RemoteIpAddress is { } remoteAddress && crowdSecBouncer.IsBannedFromWebInterface(remoteAddress))
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                return;
+            }
+
+            await next();
+        });
 
         // Défis HTTP-01 de Let's Encrypt, avant toute redirection, page d'erreur ou authentification.
         app.UseAcmeHttpChallenge();

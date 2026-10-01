@@ -21,6 +21,8 @@ public sealed class AppLocalSettings
 
     public CountryFilterSettingsData CountryFilter { get; set; } = new CountryFilterSettingsData();
 
+    public CrowdSecSettingsData CrowdSec { get; set; } = new CrowdSecSettingsData();
+
     public ClientsSettingsData Clients { get; set; } = new ClientsSettingsData();
 
     public ApiSettingsData Api { get; set; } = new ApiSettingsData();
