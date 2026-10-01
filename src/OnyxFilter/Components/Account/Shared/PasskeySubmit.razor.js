@@ -17,9 +17,10 @@ async function fetchWithErrorHandling(url, options = {}) {
     return response;
 }
 
-async function createCredential(signal) {
+async function createCredential(headers, signal) {
     const optionsResponse = await fetchWithErrorHandling('/Account/PasskeyCreationOptions', {
         method: 'POST',
+        headers,
         signal,
     });
     const optionsJson = await optionsResponse.json();
@@ -27,9 +28,10 @@ async function createCredential(signal) {
     return await navigator.credentials.create({ publicKey: options, signal });
 }
 
-async function requestCredential(email, mediation, signal) {
-    const optionsResponse = await fetchWithErrorHandling(`/Account/PasskeyRequestOptions?username=${email}`, {
+async function requestCredential(email, mediation, headers, signal) {
+    const optionsResponse = await fetchWithErrorHandling(`/Account/PasskeyRequestOptions?username=${encodeURIComponent(email ?? '')}`, {
         method: 'POST',
+        headers,
         signal,
     });
     const optionsJson = await optionsResponse.json();
@@ -46,6 +48,8 @@ customElements.define('passkey-submit', class extends HTMLElement {
             operation: this.getAttribute('operation'),
             name: this.getAttribute('name'),
             emailName: this.getAttribute('email-name'),
+            requestTokenName: this.getAttribute('request-token-name'),
+            requestTokenValue: this.getAttribute('request-token-value'),
         };
 
         this.internals.form.addEventListener('submit', (event) => {
@@ -67,12 +71,17 @@ customElements.define('passkey-submit', class extends HTMLElement {
             throw new Error('Some passkey features are missing. Please update your browser.');
         }
 
+        // Jeton antiforgery exigé par les endpoints des options de passkey.
+        const headers = this.attrs.requestTokenName
+            ? { [this.attrs.requestTokenName]: this.attrs.requestTokenValue }
+            : {};
+
         if (this.attrs.operation === 'Create') {
-            return await createCredential(signal);
+            return await createCredential(headers, signal);
         } else if (this.attrs.operation === 'Request') {
             const email = new FormData(this.internals.form).get(this.attrs.emailName);
             const mediation = useConditionalMediation ? 'conditional' : undefined;
-            return await requestCredential(email, mediation, signal);
+            return await requestCredential(email, mediation, headers, signal);
         } else {
             throw new Error(`Unknown passkey operation '${this.attrs.operation}'.`);
         }
