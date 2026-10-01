@@ -1,0 +1,143 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using OnyxFilter.Models.Settings;
+using OnyxFilter.Services;
+using OnyxFilter.Services.ClientLocation;
+
+namespace OnyxFilter.Components.Pages;
+
+public partial class CountryFilter : ComponentBase
+{
+    [Inject]
+    public ILocalSettingsStore SettingsStore { get; set; } = default!;
+
+    [Inject]
+    public IClientLocationService LocationService { get; set; } = default!;
+
+    [Inject]
+    public IJSRuntime JS { get; set; } = default!;
+
+    private CountryFilterMode Mode { get; set; }
+
+    private HashSet<string> SelectedCountries { get; set; } = new HashSet<string>(StringComparer.Ordinal);
+
+    // Pays de la base, complétés des pays déjà sélectionnés (base pas encore chargée).
+    private List<string> AllCountries { get; set; } = new List<string>();
+
+    // Noms des pays dans la langue de la page, fournis par le navigateur (Intl.DisplayNames) : .NET ne
+    // donne les noms que dans la langue du pays lui-même. Code pays affiché en attendant.
+    private Dictionary<string, string> CountryNames { get; set; } = new Dictionary<string, string>(StringComparer.Ordinal);
+
+    private string SearchText { get; set; } = string.Empty;
+
+    private string? StatusMessage { get; set; }
+
+    private bool StatusIsError { get; set; }
+
+    private bool IsSaving { get; set; }
+
+    // Pays sélectionnés en premier, puis par nom ; filtrés par la recherche (nom ou code).
+    private IEnumerable<string> VisibleCountries
+    {
+        get
+        {
+            string search = SearchText.Trim();
+
+            return AllCountries
+                .Where(code => search.Length == 0
+                    || NameOf(code).Contains(search, StringComparison.CurrentCultureIgnoreCase)
+                    || code.Equals(search, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(code => !SelectedCountries.Contains(code))
+                .ThenBy(NameOf, StringComparer.CurrentCultureIgnoreCase);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AppLocalSettings settings = await SettingsStore.LoadAsync();
+        Mode = settings.CountryFilter.Mode;
+        SelectedCountries = new HashSet<string>(settings.CountryFilter.Countries, StringComparer.Ordinal);
+        AllCountries = LocationService.Countries.Union(SelectedCountries).ToList();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender || AllCountries.Count == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            await using IJSObjectReference module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/CountryFilter.razor.js");
+            CountryNames = await module.InvokeAsync<Dictionary<string, string>>("getCountryNames", AllCountries);
+            StateHasChanged();
+        }
+        catch (JSException)
+        {
+            // Navigateur sans Intl.DisplayNames : les codes pays restent affichés.
+        }
+    }
+
+    private string NameOf(string code)
+    {
+        return CountryNames.TryGetValue(code, out string? name) ? name : code;
+    }
+
+    private static string FlagOf(string code)
+    {
+        return new ClientLocation(code, 0, string.Empty, string.Empty).Flag;
+    }
+
+    private void ToggleCountry(string code, ChangeEventArgs e)
+    {
+        if (e.Value is bool isChecked && isChecked)
+        {
+            SelectedCountries.Add(code);
+        }
+        else
+        {
+            SelectedCountries.Remove(code);
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        if (Mode == CountryFilterMode.Allowlist && SelectedCountries.Count == 0)
+        {
+            StatusIsError = true;
+            StatusMessage = "Sélectionnez au moins un pays à autoriser.";
+            return;
+        }
+
+        CountryFilterMode mode = Mode;
+        List<string> countries = SelectedCountries.OrderBy(code => code, StringComparer.Ordinal).ToList();
+        IsSaving = true;
+
+        try
+        {
+            await SettingsStore.UpdateAsync(settings => settings.CountryFilter = new CountryFilterSettingsData
+            {
+                Mode = mode,
+                Countries = countries,
+            });
+
+            StatusIsError = false;
+            StatusMessage = "Filtrage par pays enregistré.";
+        }
+        catch (Exception ex)
+        {
+            StatusIsError = true;
+            StatusMessage = "Erreur lors de l'enregistrement : " + ex.Message;
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+}

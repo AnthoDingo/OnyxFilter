@@ -28,15 +28,25 @@ public interface IClientLocationService
 {
     // "clientKey" : adresse telle qu'affichée dans le journal et les statistiques (éventuellement
     // anonymisée, ce qui ne change rien en pratique : les plages sont au moins des /24 ou des /48).
-    // Null si l'adresse est inconnue, privée ou si la base n'est pas encore chargée.
+    // Null si l'adresse est inconnue, privée, si la base n'est pas encore chargée, ou si l'affichage est
+    // désactivé ("Afficher le pays et le fournisseur des clients").
     ClientLocation? Lookup(string clientKey);
+
+    // Pays d'un client pour le filtrage par pays (indépendant du réglage d'affichage). Null si inconnu.
+    string? LookupCountry(IPAddress address);
+
+    // Base chargée : sans elle, le filtrage par pays laisse passer tous les clients.
+    bool IsLoaded { get; }
+
+    // Codes pays présents dans la base (triés), pour la page "Filtrage par pays".
+    IReadOnlyList<string> Countries { get; }
 }
 
 // Base « IP vers ASN » publique d'iptoasn.com (domaine public, PDDL) : une plage d'adresses par ligne,
 // avec le numéro d'ASN, le pays et le nom de l'opérateur. Fichier téléchargé dans le dossier des données,
 // chargé au démarrage depuis ce cache (sans réseau), puis retéléchargé une fois par semaine. Désactivable
-// ("Afficher le pays et le fournisseur des clients", /settings/general) : plus aucun téléchargement, et la
-// base est libérée de la mémoire.
+// ("Afficher le pays et le fournisseur des clients", /settings/general) : tant que le filtrage par pays
+// est lui aussi désactivé, plus aucun téléchargement, et la base est libérée de la mémoire.
 // Données gardées en tableaux triés (recherche dichotomique) plutôt qu'en objets par plage : environ
 // 25 Mo de mémoire pour ~650 000 plages, acceptable sur un Raspberry Pi à 2 Go.
 public sealed class ClientLocationService : BackgroundService, IClientLocationService
@@ -55,6 +65,7 @@ public sealed class ClientLocationService : BackgroundService, IClientLocationSe
     private readonly HttpClient httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
 
     private volatile LocationTable table = LocationTable.Empty;
+    private volatile bool displayEnabled;
 
     public ClientLocationService(IHostEnvironment hostEnvironment, ILocalSettingsStore settingsStore, ILogger<ClientLocationService> logger)
     {
@@ -65,13 +76,23 @@ public sealed class ClientLocationService : BackgroundService, IClientLocationSe
         settingsStore.SettingsChanged += OnSettingsChanged;
     }
 
+    public bool IsLoaded => table.RangeCount > 0;
+
+    public IReadOnlyList<string> Countries => table.Countries;
+
     public ClientLocation? Lookup(string clientKey)
     {
-        if (!IPAddress.TryParse(clientKey, out IPAddress? address))
-        {
-            return null;
-        }
+        return displayEnabled && IPAddress.TryParse(clientKey, out IPAddress? address) ? LookupAddress(address) : null;
+    }
 
+    public string? LookupCountry(IPAddress address)
+    {
+        string? countryCode = LookupAddress(address)?.CountryCode;
+        return string.IsNullOrEmpty(countryCode) ? null : countryCode;
+    }
+
+    private ClientLocation? LookupAddress(IPAddress address)
+    {
         if (address.IsIPv4MappedToIPv6)
         {
             address = address.MapToIPv4();
@@ -89,7 +110,8 @@ public sealed class ClientLocationService : BackgroundService, IClientLocationSe
             try
             {
                 AppLocalSettings settings = await settingsStore.LoadAsync();
-                enabled = settings.General.ShowClientLocation;
+                displayEnabled = settings.General.ShowClientLocation;
+                enabled = displayEnabled || settings.CountryFilter.Mode != CountryFilterMode.Disabled;
             }
             catch (Exception ex)
             {
@@ -197,6 +219,8 @@ public sealed class ClientLocationService : BackgroundService, IClientLocationSe
 
         public int RangeCount => v4Starts.Count + v6Starts.Count;
 
+        public IReadOnlyList<string> Countries { get; private set; } = Array.Empty<string>();
+
         public static async Task<LocationTable> ParseAsync(TextReader reader, CancellationToken cancellationToken)
         {
             LocationTable result = new LocationTable();
@@ -251,6 +275,18 @@ public sealed class ClientLocationService : BackgroundService, IClientLocationSe
             result.v6Starts.TrimExcess();
             result.v6Ends.TrimExcess();
             result.v6Infos.TrimExcess();
+
+            SortedSet<string> countries = new SortedSet<string>(StringComparer.Ordinal);
+
+            foreach (ClientLocation info in result.infos)
+            {
+                if (info.CountryCode.Length != 0)
+                {
+                    countries.Add(info.CountryCode);
+                }
+            }
+
+            result.Countries = new List<string>(countries);
             return result;
         }
 

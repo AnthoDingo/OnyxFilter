@@ -1,0 +1,52 @@
+.country-picker {
+    margin-top: 1.5rem;
+    padding: 1.1rem 1.25rem;
+}
+
+.country-picker-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.country-picker-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 650;
+}
+
+.country-picker-count {
+    padding: 0.05rem 0.5rem;
+    border-radius: 999px;
+    background-color: var(--of-surface-3);
+    color: var(--of-text-3);
+    font-family: var(--of-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.country-picker-tools {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+    .country-picker-tools input {
+        width: 14rem;
+    }
+
+.country-picker-empty {
+    margin: 0;
+    color: var(--of-text-3);
+    font-size: 0.85rem;
+}
+
+.chip-toggle .client-flag {
+    margin-right: 0;
+}
