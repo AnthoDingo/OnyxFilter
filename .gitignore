@@ -142,3 +142,6 @@ src/filterlists-cache
 src/OnyxFilter.db
 src/OnyxFilter.db-shm
 src/OnyxFilter.db-wal
+src/OnyxFilter/filterlists-cache
+*.db-shm
+*.db-wal
