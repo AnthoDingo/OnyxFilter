@@ -135,6 +135,12 @@ public sealed class DnsQueryPipeline : IDnsQueryPipeline
     // l'option EDNS Client Subnet quand elle est activée.
     public async Task<byte[]?> ResolveAsync(byte[] query, IPAddress? clientAddress, CancellationToken cancellationToken)
     {
+        // Sockets double pile : un client IPv4 arrive sous la forme "::ffff:a.b.c.d" (issue #10).
+        if (clientAddress is { IsIPv4MappedToIPv6: true })
+        {
+            clientAddress = clientAddress.MapToIPv4();
+        }
+
         Stopwatch stopwatch = Stopwatch.StartNew();
         string domain = DnsMessageParser.TryReadQuestionName(query, out string parsedDomain) ? parsedDomain : string.Empty;
         ushort queryType = DnsMessageParser.TryReadQuestionType(query, out ushort parsedQueryType) ? parsedQueryType : (ushort)0;
