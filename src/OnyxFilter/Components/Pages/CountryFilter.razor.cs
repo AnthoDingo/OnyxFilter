@@ -111,7 +111,7 @@ public partial class CountryFilter : ComponentBase
         if (Mode == CountryFilterMode.Allowlist && SelectedCountries.Count == 0)
         {
             StatusIsError = true;
-            StatusMessage = "Sélectionnez au moins un pays à autoriser.";
+            StatusMessage = L["Sélectionnez au moins un pays à autoriser."];
             return;
         }
 
@@ -128,12 +128,12 @@ public partial class CountryFilter : ComponentBase
             });
 
             StatusIsError = false;
-            StatusMessage = "Filtrage par pays enregistré.";
+            StatusMessage = L["Filtrage par pays enregistré."];
         }
         catch (Exception ex)
         {
             StatusIsError = true;
-            StatusMessage = "Erreur lors de l'enregistrement : " + ex.Message;
+            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
         }
         finally
         {

@@ -9,7 +9,7 @@ namespace OnyxFilter.Components.Shared;
 // avertissement si le nom du serveur n'y figure pas.
 public partial class CertificateDetails : ComponentBase
 {
-    private static readonly CultureInfo DisplayCulture = CultureInfo.GetCultureInfo("fr-FR");
+    private static CultureInfo DisplayCulture => CultureInfo.CurrentCulture;
 
     [Parameter, EditorRequired]
     public CertificateSummary Certificate { get; set; } = default!;
@@ -27,20 +27,20 @@ public partial class CertificateDetails : ComponentBase
         {
             if (Certificate.NotBeforeUtc > DateTime.UtcNow)
             {
-                return "pas encore valide";
+                return L["pas encore valide"];
             }
 
             if (Remaining <= TimeSpan.Zero)
             {
-                return "expiré";
+                return L["expiré"];
             }
 
             int days = (int)Remaining.TotalDays;
             return days switch
             {
-                0 => "expire aujourd'hui",
-                1 => "encore 1 jour",
-                _ => $"encore {days} jours",
+                0 => L["expire aujourd'hui"],
+                1 => L["encore 1 jour"],
+                _ => L["encore {0} jours", days],
             };
         }
     }

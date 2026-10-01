@@ -3,21 +3,21 @@
 @rendermode InteractiveServer
 @using OnyxFilter.Services.QueryLog
 
-<PageTitle>Journal des requêtes · OnyxFilter</PageTitle>
+<PageTitle>@L["Journal des requêtes"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Supervision</p>
-        <h1 class="page-title">Journal des requêtes</h1>
-        <p class="page-lead">Chaque requête DNS traitée, avec la décision prise et le client à l'origine.</p>
+        <p class="page-eyebrow">@L["Supervision"]</p>
+        <h1 class="page-title">@L["Journal des requêtes"]</h1>
+        <p class="page-lead">@L["Chaque requête DNS traitée, avec la décision prise et le client à l'origine."]</p>
     </div>
     <div class="page-actions">
-        <div class="form-check form-switch live-switch mb-0" title="Actualise le journal toutes les 5 secondes">
+        <div class="form-check form-switch live-switch mb-0" title="@L["Actualise le journal toutes les 5 secondes"]">
             <input class="form-check-input" type="checkbox" role="switch" id="auto-refresh-switch" checked="@AutoRefreshEnabled" @onchange="OnAutoRefreshToggled" />
-            <label class="form-check-label" for="auto-refresh-switch">Direct</label>
+            <label class="form-check-label" for="auto-refresh-switch">@L["Direct"]</label>
         </div>
         <button type="button" class="btn btn-secondary" @onclick="RefreshAsync" disabled="@IsLoading">
-            <Icon Name="refresh" />Actualiser
+            <Icon Name="refresh" />@L["Actualiser"]
         </button>
     </div>
 </header>
@@ -25,23 +25,21 @@
 @if (!IsLogEnabled)
 {
     <div class="alert alert-warning page-status">
-        L'enregistrement des requêtes est désactivé. Activez-le dans <a href="/settings/general">Général</a>.
+        @L["L'enregistrement des requêtes est désactivé. Activez-le dans"] <a href="/settings/general">@L["Général"]</a>.
     </div>
 }
 
 @if (FallbackFilePath is not null)
 {
     <div class="alert alert-danger page-status">
-        Base de données inaccessible : les nouvelles requêtes sont écrites dans un fichier de secours
-        (<code>@FallbackFilePath</code>) et n'apparaissent pas ci-dessous tant que la base n'est pas rétablie. La
-        résolution DNS n'est pas affectée.
+        @L["Base de données inaccessible : les nouvelles requêtes sont écrites dans un fichier de secours"]
+        (<code>@FallbackFilePath</code>) @L["et n'apparaissent pas ci-dessous tant que la base n'est pas rétablie. La résolution DNS n'est pas affectée."]
     </div>
 }
 else if (!IsDatabaseHealthy)
 {
     <div class="alert alert-warning page-status">
-        Base de données temporairement inaccessible, nouvelle tentative en cours : les requêtes récentes peuvent
-        manquer ci-dessous.
+        @L["Base de données temporairement inaccessible, nouvelle tentative en cours : les requêtes récentes peuvent manquer ci-dessous."]
     </div>
 }
 
@@ -49,39 +47,39 @@ else if (!IsDatabaseHealthy)
     <div class="log-toolbar">
         <div class="log-search">
             <Icon Name="search" />
-            <input type="search" class="form-control" placeholder="Filtrer par domaine ou client" aria-label="Filtrer par domaine ou client" value="@SearchText" @oninput="OnSearchChanged" />
+            <input type="search" class="form-control" placeholder="@L["Filtrer par domaine ou client"]" aria-label="@L["Filtrer par domaine ou client"]" value="@SearchText" @oninput="OnSearchChanged" />
         </div>
 
-        <select class="form-select log-filter" aria-label="Filtrer par décision" @onchange="OnStatusFilterChanged">
-            <option value="">Toutes les décisions</option>
-            <option value="Resolved">Résolues</option>
-            <option value="Cached">Servies depuis le cache</option>
-            <option value="Rewritten">Réécrites</option>
-            <option value="SafeSearch">Recherche sécurisée</option>
-            <option value="CustomRule">Règle personnalisée</option>
-            <option value="Filtered">Bloquées par une liste</option>
-            <option value="BlockedService">Service bloqué</option>
-            <option value="SecurityThreat">Menace</option>
-            <option value="ParentalControl">Contrôle parental</option>
+        <select class="form-select log-filter" aria-label="@L["Filtrer par décision"]" @onchange="OnStatusFilterChanged">
+            <option value="">@L["Toutes les décisions"]</option>
+            <option value="Resolved">@L["Résolues"]</option>
+            <option value="Cached">@L["Servies depuis le cache"]</option>
+            <option value="Rewritten">@L["Réécrites"]</option>
+            <option value="SafeSearch">@L["Recherche sécurisée"]</option>
+            <option value="CustomRule">@L["Règle personnalisée"]</option>
+            <option value="Filtered">@L["Bloquées par une liste"]</option>
+            <option value="BlockedService">@L["Service bloqué"]</option>
+            <option value="SecurityThreat">@L["Menace"]</option>
+            <option value="ParentalControl">@L["Contrôle parental"]</option>
         </select>
 
-        <div class="segmented log-density" role="radiogroup" aria-label="Densité d'affichage">
+        <div class="segmented log-density" role="radiogroup" aria-label="@L["Densité d'affichage"]">
             <input class="btn-check" type="radio" name="log-density" id="log-density-compact" checked="@IsCompact" @onchange="() => IsCompact = true" />
-            <label class="segmented-option" for="log-density-compact">Compacte</label>
+            <label class="segmented-option" for="log-density-compact">@L["Compacte"]</label>
             <input class="btn-check" type="radio" name="log-density" id="log-density-detailed" checked="@(!IsCompact)" @onchange="() => IsCompact = false" />
-            <label class="segmented-option" for="log-density-detailed">Détaillée</label>
+            <label class="segmented-option" for="log-density-detailed">@L["Détaillée"]</label>
         </div>
     </div>
 
     @if (IsLoading)
     {
-        <p class="empty-state mb-0">Chargement…</p>
+        <p class="empty-state mb-0">@L["Chargement…"]</p>
     }
     else if (Entries.Count == 0)
     {
         <p class="empty-state mb-0">
-            <span class="empty-state-title">Aucune requête</span>
-            Rien à afficher pour ces critères.
+            <span class="empty-state-title">@L["Aucune requête"]</span>
+            @L["Rien à afficher pour ces critères."]
         </p>
     }
     else
@@ -90,10 +88,10 @@ else if (!IsDatabaseHealthy)
             <table class="table align-middle log-table @(IsCompact ? "is-compact" : "")">
                 <thead>
                     <tr>
-                        <th scope="col" class="col-time">Heure</th>
-                        <th scope="col">Requête</th>
-                        <th scope="col" class="col-status">Décision</th>
-                        <th scope="col" class="col-client">Client</th>
+                        <th scope="col" class="col-time">@L["Heure"]</th>
+                        <th scope="col">@L["Requête"]</th>
+                        <th scope="col" class="col-status">@L["Décision"]</th>
+                        <th scope="col" class="col-client">@L["Client"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -102,7 +100,7 @@ else if (!IsDatabaseHealthy)
                         <tr class="@GetRowClass(entry.Reason)">
                             <td class="col-time">
                                 <span class="log-time">@entry.TimestampUtc.ToLocalTime().ToString("HH:mm:ss")</span>
-                                <span class="log-secondary">@entry.TimestampUtc.ToLocalTime().ToString("dd/MM/yyyy")</span>
+                                <span class="log-secondary">@entry.TimestampUtc.ToLocalTime().ToString("d")</span>
                             </td>
                             <td>
                                 <span class="log-domain">@entry.Domain</span>
@@ -112,31 +110,31 @@ else if (!IsDatabaseHealthy)
                                 @switch (entry.Reason)
                                 {
                                     case QueryLogReason.Filtered:
-                                        <span class="log-status log-status-blocked">Liste de blocage</span>
+                                        <span class="log-status log-status-blocked">@L["Liste de blocage"]</span>
                                         break;
                                     case QueryLogReason.CustomRule:
-                                        <span class="log-status log-status-blocked">Règle perso.</span>
+                                        <span class="log-status log-status-blocked">@L["Règle perso."]</span>
                                         break;
                                     case QueryLogReason.BlockedService:
-                                        <span class="log-status log-status-blocked">Service bloqué</span>
+                                        <span class="log-status log-status-blocked">@L["Service bloqué"]</span>
                                         break;
                                     case QueryLogReason.SecurityThreat:
-                                        <span class="log-status log-status-warn">Menace</span>
+                                        <span class="log-status log-status-warn">@L["Menace"]</span>
                                         break;
                                     case QueryLogReason.ParentalControl:
-                                        <span class="log-status log-status-warn">Contrôle parental</span>
+                                        <span class="log-status log-status-warn">@L["Contrôle parental"]</span>
                                         break;
                                     case QueryLogReason.Rewritten:
-                                        <span class="log-status log-status-info">Réécrite</span>
+                                        <span class="log-status log-status-info">@L["Réécrite"]</span>
                                         break;
                                     case QueryLogReason.SafeSearch:
-                                        <span class="log-status log-status-info">Recherche sécurisée</span>
+                                        <span class="log-status log-status-info">@L["Recherche sécurisée"]</span>
                                         break;
                                     case QueryLogReason.Cached:
-                                        <span class="log-status log-status-muted">Cache</span>
+                                        <span class="log-status log-status-muted">@L["Cache"]</span>
                                         break;
                                     default:
-                                        <span class="log-status log-status-ok">Résolue</span>
+                                        <span class="log-status log-status-ok">@L["Résolue"]</span>
                                         break;
                                 }
                                 <span class="log-secondary">
@@ -166,23 +164,23 @@ else if (!IsDatabaseHealthy)
         </div>
 
         <div class="pagination-bar">
-            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPageIndex <= 0 || IsLoading)" @onclick="GoToPreviousPageAsync">Plus récentes</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPageIndex <= 0 || IsLoading)" @onclick="GoToPreviousPageAsync">@L["Plus récentes"]</button>
 
             <div class="pagination-bar-center">
                 <span>@DisplayedRangeText</span>
-                <select class="form-select form-select-sm" aria-label="Lignes par page" value="@PageSize" @onchange="OnPageSizeChanged" disabled="@IsLoading">
+                <select class="form-select form-select-sm" aria-label="@L["Lignes par page"]" value="@PageSize" @onchange="OnPageSizeChanged" disabled="@IsLoading">
                     @foreach (int option in PageSizeOptions)
                     {
-                        <option value="@option">@option par page</option>
+                        <option value="@option">@L["{0} par page", option]</option>
                     }
                 </select>
             </div>
 
-            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(!HasNextPage || IsLoading)" @onclick="GoToNextPageAsync">Plus anciennes</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(!HasNextPage || IsLoading)" @onclick="GoToNextPageAsync">@L["Plus anciennes"]</button>
         </div>
     }
 </div>
 
 <p class="page-note">
-    Ce qui est enregistré et la durée de conservation se règlent dans <a href="/settings/general">Général</a>.
+    @L["Ce qui est enregistré et la durée de conservation se règlent dans"] <a href="/settings/general">@L["Général"]</a>.
 </p>

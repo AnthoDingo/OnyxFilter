@@ -5,11 +5,11 @@
         <span class="update-notice-text">
             @if (IsInProgress)
             {
-                <span>Mise à jour en cours…</span>
+                <span>@L["Mise à jour en cours…"]</span>
             }
             else
             {
-                <span>Version @LatestVersion disponible</span>
+                <span>@L["Version {0} disponible", LatestVersion]</span>
             }
         </span>
     </a>

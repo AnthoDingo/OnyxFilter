@@ -3,25 +3,25 @@
 @rendermode InteractiveServer
 @using OnyxFilter.Services.Statistics
 
-<PageTitle>Vue d'ensemble · OnyxFilter</PageTitle>
+<PageTitle>@L["Vue d'ensemble"] · OnyxFilter</PageTitle>
 
 <div class="overview">
     <header class="page-header">
         <div class="page-heading">
-            <p class="page-eyebrow">Supervision</p>
-            <h1 class="page-title">Vue d'ensemble</h1>
-            <p class="page-lead">Activité du résolveur sur les dernières 24 heures.</p>
+            <p class="page-eyebrow">@L["Supervision"]</p>
+            <h1 class="page-title">@L["Vue d'ensemble"]</h1>
+            <p class="page-lead">@L["Activité du résolveur sur les dernières 24 heures."]</p>
         </div>
         <div class="page-actions">
-            <span class="refresh-stamp mono" title="Dernière actualisation des statistiques">
+            <span class="refresh-stamp mono" title="@L["Dernière actualisation des statistiques"]">
                 <Icon Name="clock" />@LastRefreshedAt.ToString("HH:mm:ss")
             </span>
-            <div class="form-check form-switch live-switch mb-0" title="Actualise les statistiques toutes les 5 secondes">
+            <div class="form-check form-switch live-switch mb-0" title="@L["Actualise les statistiques toutes les 5 secondes"]">
                 <input class="form-check-input" type="checkbox" role="switch" id="live-refresh" checked="@AutoRefreshEnabled" @onchange="OnAutoRefreshChanged" />
-                <label class="form-check-label" for="live-refresh">Direct</label>
+                <label class="form-check-label" for="live-refresh">@L["Direct"]</label>
             </div>
             <button type="button" class="btn btn-secondary" @onclick="RefreshStatisticsAsync">
-                <Icon Name="refresh" />Actualiser
+                <Icon Name="refresh" />@L["Actualiser"]
             </button>
         </div>
     </header>
@@ -32,24 +32,24 @@
                 <Icon Name="@(ProtectionEnabled ? "shield" : "shield-off")" StrokeWidth="1.5" />
             </div>
             <div class="status-body">
-                <p class="status-kicker">Protection DNS</p>
-                <h2 class="status-title">@(ProtectionEnabled ? "Active" : "Suspendue")</h2>
+                <p class="status-kicker">@L["Protection DNS"]</p>
+                <h2 class="status-title">@(ProtectionEnabled ? L["Active"] : L["Suspendue"])</h2>
                 <p class="status-detail">@ProtectionDetail</p>
 
                 @if (ProtectionEnabled)
                 {
                     <div class="status-actions">
-                        <span class="status-actions-label"><Icon Name="pause" />Pause</span>
-                        <div class="pause-chips" role="group" aria-label="Suspendre la protection">
+                        <span class="status-actions-label"><Icon Name="pause" />@L["Pause"]</span>
+                        <div class="pause-chips" role="group" aria-label="@L["Suspendre la protection"]">
                             @foreach (ProtectionPauseOption option in PauseOptions)
                             {
-                                <button type="button" class="pause-chip" title="@option.Description" @onclick="() => DisableProtectionUntil(option.ComputeUntil())">
-                                    @option.Label
+                                <button type="button" class="pause-chip" title="@L[option.Description]" @onclick="() => DisableProtectionUntil(option.ComputeUntil())">
+                                    @L[option.Label]
                                 </button>
                             }
                         </div>
                         <button type="button" class="btn btn-sm btn-outline-danger" @onclick="DisableProtection">
-                            Couper la protection
+                            @L["Couper la protection"]
                         </button>
                     </div>
                 }
@@ -57,7 +57,7 @@
                 {
                     <div class="status-actions">
                         <button type="button" class="btn btn-primary" @onclick="EnableProtection">
-                            <Icon Name="play" />Réactiver maintenant
+                            <Icon Name="play" />@L["Réactiver maintenant"]
                         </button>
                     </div>
                 }
@@ -72,52 +72,52 @@
                 </svg>
                 <div class="ratio-center">
                     <strong class="tabular">@BlockedPercentText</strong>
-                    <span>bloquées</span>
+                    <span>@L["Bloquées"]</span>
                 </div>
             </div>
             <dl class="ratio-legend">
                 <div>
-                    <dt><span class="swatch swatch-allowed" aria-hidden="true"></span>Autorisées</dt>
+                    <dt><span class="swatch swatch-allowed" aria-hidden="true"></span>@L["Autorisées"]</dt>
                     <dd class="mono">@FormatCount(AllowedCount)</dd>
                 </div>
                 <div>
-                    <dt><span class="swatch swatch-blocked" aria-hidden="true"></span>Bloquées</dt>
+                    <dt><span class="swatch swatch-blocked" aria-hidden="true"></span>@L["Bloquées"]</dt>
                     <dd class="mono">@FormatCount(BlockedByFiltersCount)</dd>
                 </div>
             </dl>
         </div>
     </section>
 
-    <section class="metric-strip" aria-label="Indicateurs clés">
+    <section class="metric-strip" aria-label="@L["Indicateurs clés"]">
         <div class="metric">
-            <span class="metric-label">Requêtes traitées</span>
+            <span class="metric-label">@L["Requêtes traitées"]</span>
             <span class="metric-value">@FormatCount(DnsQueriesCount)</span>
-            <span class="metric-foot">≈ @FormatCount(AveragePerHour) par heure</span>
+            <span class="metric-foot">@L["≈ {0} par heure", FormatCount(AveragePerHour)]</span>
         </div>
         <div class="metric">
-            <span class="metric-label">Temps de traitement</span>
+            <span class="metric-label">@L["Temps de traitement"]</span>
             <span class="metric-value">@AverageProcessingTimeMs<small>ms</small></span>
-            <span class="metric-foot">moyenne par requête</span>
+            <span class="metric-foot">@L["moyenne par requête"]</span>
         </div>
         <div class="metric">
-            <span class="metric-label">Heure de pointe</span>
+            <span class="metric-label">@L["Heure de pointe"]</span>
             @if (PeakHour is { } peak)
             {
                 <span class="metric-value">@FormatCount(peak.TotalQueries)</span>
-                <span class="metric-foot">requêtes @FormatHourRange(peak)</span>
+                <span class="metric-foot">@FormatHourRange(peak)</span>
             }
             else
             {
                 <span class="metric-value metric-value-empty">—</span>
-                <span class="metric-foot">aucune activité enregistrée</span>
+                <span class="metric-foot">@L["aucune activité enregistrée"]</span>
             }
         </div>
     </section>
 
-    <DashboardPanel Title="Activité horaire" Caption="Requêtes reçues par heure, sur 24 heures glissantes" Class="overview-activity">
+    <DashboardPanel Title="@L["Activité horaire"]" Caption="@L["Requêtes reçues par heure, sur 24 heures glissantes"]" Class="overview-activity">
         <Aside>
-            <span class="legend-item"><span class="swatch swatch-allowed" aria-hidden="true"></span>Autorisées</span>
-            <span class="legend-item"><span class="swatch swatch-blocked" aria-hidden="true"></span>Bloquées</span>
+            <span class="legend-item"><span class="swatch swatch-allowed" aria-hidden="true"></span>@L["Autorisées"]</span>
+            <span class="legend-item"><span class="swatch swatch-blocked" aria-hidden="true"></span>@L["Bloquées"]</span>
         </Aside>
         <ChildContent>
             <ActivityChart Points="HourlySeries" />
@@ -125,33 +125,33 @@
     </DashboardPanel>
 
     <div class="overview-grid overview-grid-3">
-        <DashboardPanel Title="Domaines les plus demandés" Caption="Top 24 h">
-            <RankList Items="TopSearchedDomains" Tone="RankTone.Accent" EmptyText="Aucun domaine demandé pour le moment." />
+        <DashboardPanel Title="@L["Domaines les plus demandés"]" Caption="@L["Top 24 h"]">
+            <RankList Items="TopSearchedDomains" Tone="RankTone.Accent" EmptyText="@L["Aucun domaine demandé pour le moment."]" />
         </DashboardPanel>
 
-        <DashboardPanel Title="Domaines les plus bloqués" Caption="Top 24 h">
-            <RankList Items="TopBlockedDomains" Tone="RankTone.Blocked" EmptyText="Aucun domaine bloqué pour le moment." />
+        <DashboardPanel Title="@L["Domaines les plus bloqués"]" Caption="@L["Top 24 h"]">
+            <RankList Items="TopBlockedDomains" Tone="RankTone.Blocked" EmptyText="@L["Aucun domaine bloqué pour le moment."]" />
         </DashboardPanel>
 
-        <DashboardPanel Title="Clients les plus actifs" Caption="Top 24 h">
-            <RankList Items="TopClients" Tone="RankTone.Neutral" EmptyText="Aucun client observé pour le moment." />
+        <DashboardPanel Title="@L["Clients les plus actifs"]" Caption="@L["Top 24 h"]">
+            <RankList Items="TopClients" Tone="RankTone.Neutral" EmptyText="@L["Aucun client observé pour le moment."]" />
         </DashboardPanel>
     </div>
 
     <div class="overview-grid overview-grid-wide">
-        <DashboardPanel Title="Serveurs en amont" Caption="Volume transmis et latence moyenne de réponse">
+        <DashboardPanel Title="@L["Serveurs en amont"]" Caption="@L["Volume transmis et latence moyenne de réponse"]">
             @if (Upstreams.Count == 0)
             {
-                <p class="panel-empty">Aucune requête transmise en amont pour le moment.</p>
+                <p class="panel-empty">@L["Aucune requête transmise en amont pour le moment."]</p>
             }
             else
             {
                 <table class="upstream-table">
                     <thead>
                         <tr>
-                            <th scope="col">Serveur</th>
-                            <th scope="col">Requêtes</th>
-                            <th scope="col">Latence</th>
+                            <th scope="col">@L["Serveur"]</th>
+                            <th scope="col">@L["Requêtes"]</th>
+                            <th scope="col">@L["Latence"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -177,21 +177,21 @@
             }
         </DashboardPanel>
 
-        <DashboardPanel Title="Protection avancée" Caption="Détections spécifiques, 24 h">
+        <DashboardPanel Title="@L["Protection avancée"]" Caption="@L["Détections spécifiques, 24 h"]">
             <ul class="detection-list">
                 <li>
                     <span class="detection-icon detection-threat" aria-hidden="true"><Icon Name="alert" /></span>
-                    <span class="detection-label">Menaces (malware, hameçonnage)</span>
+                    <span class="detection-label">@L["Menaces (malware, hameçonnage)"]</span>
                     <span class="detection-value">@FormatCount(MalwareBlockedCount)</span>
                 </li>
                 <li>
                     <span class="detection-icon detection-adult" aria-hidden="true"><Icon Name="shield" /></span>
-                    <span class="detection-label">Contenu pour adultes</span>
+                    <span class="detection-label">@L["Contenu pour adultes"]</span>
                     <span class="detection-value">@FormatCount(AdultContentBlockedCount)</span>
                 </li>
                 <li>
                     <span class="detection-icon detection-safe" aria-hidden="true"><Icon Name="search" /></span>
-                    <span class="detection-label">Recherche sécurisée imposée</span>
+                    <span class="detection-label">@L["Recherche sécurisée imposée"]</span>
                     <span class="detection-value">@FormatCount(SafeSearchEnforcedCount)</span>
                 </li>
             </ul>

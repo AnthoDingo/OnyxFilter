@@ -64,12 +64,12 @@ public partial class QueryLog : ComponentBase, IDisposable
         {
             if (Entries.Count == 0)
             {
-                return "Aucune requête";
+                return L["Aucune requête"];
             }
 
             int firstIndex = (CurrentPageIndex * PageSize) + 1;
             int lastIndex = firstIndex + Entries.Count - 1;
-            return "Requêtes " + firstIndex.ToString(CultureInfo.InvariantCulture) + "–" + lastIndex.ToString(CultureInfo.InvariantCulture);
+            return L["Requêtes {0}–{1}", firstIndex.ToString(CultureInfo.InvariantCulture), lastIndex.ToString(CultureInfo.InvariantCulture)];
         }
     }
 

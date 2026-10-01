@@ -13,7 +13,7 @@ namespace OnyxFilter.Components.Pages;
 
 public partial class ApiAccess : ComponentBase, IDisposable
 {
-    private static readonly CultureInfo DisplayCulture = CultureInfo.GetCultureInfo("fr-FR");
+    private static CultureInfo DisplayCulture => CultureInfo.CurrentCulture;
 
     // Le QR code affiché change toutes les 30 secondes ; chaque jeton reste valable 30 secondes de plus,
     // pour un code scanné juste avant d'être remplacé.
@@ -91,11 +91,11 @@ public partial class ApiAccess : ComponentBase, IDisposable
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
         {
-            StatusMessage = "Erreur : " + ex.Message;
+            StatusMessage = L["Erreur : {0}", ex.Message];
         }
         catch (Exception ex)
         {
-            StatusMessage = "Erreur lors de l'enregistrement du jeton : " + ex.Message;
+            StatusMessage = L["Erreur lors de l'enregistrement du jeton : {0}", ex.Message];
         }
         finally
         {
@@ -119,7 +119,7 @@ public partial class ApiAccess : ComponentBase, IDisposable
         }
         catch (JSException)
         {
-            StatusMessage = "Erreur : copie automatique indisponible (HTTPS requis). Sélectionnez le jeton et copiez-le manuellement.";
+            StatusMessage = L["Erreur : copie automatique indisponible (HTTPS requis). Sélectionnez le jeton et copiez-le manuellement."];
         }
     }
 
@@ -153,13 +153,13 @@ public partial class ApiAccess : ComponentBase, IDisposable
         {
             bool revoked = await TokenService.RevokeAsync(TokenPendingRevocation.Id);
             StatusMessage = revoked
-                ? $"Jeton « {name} » révoqué : il ne donne plus accès à l'API."
-                : $"Erreur : le jeton « {name} » n'existe plus.";
+                ? L["Jeton « {0} » révoqué : il ne donne plus accès à l'API.", name]
+                : L["Erreur : le jeton « {0} » n'existe plus.", name];
             Tokens = await TokenService.ListAsync();
         }
         catch (Exception ex)
         {
-            StatusMessage = "Erreur lors de la révocation : " + ex.Message;
+            StatusMessage = L["Erreur lors de la révocation : {0}", ex.Message];
         }
         finally
         {
@@ -171,7 +171,7 @@ public partial class ApiAccess : ComponentBase, IDisposable
     {
         if (Tokens.Count >= ApiTokenService.MaxTokenCount)
         {
-            StatusMessage = $"Erreur : nombre maximal de jetons atteint ({ApiTokenService.MaxTokenCount}). Révoquez-en un avant de connecter un smartphone.";
+            StatusMessage = L["Erreur : nombre maximal de jetons atteint ({0}). Révoquez-en un avant de connecter un smartphone.", ApiTokenService.MaxTokenCount];
             return;
         }
 
@@ -201,12 +201,12 @@ public partial class ApiAccess : ComponentBase, IDisposable
                     {
                         case PairingTokenState.Consumed:
                             ClosePairing();
-                            StatusMessage = $"Smartphone « {PairingDeviceName.Trim()} » connecté : son jeton figure dans la liste.";
+                            StatusMessage = L["Smartphone « {0} » connecté : son jeton figure dans la liste.", PairingDeviceName.Trim()];
                             Tokens = await TokenService.ListAsync();
                             await InvokeAsync(StateHasChanged);
                             return;
                         case PairingTokenState.Rejected:
-                            PairingError = $"Erreur : nombre maximal de jetons atteint ({ApiTokenService.MaxTokenCount}). Révoquez-en un, puis réessayez.";
+                            PairingError = L["Erreur : nombre maximal de jetons atteint ({0}). Révoquez-en un, puis réessayez.", ApiTokenService.MaxTokenCount];
                             pairingTokenIds.Remove(id);
                             break;
                         case PairingTokenState.Expired:
@@ -252,7 +252,7 @@ public partial class ApiAccess : ComponentBase, IDisposable
         }
         catch (ArgumentException ex)
         {
-            PairingError = "Erreur : " + ex.Message;
+            PairingError = L["Erreur : {0}", ex.Message];
         }
     }
 
@@ -290,8 +290,8 @@ public partial class ApiAccess : ComponentBase, IDisposable
         pairingLoopCts?.Dispose();
     }
 
-    private static string FormatCreatedAt(DateTime createdUtc)
+    private string FormatCreatedAt(DateTime createdUtc)
     {
-        return createdUtc.ToLocalTime().ToString("d MMMM yyyy 'à' HH:mm", DisplayCulture);
+        return createdUtc.ToLocalTime().ToString(L["d MMMM yyyy 'à' HH:mm"], DisplayCulture);
     }
 }

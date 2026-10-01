@@ -14,7 +14,7 @@ public partial class Passkeys : ComponentBase
 {
     private const int MaxPasskeyCount = 20;
 
-    private static readonly CultureInfo DisplayCulture = CultureInfo.GetCultureInfo("fr-FR");
+    private static CultureInfo DisplayCulture => CultureInfo.CurrentCulture;
 
     [Inject]
     public UserManager<ApplicationUser> UserManager { get; set; } = default!;
@@ -86,19 +86,19 @@ public partial class Passkeys : ComponentBase
 
         if (!string.IsNullOrEmpty(Input.Error))
         {
-            RedirectWithMessage($"Erreur : {Input.Error}");
+            RedirectWithMessage(L["Erreur : {0}", Input.Error!]);
             return;
         }
 
         if (string.IsNullOrEmpty(Input.CredentialJson))
         {
-            RedirectWithMessage("Erreur : le navigateur n'a pas fourni de clé d'accès.");
+            RedirectWithMessage(L["Erreur : le navigateur n'a pas fourni de clé d'accès."]);
             return;
         }
 
         if (CurrentPasskeys is { Count: >= MaxPasskeyCount })
         {
-            RedirectWithMessage("Erreur : nombre maximal de clés d'accès atteint.");
+            RedirectWithMessage(L["Erreur : nombre maximal de clés d'accès atteint."]);
             return;
         }
 
@@ -106,7 +106,7 @@ public partial class Passkeys : ComponentBase
 
         if (!attestationResult.Succeeded)
         {
-            RedirectWithMessage($"Erreur : impossible d'ajouter la clé d'accès : {attestationResult.Failure!.Message}");
+            RedirectWithMessage(L["Erreur : impossible d'ajouter la clé d'accès : {0}", attestationResult.Failure!.Message]);
             return;
         }
 
@@ -116,11 +116,11 @@ public partial class Passkeys : ComponentBase
 
         if (!addPasskeyResult.Succeeded)
         {
-            RedirectWithMessage("Erreur : la clé d'accès n'a pas pu être enregistrée.");
+            RedirectWithMessage(L["Erreur : la clé d'accès n'a pas pu être enregistrée."]);
             return;
         }
 
-        RedirectWithMessage("Votre clé d'accès a été ajoutée.");
+        RedirectWithMessage(L["Votre clé d'accès a été ajoutée."]);
     }
 
     private async Task DeletePasskeyAsync()
@@ -133,7 +133,7 @@ public partial class Passkeys : ComponentBase
 
         if (string.IsNullOrEmpty(CredentialId))
         {
-            RedirectWithMessage("Erreur : identifiant de clé d'accès manquant.");
+            RedirectWithMessage(L["Erreur : identifiant de clé d'accès manquant."]);
             return;
         }
 
@@ -145,7 +145,7 @@ public partial class Passkeys : ComponentBase
         }
         catch (FormatException)
         {
-            RedirectWithMessage("Erreur : identifiant de clé d'accès invalide.");
+            RedirectWithMessage(L["Erreur : identifiant de clé d'accès invalide."]);
             return;
         }
 
@@ -153,10 +153,10 @@ public partial class Passkeys : ComponentBase
 
         if (!result.Succeeded)
         {
-            RedirectWithMessage("Erreur : la clé d'accès n'a pas pu être supprimée.");
+            RedirectWithMessage(L["Erreur : la clé d'accès n'a pas pu être supprimée."]);
             return;
         }
 
-        RedirectWithMessage("Clé d'accès supprimée.");
+        RedirectWithMessage(L["Clé d'accès supprimée."]);
     }
 }

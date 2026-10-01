@@ -54,7 +54,7 @@ public partial class Login : ComponentBase
     {
         if (!string.IsNullOrEmpty(Input.Passkey?.Error))
         {
-            ErrorMessage = $"Erreur : {Input.Passkey.Error}";
+            ErrorMessage = L["Erreur : {0}", Input.Passkey.Error];
             return;
         }
 
@@ -83,11 +83,11 @@ public partial class Login : ComponentBase
         else if (result.IsLockedOut)
         {
             Logger.LogWarning("Compte verrouillé.");
-            ErrorMessage = "Erreur : ce compte est temporairement verrouillé.";
+            ErrorMessage = L["Erreur : ce compte est temporairement verrouillé."];
         }
         else
         {
-            ErrorMessage = "Erreur : identifiants invalides.";
+            ErrorMessage = L["Erreur : identifiants invalides."];
         }
     }
 

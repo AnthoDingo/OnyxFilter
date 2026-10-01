@@ -16,7 +16,7 @@ public partial class Home : ComponentBase, IDisposable
 {
     private const int AutoRefreshIntervalSeconds = 5;
 
-    private static readonly CultureInfo DisplayCulture = CultureInfo.GetCultureInfo("fr-FR");
+    private static CultureInfo DisplayCulture => CultureInfo.CurrentCulture;
 
     private Timer? AutoRefreshTimer;
 
@@ -281,10 +281,10 @@ public partial class Home : ComponentBase, IDisposable
 
     private static string FormatCount(long value) => value.ToString("N0", DisplayCulture);
 
-    private static string FormatHourRange(DnsStatisticsHourlyPoint point)
+    private string FormatHourRange(DnsStatisticsHourlyPoint point)
     {
         DateTime start = point.HourStartUtc.ToLocalTime();
-        return string.Create(CultureInfo.InvariantCulture, $"de {start.Hour} h à {start.AddHours(1).Hour} h");
+        return L["requêtes de {0} h à {1} h", start.Hour, start.AddHours(1).Hour];
     }
 
     private string ProtectionDetail
@@ -293,19 +293,18 @@ public partial class Home : ComponentBase, IDisposable
         {
             if (ProtectionEnabled)
             {
-                return "Listes de blocage, services bloqués, règles personnalisées et protections avancées s'appliquent à chaque requête.";
+                return L["Listes de blocage, services bloqués, règles personnalisées et protections avancées s'appliquent à chaque requête."];
             }
 
             if (ProtectionDisabledUntil is null)
             {
-                return "Les requêtes sont résolues sans filtrage jusqu'à ce que vous réactiviez la protection.";
+                return L["Les requêtes sont résolues sans filtrage jusqu'à ce que vous réactiviez la protection."];
             }
 
             DateTime until = ProtectionDisabledUntil.Value;
-            string when = until.Date == DateTime.Today
-                ? until.ToString("HH:mm", DisplayCulture)
-                : until.ToString("dddd d MMMM 'à' HH:mm", DisplayCulture);
-            return "Les requêtes sont résolues sans filtrage. Reprise automatique " + (until.Date == DateTime.Today ? "à " : "le ") + when + ".";
+            return until.Date == DateTime.Today
+                ? L["Les requêtes sont résolues sans filtrage. Reprise automatique à {0}.", until.ToString("t", DisplayCulture)]
+                : L["Les requêtes sont résolues sans filtrage. Reprise automatique le {0} à {1}.", until.ToString("dddd d MMMM", DisplayCulture), until.ToString("t", DisplayCulture)];
         }
     }
 }

@@ -1,13 +1,13 @@
-<aside class="sidebar" id="app-sidebar" aria-label="Menu principal">
+<aside class="sidebar" id="app-sidebar" aria-label="@L["Menu principal"]">
     <div class="sidebar-top">
         <a href="" class="sidebar-brand">
             <BrandMark />
             <span class="sidebar-brand-text">
                 <span class="sidebar-brand-name">Onyx<strong>Filter</strong></span>
-                <span class="sidebar-brand-tag">Résolveur filtrant</span>
+                <span class="sidebar-brand-tag">@L["Résolveur filtrant"]</span>
             </span>
         </a>
-        <button type="button" class="sidebar-close" data-nav-close aria-label="Fermer le menu">
+        <button type="button" class="sidebar-close" data-nav-close aria-label="@L["Fermer le menu"]">
             <Icon Name="close" />
         </button>
     </div>
@@ -15,65 +15,69 @@
     <ProtectionIndicator @rendermode="InteractiveServer" />
 
     <nav class="sidebar-nav">
-        <p class="sidebar-section">Supervision</p>
-        <NavLink class="sidebar-link" href="" Match="NavLinkMatch.All"><Icon Name="overview" />Vue d'ensemble</NavLink>
-        <NavLink class="sidebar-link" href="query-log"><Icon Name="log" />Journal des requêtes</NavLink>
+        <p class="sidebar-section">@L["Supervision"]</p>
+        <NavLink class="sidebar-link" href="" Match="NavLinkMatch.All"><Icon Name="overview" />@L["Vue d'ensemble"]</NavLink>
+        <NavLink class="sidebar-link" href="query-log"><Icon Name="log" />@L["Journal des requêtes"]</NavLink>
 
-        <p class="sidebar-section">Filtrage</p>
-        <NavLink class="sidebar-link" href="filters/blocklists"><Icon Name="blocklist" />Listes de blocage</NavLink>
-        <NavLink class="sidebar-link" href="filters/allowlists"><Icon Name="allowlist" />Listes d'autorisation</NavLink>
-        <NavLink class="sidebar-link" href="filters/blocked-services"><Icon Name="services" />Services bloqués</NavLink>
-        <NavLink class="sidebar-link" href="filters/countries"><Icon Name="globe" />Filtrage par pays</NavLink>
-        <NavLink class="sidebar-link" href="filters/custom-rules"><Icon Name="rules" />Règles personnalisées</NavLink>
-        <NavLink class="sidebar-link" href="filters/rewrites"><Icon Name="rewrites" />Réécritures DNS</NavLink>
-        <NavLink class="sidebar-link" href="filters/check"><Icon Name="search" />Tester un domaine</NavLink>
+        <p class="sidebar-section">@L["Filtrage"]</p>
+        <NavLink class="sidebar-link" href="filters/blocklists"><Icon Name="blocklist" />@L["Listes de blocage"]</NavLink>
+        <NavLink class="sidebar-link" href="filters/allowlists"><Icon Name="allowlist" />@L["Listes d'autorisation"]</NavLink>
+        <NavLink class="sidebar-link" href="filters/blocked-services"><Icon Name="services" />@L["Services bloqués"]</NavLink>
+        <NavLink class="sidebar-link" href="filters/countries"><Icon Name="globe" />@L["Filtrage par pays"]</NavLink>
+        <NavLink class="sidebar-link" href="filters/custom-rules"><Icon Name="rules" />@L["Règles personnalisées"]</NavLink>
+        <NavLink class="sidebar-link" href="filters/rewrites"><Icon Name="rewrites" />@L["Réécritures DNS"]</NavLink>
+        <NavLink class="sidebar-link" href="filters/check"><Icon Name="search" />@L["Tester un domaine"]</NavLink>
 
-        <p class="sidebar-section">Configuration</p>
-        <NavLink class="sidebar-link" href="settings/general"><Icon Name="sliders" />Général</NavLink>
-        <NavLink class="sidebar-link" href="settings/dns"><Icon Name="server" />Serveur DNS</NavLink>
-        <NavLink class="sidebar-link" href="settings/encryption"><Icon Name="lock" />Chiffrement</NavLink>
-        <NavLink class="sidebar-link" href="settings/client"><Icon Name="devices" />Clients</NavLink>
-        <NavLink class="sidebar-link" href="settings/api"><Icon Name="plug" />Accès API</NavLink>
-        <NavLink class="sidebar-link" href="settings/updates"><Icon Name="download" />Mises à jour</NavLink>
-        <NavLink class="sidebar-link" href="setup-guide"><Icon Name="book" />Guide d'installation</NavLink>
+        <p class="sidebar-section">@L["Configuration"]</p>
+        <NavLink class="sidebar-link" href="settings/general"><Icon Name="sliders" />@L["Général"]</NavLink>
+        <NavLink class="sidebar-link" href="settings/dns"><Icon Name="server" />@L["Serveur DNS"]</NavLink>
+        <NavLink class="sidebar-link" href="settings/encryption"><Icon Name="lock" />@L["Chiffrement"]</NavLink>
+        <NavLink class="sidebar-link" href="settings/client"><Icon Name="devices" />@L["Clients"]</NavLink>
+        <NavLink class="sidebar-link" href="settings/api"><Icon Name="plug" />@L["Accès API"]</NavLink>
+        <NavLink class="sidebar-link" href="settings/updates"><Icon Name="download" />@L["Mises à jour"]</NavLink>
+        <NavLink class="sidebar-link" href="setup-guide"><Icon Name="book" />@L["Guide d'installation"]</NavLink>
     </nav>
 
     <div class="sidebar-bottom">
         <UpdateNotice @rendermode="InteractiveServer" />
 
         <div class="sidebar-account">
-            <NavLink class="sidebar-account-link" href="account/my-account" title="Mon compte">
+            <NavLink class="sidebar-account-link" href="account/my-account" title="@L["Mon compte"]">
                 <span class="sidebar-avatar" aria-hidden="true">@UserInitial</span>
                 <span class="sidebar-account-text">
                     <span class="sidebar-account-name">@UserName</span>
-                    <span class="sidebar-account-role">Mon compte</span>
+                    <span class="sidebar-account-role">@L["Mon compte"]</span>
                 </span>
             </NavLink>
-            <a href="Account/Logout" class="sidebar-logout" title="Se déconnecter" aria-label="Se déconnecter">
+            <a href="Account/Logout" class="sidebar-logout" title="@L["Se déconnecter"]" aria-label="@L["Se déconnecter"]">
                 <Icon Name="logout" />
             </a>
         </div>
 
         <div class="sidebar-prefs">
-            <div class="theme-toggle" role="group" aria-label="Thème de l'interface">
-                <button type="button" class="theme-toggle-option" data-theme-choice="auto" aria-pressed="false" title="Thème du système">
-                    <Icon Name="contrast" /><span>Auto</span>
+            <div class="theme-toggle" role="group" aria-label="@L["Thème de l'interface"]">
+                <button type="button" class="theme-toggle-option" data-theme-choice="auto" aria-pressed="false" title="@L["Thème du système"]">
+                    <Icon Name="contrast" /><span>@L["Auto"]</span>
                 </button>
-                <button type="button" class="theme-toggle-option" data-theme-choice="dark" aria-pressed="false" title="Thème sombre">
-                    <Icon Name="moon" /><span>Sombre</span>
+                <button type="button" class="theme-toggle-option" data-theme-choice="dark" aria-pressed="false" title="@L["Thème sombre"]">
+                    <Icon Name="moon" /><span>@L["Sombre"]</span>
                 </button>
-                <button type="button" class="theme-toggle-option" data-theme-choice="light" aria-pressed="false" title="Thème clair">
-                    <Icon Name="sun" /><span>Clair</span>
+                <button type="button" class="theme-toggle-option" data-theme-choice="light" aria-pressed="false" title="@L["Thème clair"]">
+                    <Icon Name="sun" /><span>@L["Clair"]</span>
                 </button>
+            </div>
+            <div class="theme-toggle language-toggle" role="group" aria-label="@L["Langue de l'interface"]">
+                <a href="@LanguageUrl("fr")" class="theme-toggle-option" data-enhance-nav="false" hreflang="fr" lang="fr" aria-current="@IsCurrentLanguage("fr")"><span>Français</span></a>
+                <a href="@LanguageUrl("en")" class="theme-toggle-option" data-enhance-nav="false" hreflang="en" lang="en" aria-current="@IsCurrentLanguage("en")"><span>English</span></a>
             </div>
         </div>
 
         <p class="sidebar-meta">
-            <a href="settings/updates" class="mono" title="Version installée · mises à jour">v@(AssemblyVersion)</a>
+            <a href="settings/updates" class="mono" title="@L["Version installée · mises à jour"]">v@(AssemblyVersion)</a>
             <span aria-hidden="true">·</span>
-            <a href="https://github.com/AnthoDingo/OnyxFilter" target="_blank" rel="noopener noreferrer">Code source</a>
+            <a href="https://github.com/AnthoDingo/OnyxFilter" target="_blank" rel="noopener noreferrer">@L["Code source"]</a>
             <span aria-hidden="true">·</span>
-            <a href="https://github.com/AnthoDingo/OnyxFilter/issues/new" target="_blank" rel="noopener noreferrer">Signaler un bug</a>
+            <a href="https://github.com/AnthoDingo/OnyxFilter/issues/new" target="_blank" rel="noopener noreferrer">@L["Signaler un bug"]</a>
         </p>
     </div>
 </aside>

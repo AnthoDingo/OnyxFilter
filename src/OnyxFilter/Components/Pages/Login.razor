@@ -2,11 +2,11 @@
 @attribute [AllowAnonymous]
 @layout LoginLayout
 
-<PageTitle>Connexion · OnyxFilter</PageTitle>
+<PageTitle>@L["Connexion"] · OnyxFilter</PageTitle>
 
 <div class="login-panel">
-    <h1 class="login-title">Connexion</h1>
-    <p class="login-lead">Accédez à la console d'administration.</p>
+    <h1 class="login-title">@L["Connexion"]</h1>
+    <p class="login-lead">@L["Accédez à la console d'administration."]</p>
 
     @if (!string.IsNullOrEmpty(ErrorMessage))
     {
@@ -17,30 +17,36 @@
         <DataAnnotationsValidator />
 
         <div class="mb-3">
-            <label class="form-label" for="username">Nom d'utilisateur</label>
+            <label class="form-label" for="username">@L["Nom d'utilisateur"]</label>
             <InputText id="username" class="form-control"
                        @bind-Value="Input.Username"
                        autocomplete="username webauthn" aria-required="true"
-                       placeholder="Votre identifiant" />
-            <ValidationMessage For="() => Input.Username" class="validation-message small" />
+                       placeholder="@L["Votre identifiant"]" />
+            @foreach (string message in CurrentEditContext.GetValidationMessages(() => Input.Username))
+            {
+                <div class="validation-message small">@L[message]</div>
+            }
         </div>
 
         <div class="mb-4">
-            <label class="form-label" for="password">Mot de passe</label>
+            <label class="form-label" for="password">@L["Mot de passe"]</label>
             <InputText type="password" id="password" class="form-control"
                        @bind-Value="Input.Password"
                        autocomplete="current-password" aria-required="true"
                        placeholder="••••••••" />
-            <ValidationMessage For="() => Input.Password" class="validation-message small" />
+            @foreach (string message in CurrentEditContext.GetValidationMessages(() => Input.Password))
+            {
+                <div class="validation-message small">@L[message]</div>
+            }
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 login-submit">Se connecter</button>
+        <button type="submit" class="btn btn-primary w-100 login-submit">@L["Se connecter"]</button>
 
-        <div class="login-divider"><span>ou</span></div>
+        <div class="login-divider"><span>@L["ou"]</span></div>
 
         <PasskeySubmit Operation="PasskeyOperation.Request" Name="Input.Passkey" EmailName="Input.Username"
                        class="btn btn-outline-secondary w-100">
-            <Icon Name="key" />Utiliser une clé d'accès
+            <Icon Name="key" />@L["Utiliser une clé d'accès"]
         </PasskeySubmit>
     </EditForm>
 </div>

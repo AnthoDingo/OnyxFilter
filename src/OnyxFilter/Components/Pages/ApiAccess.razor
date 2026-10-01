@@ -3,59 +3,55 @@
 @rendermode InteractiveServer
 @using OnyxFilter.Services.Api
 
-<PageTitle>Accès API · OnyxFilter</PageTitle>
+<PageTitle>@L["Accès API"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Configuration</p>
-        <h1 class="page-title">Accès API</h1>
+        <p class="page-eyebrow">@L["Configuration"]</p>
+        <h1 class="page-title">@L["Accès API"]</h1>
         <p class="page-lead">
-            Pilotez OnyxFilter depuis vos scripts ou votre domotique : suspension temporaire du filtrage,
-            statistiques d'usage, journal des requêtes et mises à jour.
+            @L["Pilotez OnyxFilter depuis vos scripts ou votre domotique : suspension temporaire du filtrage, statistiques d'usage, journal des requêtes et mises à jour."]
         </p>
     </div>
 </header>
 
 @if (!string.IsNullOrEmpty(StatusMessage))
 {
-    <div class="alert page-status @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
+    <div class="alert page-status @(StatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
 }
 
 <div class="settings-sections">
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Jetons d'accès</h2>
+            <h2 class="settings-intro-title">@L["Jetons d'accès"]</h2>
             <p class="settings-intro-text">
-                Chaque jeton donne un accès complet à l'API. Sa valeur n'est affichée qu'une fois, à la création :
-                conservez-la en lieu sûr et révoquez le jeton s'il a pu fuiter.
+                @L["Chaque jeton donne un accès complet à l'API. Sa valeur n'est affichée qu'une fois, à la création : conservez-la en lieu sûr et révoquez le jeton s'il a pu fuiter."]
             </p>
         </div>
 
         <div class="card settings-panel">
             <div class="setting">
                 <div class="setting-text">
-                    <span class="setting-label">Connecter un smartphone</span>
+                    <span class="setting-label">@L["Connecter un smartphone"]</span>
                     <p class="setting-help">
-                        Affiche un QR code à scanner avec l'application OnyxFilter pour Android : elle se connecte sans
-                        saisie. Le code change toutes les @((int)PairingQrRefreshInterval.TotalSeconds) secondes et ne
-                        sert qu'une fois ; le jeton créé apparaît ensuite dans la liste ci-dessous.
+                        @L["Affiche un QR code à scanner avec l'application OnyxFilter pour Android : elle se connecte sans saisie. Le code change toutes les {0} secondes et ne sert qu'une fois ; le jeton créé apparaît ensuite dans la liste ci-dessous.", (int)PairingQrRefreshInterval.TotalSeconds]
                     </p>
                 </div>
                 <div class="setting-control">
-                    <button type="button" class="btn btn-secondary" @onclick="OpenPairing">Afficher le QR code</button>
+                    <button type="button" class="btn btn-secondary" @onclick="OpenPairing">@L["Afficher le QR code"]</button>
                 </div>
             </div>
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <label class="setting-label" for="new-token-name">Nouveau jeton</label>
-                    <p class="setting-help">Un nom pour savoir qui l'utilise (ex. « Home Assistant »).</p>
+                    <label class="setting-label" for="new-token-name">@L["Nouveau jeton"]</label>
+                    <p class="setting-help">@L["Un nom pour savoir qui l'utilise (ex. « Home Assistant »)."]</p>
                 </div>
                 <div class="setting-nested token-create">
-                    <input id="new-token-name" type="text" class="form-control" maxlength="@ApiTokenService.MaxNameLength" placeholder="Nom du jeton" @bind="NewTokenName" @bind:event="oninput" />
+                    <input id="new-token-name" type="text" class="form-control" maxlength="@ApiTokenService.MaxNameLength" placeholder="@L["Nom du jeton"]" @bind="NewTokenName" @bind:event="oninput" />
                     <button type="button" class="btn btn-primary" @onclick="CreateTokenAsync" disabled="@(IsCreating || string.IsNullOrWhiteSpace(NewTokenName))">
-                        <Icon Name="plus" />Créer
+                        <Icon Name="plus" />@L["Créer"]
                     </button>
                 </div>
 
@@ -63,12 +59,12 @@
                 {
                     <div class="setting-nested token-reveal" role="status">
                         <p class="token-reveal-title">
-                            <Icon Name="key" />Jeton « @CreatedTokenName » créé. Copiez-le maintenant, il ne sera plus affiché.
+                            <Icon Name="key" />@L["Jeton « {0} » créé. Copiez-le maintenant, il ne sera plus affiché.", CreatedTokenName!]
                         </p>
                         <div class="token-reveal-value">
-                            <input type="text" class="form-control font-monospace" readonly value="@CreatedToken" aria-label="Valeur du jeton" onfocus="this.select()" />
-                            <button type="button" class="btn btn-secondary" @onclick="CopyTokenAsync">@(TokenCopied ? "Copié" : "Copier")</button>
-                            <button type="button" class="btn btn-outline-secondary" @onclick="DismissCreatedToken">Masquer</button>
+                            <input type="text" class="form-control font-monospace" readonly value="@CreatedToken" aria-label="@L["Valeur du jeton"]" onfocus="this.select()" />
+                            <button type="button" class="btn btn-secondary" @onclick="CopyTokenAsync">@(TokenCopied ? L["Copié"] : L["Copier"])</button>
+                            <button type="button" class="btn btn-outline-secondary" @onclick="DismissCreatedToken">@L["Masquer"]</button>
                         </div>
                     </div>
                 }
@@ -77,8 +73,8 @@
             @if (Tokens.Count == 0)
             {
                 <p class="empty-state mb-0">
-                    <span class="empty-state-title">Aucun jeton</span>
-                    L'API reste inaccessible tant qu'aucun jeton n'a été créé.
+                    <span class="empty-state-title">@L["Aucun jeton"]</span>
+                    @L["L'API reste inaccessible tant qu'aucun jeton n'a été créé."]
                 </p>
             }
             else
@@ -87,10 +83,10 @@
                     <table class="table align-middle token-table">
                         <thead>
                             <tr>
-                                <th scope="col">Nom</th>
-                                <th scope="col">Jeton</th>
-                                <th scope="col">Créé le</th>
-                                <th scope="col"><span class="visually-hidden">Actions</span></th>
+                                <th scope="col">@L["Nom"]</th>
+                                <th scope="col">@L["Jeton"]</th>
+                                <th scope="col">@L["Créé le"]</th>
+                                <th scope="col"><span class="visually-hidden">@L["Actions"]</span></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -102,7 +98,7 @@
                                     <td class="text-body-secondary">@FormatCreatedAt(token.CreatedUtc)</td>
                                     <td>
                                         <div class="row-actions">
-                                            <button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => RequestRevoke(token)">Révoquer</button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => RequestRevoke(token)">@L["Révoquer"]</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -116,18 +112,16 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Référence</h2>
+            <h2 class="settings-intro-title">@L["Référence"]</h2>
             <p class="settings-intro-text">
-                Réponses en JSON, dates en UTC (ISO 8601). Le jeton se transmet dans l'en-tête
-                <code>Authorization: Bearer …</code> ou <code>X-Api-Key</code>. Hors de votre réseau local,
-                n'utilisez l'API qu'en HTTPS : le jeton accompagne chaque requête.
+                @((MarkupString)L["Réponses en JSON, dates en UTC (ISO 8601). Le jeton se transmet dans l'en-tête <code>Authorization: Bearer …</code> ou <code>X-Api-Key</code>. Hors de votre réseau local, n'utilisez l'API qu'en HTTPS : le jeton accompagne chaque requête."].Value)
             </p>
         </div>
 
         <div class="card settings-panel">
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <span class="setting-label">Adresse de base</span>
+                    <span class="setting-label">@L["Adresse de base"]</span>
                 </div>
                 <div class="setting-nested">
                     <code class="api-base">@ApiBaseUrl</code>
@@ -136,38 +130,34 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <span class="setting-label">Points d'accès</span>
+                    <span class="setting-label">@L["Points d'accès"]</span>
                 </div>
                 <div class="setting-nested">
                     <dl class="endpoint-list">
                         <div class="endpoint">
                             <dt><span class="http-method http-get">GET</span><code>/protection</code></dt>
-                            <dd>État du filtrage : <code>enabled</code>, <code>disabledUntil</code>, <code>remainingSeconds</code>.</dd>
+                            <dd>@((MarkupString)L["État du filtrage : <code>enabled</code>, <code>disabledUntil</code>, <code>remainingSeconds</code>."].Value)</dd>
                         </div>
                         <div class="endpoint">
                             <dt><span class="http-method http-post">POST</span><code>/protection/disable</code></dt>
                             <dd>
-                                Suspend le filtrage. Corps JSON optionnel : <code>{"durationSeconds": 600}</code> ou
-                                <code>{"until": "2026-01-01T08:00:00Z"}</code> (aussi acceptés dans l'adresse :
-                                <code>?durationSeconds=600</code>). Sans durée, jusqu'à réactivation.
+                                @((MarkupString)L["Suspend le filtrage. Corps JSON optionnel : <code>{&quot;durationSeconds&quot;: 600}</code> ou <code>{&quot;until&quot;: &quot;2026-01-01T08:00:00Z&quot;}</code> (aussi acceptés dans l'adresse : <code>?durationSeconds=600</code>). Sans durée, jusqu'à réactivation."].Value)
                             </dd>
                         </div>
                         <div class="endpoint">
                             <dt><span class="http-method http-post">POST</span><code>/protection/enable</code></dt>
-                            <dd>Réactive immédiatement le filtrage et annule toute reprise programmée.</dd>
+                            <dd>@L["Réactive immédiatement le filtrage et annule toute reprise programmée."]</dd>
                         </div>
                         <div class="endpoint">
                             <dt><span class="http-method http-get">GET</span><code>/stats</code></dt>
                             <dd>
-                                Usage sur 24 heures glissantes : volumes (total, bloquées, autorisées, taux), temps de
-                                traitement, domaines et clients les plus actifs, serveurs en amont, série horaire.
+                                @((MarkupString)L["Usage sur 24 heures glissantes : volumes (total, bloquées, autorisées, taux), temps de traitement, domaines et clients les plus actifs, serveurs en amont, série horaire."].Value)
                             </dd>
                         </div>
                         <div class="endpoint">
                             <dt><span class="http-method http-get">GET</span><code>/querylog</code></dt>
                             <dd>
-                                Journal, du plus récent au plus ancien. Paramètres : <code>limit</code> (1 à 500, 50 par
-                                défaut), <code>offset</code>, <code>search</code> (domaine ou client), <code>reason</code>
+                                @((MarkupString)L["Journal, du plus récent au plus ancien. Paramètres : <code>limit</code> (1 à 500, 50 par défaut), <code>offset</code>, <code>search</code> (domaine ou client), <code>reason</code>"].Value)
                                 (<code>Resolved</code>, <code>Cached</code>, <code>Rewritten</code>, <code>SafeSearch</code>,
                                 <code>CustomRule</code>, <code>Filtered</code>, <code>BlockedService</code>,
                                 <code>SecurityThreat</code>, <code>ParentalControl</code>).
@@ -176,49 +166,41 @@
                         <div class="endpoint">
                             <dt><span class="http-method http-get">GET</span><code>/update</code></dt>
                             <dd>
-                                Mises à jour : version installée, dernière publication, état (<code>state</code>),
-                                progression et possibilité d'installer (<code>canInstall</code>, <code>installBlocker</code>).
+                                @((MarkupString)L["Mises à jour : version installée, dernière publication, état (<code>state</code>), progression et possibilité d'installer (<code>canInstall</code>, <code>installBlocker</code>)."].Value)
                             </dd>
                         </div>
                         <div class="endpoint">
                             <dt><span class="http-method http-post">POST</span><code>/update/check</code></dt>
-                            <dd>Recherche immédiatement une nouvelle version sur GitHub.</dd>
+                            <dd>@L["Recherche immédiatement une nouvelle version sur GitHub."]</dd>
                         </div>
                         <div class="endpoint">
                             <dt><span class="http-method http-post">POST</span><code>/update/install</code></dt>
                             <dd>
-                                Installe la nouvelle version puis redémarre OnyxFilter (réponse 202, suivi via
-                                <code>GET /update</code> ; 409 si rien à installer ou installation impossible).
+                                @((MarkupString)L["Installe la nouvelle version puis redémarre OnyxFilter (réponse 202, suivi via <code>GET /update</code> ; 409 si rien à installer ou installation impossible)."].Value)
                             </dd>
                         </div>
                         <div class="endpoint">
                             <dt><span class="http-method http-get">GET</span><code>/access</code></dt>
                             <dd>
-                                Accès des clients au DNS : mode (<code>Blocklist</code> : tous sauf les refusés ;
-                                <code>Allowlist</code> : seulement les autorisés) et listes <code>allowedClients</code>,
-                                <code>blockedClients</code>, <code>alwaysAllowedClients</code> (servis dans tous les cas).
+                                @((MarkupString)L["Accès des clients au DNS : mode (<code>Blocklist</code> : tous sauf les refusés ; <code>Allowlist</code> : seulement les autorisés) et listes <code>allowedClients</code>, <code>blockedClients</code>, <code>alwaysAllowedClients</code> (servis dans tous les cas)."].Value)
                             </dd>
                         </div>
                         <div class="endpoint">
                             <dt><span class="http-method http-get">GET</span><code>/access/check</code></dt>
                             <dd>
-                                Une adresse est-elle servie ? <code>?ip=192.168.1.50</code> ; réponse : <code>allowed</code>,
-                                et la règle en cause (<code>rule</code>, <code>list</code>).
+                                @((MarkupString)L["Une adresse est-elle servie ? <code>?ip=192.168.1.50</code> ; réponse : <code>allowed</code>, et la règle en cause (<code>rule</code>, <code>list</code>)."].Value)
                             </dd>
                         </div>
                         <div class="endpoint">
                             <dt><span class="http-method http-post">POST</span><code>/access/block</code></dt>
                             <dd>
-                                Bloque une adresse IP ou un sous-réseau : <code>{"client": "192.168.1.50"}</code> (ou
-                                <code>?client=…</code>). Effet immédiat, visible dans Paramètres DNS. 409 si une règle
-                                autorisée plus large le couvre, ou si le blocage viderait la liste des clients autorisés.
+                                @((MarkupString)L["Bloque une adresse IP ou un sous-réseau : <code>{&quot;client&quot;: &quot;192.168.1.50&quot;}</code> (ou <code>?client=…</code>). Effet immédiat, visible dans Paramètres DNS. 409 si une règle autorisée plus large le couvre, ou si le blocage viderait la liste des clients autorisés."].Value)
                             </dd>
                         </div>
                         <div class="endpoint">
                             <dt><span class="http-method http-post">POST</span><code>/access/allow</code></dt>
                             <dd>
-                                Autorise une adresse IP ou un sous-réseau, même format. Une adresse couverte par un
-                                sous-réseau refusé est ajoutée aux clients toujours autorisés : elle seule est débloquée.
+                                @L["Autorise une adresse IP ou un sous-réseau, même format. Une adresse couverte par un sous-réseau refusé est ajoutée aux clients toujours autorisés : elle seule est débloquée."]
                             </dd>
                         </div>
                     </dl>
@@ -227,25 +209,25 @@
 
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <span class="setting-label">Exemples</span>
-                    <p class="setting-help">Avec le jeton dans la variable d'environnement <code>ONYX_TOKEN</code>.</p>
+                    <span class="setting-label">@L["Exemples"]</span>
+                    <p class="setting-help">@L["Avec le jeton dans la variable d'environnement"] <code>ONYX_TOKEN</code>.</p>
                 </div>
                 <div class="setting-nested">
-                    <pre class="code-block"><span class="code-comment"># Suspendre le filtrage pendant 10 minutes</span>
+                    <pre class="code-block"><span class="code-comment">@L["# Suspendre le filtrage pendant 10 minutes"]</span>
 curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" \
      -H "Content-Type: application/json" -d '{"durationSeconds": 600}' \
      @ApiBaseUrl/protection/disable
 
-<span class="code-comment"># Le réactiver</span>
+<span class="code-comment">@L["# Le réactiver"]</span>
 curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" @ApiBaseUrl/protection/enable
 
-<span class="code-comment"># Statistiques d'usage</span>
+<span class="code-comment">@L["# Statistiques d'usage"]</span>
 curl -H "Authorization: Bearer $ONYX_TOKEN" @ApiBaseUrl/stats
 
-<span class="code-comment"># 20 dernières requêtes bloquées par une liste</span>
+<span class="code-comment">@L["# 20 dernières requêtes bloquées par une liste"]</span>
 curl -H "Authorization: Bearer $ONYX_TOKEN" "@ApiBaseUrl/querylog?limit=20&amp;reason=Filtered"
 
-<span class="code-comment"># Couper le DNS à un appareil, puis le lui rendre</span>
+<span class="code-comment">@L["# Couper le DNS à un appareil, puis le lui rendre"]</span>
 curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" \
      -H "Content-Type: application/json" -d '{"client": "192.168.1.50"}' \
      @ApiBaseUrl/access/block
@@ -266,10 +248,9 @@ curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" \
     <div class="modal-static" role="dialog" aria-modal="true" aria-labelledby="pairing-dialog-title">
         <div class="card dialog-card">
             <div class="card-body">
-                <h2 class="dialog-title" id="pairing-dialog-title">Connecter un smartphone</h2>
+                <h2 class="dialog-title" id="pairing-dialog-title">@L["Connecter un smartphone"]</h2>
                 <p class="dialog-lead">
-                    Scannez ce code avec l'appareil photo du téléphone, ou depuis l'écran de connexion de
-                    l'application OnyxFilter.
+                    @L["Scannez ce code avec l'appareil photo du téléphone, ou depuis l'écran de connexion de l'application OnyxFilter."]
                 </p>
 
                 @if (PairingError is not null)
@@ -278,27 +259,27 @@ curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" \
                 }
                 else if (PairingQrSvg is not null)
                 {
-                    <div class="pairing-qr" role="img" aria-label="QR code de connexion">@((MarkupString)PairingQrSvg)</div>
-                    <p class="pairing-countdown" aria-live="polite">Nouveau code dans @PairingSecondsLeft s</p>
+                    <div class="pairing-qr" role="img" aria-label="@L["QR code de connexion"]">@((MarkupString)PairingQrSvg)</div>
+                    <p class="pairing-countdown" aria-live="polite">@L["Nouveau code dans {0} s", PairingSecondsLeft]</p>
                 }
 
                 <div class="pairing-fields">
                     <div>
-                        <label class="form-label" for="pairing-name">Nom de l'appareil</label>
+                        <label class="form-label" for="pairing-name">@L["Nom de l'appareil"]</label>
                         <input id="pairing-name" type="text" class="form-control" maxlength="@ApiTokenService.MaxNameLength" @bind="PairingDeviceName" @bind:after="RegeneratePairing" />
                     </div>
                     <div>
-                        <label class="form-label" for="pairing-server">Adresse du serveur, vue du smartphone</label>
+                        <label class="form-label" for="pairing-server">@L["Adresse du serveur, vue du smartphone"]</label>
                         <input id="pairing-server" type="url" class="form-control" @bind="PairingServerUrl" @bind:after="RegeneratePairing" />
                         @if (PairingServerUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
                         {
-                            <p class="form-text">En HTTP, le jeton circule en clair : réservez-le à votre réseau local.</p>
+                            <p class="form-text">@L["En HTTP, le jeton circule en clair : réservez-le à votre réseau local."]</p>
                         }
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <button type="button" class="btn btn-outline-secondary" @onclick="ClosePairing">Fermer</button>
+                <button type="button" class="btn btn-outline-secondary" @onclick="ClosePairing">@L["Fermer"]</button>
             </div>
         </div>
     </div>
@@ -311,16 +292,15 @@ curl -X POST -H "Authorization: Bearer $ONYX_TOKEN" \
     <div class="modal-static" role="alertdialog" aria-modal="true" aria-labelledby="revoke-dialog-title">
         <div class="card dialog-card">
             <div class="card-body">
-                <h2 class="dialog-title" id="revoke-dialog-title">Révoquer le jeton ?</h2>
+                <h2 class="dialog-title" id="revoke-dialog-title">@L["Révoquer le jeton ?"]</h2>
                 <p class="dialog-lead mb-0">
-                    « @TokenPendingRevocation.Name » cessera immédiatement de donner accès à l'API. Les scripts qui
-                    l'utilisent recevront une erreur 401.
+                    @L["« {0} » cessera immédiatement de donner accès à l'API. Les scripts qui l'utilisent recevront une erreur 401.", TokenPendingRevocation.Name]
                 </p>
             </div>
             <div class="card-footer">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelRevoke">Annuler</button>
-                    <button type="button" class="btn btn-danger" @onclick="ConfirmRevokeAsync">Révoquer</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelRevoke">@L["Annuler"]</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmRevokeAsync">@L["Révoquer"]</button>
                 </div>
             </div>
         </div>

@@ -2,30 +2,29 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 
-<PageTitle>Listes de blocage · OnyxFilter</PageTitle>
+<PageTitle>@L["Listes de blocage"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Filtrage</p>
-        <h1 class="page-title">Listes de blocage</h1>
+        <p class="page-eyebrow">@L["Filtrage"]</p>
+        <h1 class="page-title">@L["Listes de blocage"]</h1>
         <p class="page-lead">
-            Abonnements à des listes de domaines à bloquer, au format Adblock ou fichier hosts, actualisés
-            automatiquement.
+            @L["Abonnements à des listes de domaines à bloquer, au format Adblock ou fichier hosts, actualisés automatiquement."]
         </p>
     </div>
     <div class="page-actions">
         <button type="button" class="btn btn-secondary" @onclick="RefreshNowAsync" disabled="@IsRefreshing">
-            <Icon Name="refresh" />@(IsRefreshing ? "Actualisation…" : "Actualiser les listes")
+            <Icon Name="refresh" />@(IsRefreshing ? L["Actualisation…"] : L["Actualiser les listes"])
         </button>
         <button type="button" class="btn btn-primary" @onclick="OpenAddDialog">
-            <Icon Name="plus" />Ajouter une liste
+            <Icon Name="plus" />@L["Ajouter une liste"]
         </button>
     </div>
 </header>
 
 @if (!string.IsNullOrEmpty(StatusMessage))
 {
-    <div class="alert page-status @(StatusMessage.StartsWith("Erreur", StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
+    <div class="alert page-status @(StatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
 }
 
 <div class="card table-panel">
@@ -33,11 +32,11 @@
         <table class="table align-middle">
             <thead>
                 <tr>
-                    <th scope="col" style="width: 4rem;">Active</th>
-                    <th scope="col">Liste</th>
-                    <th scope="col">Règles</th>
-                    <th scope="col">Dernière actualisation</th>
-                    <th scope="col"><span class="visually-hidden">Actions</span></th>
+                    <th scope="col" style="width: 4rem;">@L["Active"]</th>
+                    <th scope="col">@L["Liste"]</th>
+                    <th scope="col">@L["Règles"]</th>
+                    <th scope="col">@L["Dernière actualisation"]</th>
+                    <th scope="col"><span class="visually-hidden">@L["Actions"]</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -45,8 +44,8 @@
                 {
                     <tr>
                         <td colspan="5" class="empty-state">
-                            <span class="empty-state-title">Aucune liste de blocage</span>
-                            Ajoutez une liste pour commencer à bloquer des domaines.
+                            <span class="empty-state-title">@L["Aucune liste de blocage"]</span>
+                            @L["Ajoutez une liste pour commencer à bloquer des domaines."]
                         </td>
                     </tr>
                 }
@@ -57,7 +56,7 @@
                         <tr>
                             <td>
                                 <div class="form-check form-switch cell-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" aria-label="Activer @entry.Name" checked="@entry.Enabled" @onchange="e => ToggleEnabledAsync(entry, e)" />
+                                    <input class="form-check-input" type="checkbox" role="switch" aria-label="@L["Activer {0}", entry.Name]" checked="@entry.Enabled" @onchange="e => ToggleEnabledAsync(entry, e)" />
                                 </div>
                             </td>
                             <td>
@@ -68,10 +67,10 @@
                             <td class="text-body-secondary">@FormatLastUpdated(GetStatus(entry))</td>
                             <td>
                                 <div class="row-actions">
-                                    <button type="button" class="btn btn-outline-primary btn-icon" title="Modifier" aria-label="Modifier @entry.Name" @onclick="() => OpenEditDialog(entry)">
+                                    <button type="button" class="btn btn-outline-primary btn-icon" title="@L["Modifier"]" aria-label="@L["Modifier {0}", entry.Name]" @onclick="() => OpenEditDialog(entry)">
                                         <Icon Name="edit" />
                                     </button>
-                                    <button type="button" class="btn btn-outline-danger btn-icon" title="Supprimer" aria-label="Supprimer @entry.Name" @onclick="() => RequestDelete(entry)">
+                                    <button type="button" class="btn btn-outline-danger btn-icon" title="@L["Supprimer"]" aria-label="@L["Supprimer {0}", entry.Name]" @onclick="() => RequestDelete(entry)">
                                         <Icon Name="trash" />
                                     </button>
                                 </div>
@@ -86,28 +85,27 @@
     @if (Lists.Count > 0)
     {
         <div class="pagination-bar">
-            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage <= 1)" @onclick="GoToPreviousPage">Précédent</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage <= 1)" @onclick="GoToPreviousPage">@L["Précédent"]</button>
 
             <div class="pagination-bar-center">
-                <span>Page @CurrentPage sur @TotalPages</span>
-                <select class="form-select form-select-sm" aria-label="Lignes par page" value="@PageSize" @onchange="OnPageSizeChanged">
+                <span>@L["Page {0} sur {1}", CurrentPage, TotalPages]</span>
+                <select class="form-select form-select-sm" aria-label="@L["Lignes par page"]" value="@PageSize" @onchange="OnPageSizeChanged">
                     @foreach (int option in PageSizeOptions)
                     {
-                        <option value="@option">@option par page</option>
+                        <option value="@option">@L["{0} par page", option]</option>
                     }
                 </select>
             </div>
 
-            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage >= TotalPages)" @onclick="GoToNextPage">Suivant</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" disabled="@(CurrentPage >= TotalPages)" @onclick="GoToNextPage">@L["Suivant"]</button>
         </div>
     }
 </div>
 
 <p class="page-note">
-    Le blocage ne s'applique que si « Bloquer via les listes et fichiers hosts » est activé dans
-    <a href="/settings/general">Général</a> ; la réponse renvoyée dépend du réglage « Réponse aux domaines
-    bloqués » de <a href="/settings/dns">Serveur DNS</a>. La fréquence d'actualisation automatique se règle
-    également dans Général.
+    @L["Le blocage ne s'applique que si « Bloquer via les listes et fichiers hosts » est activé dans"]
+    <a href="/settings/general">@L["Général"]</a> ; @L["la réponse renvoyée dépend du réglage « Réponse aux domaines bloqués » de"]
+    <a href="/settings/dns">@L["Serveur DNS"]</a>. @L["La fréquence d'actualisation automatique se règle également dans Général."]
 </p>
 
 @if (ShowDialog)
@@ -117,16 +115,16 @@
     <div class="modal-static" role="dialog" aria-modal="true" aria-labelledby="list-dialog-title">
         <div class="card dialog-card">
             <div class="card-body">
-                <h2 class="dialog-title" id="list-dialog-title">@(IsEditMode ? "Modifier la liste" : "Nouvelle liste de blocage")</h2>
-                <p class="dialog-lead">La liste est téléchargée et analysée dès l'enregistrement.</p>
+                <h2 class="dialog-title" id="list-dialog-title">@(IsEditMode ? L["Modifier la liste"] : L["Nouvelle liste de blocage"])</h2>
+                <p class="dialog-lead">@L["La liste est téléchargée et analysée dès l'enregistrement."]</p>
 
                 <div class="mb-3">
-                    <label class="form-label" for="dialog-list-name">Nom</label>
+                    <label class="form-label" for="dialog-list-name">@L["Nom"]</label>
                     <input id="dialog-list-name" type="text" class="form-control" @bind="DialogName" @bind:event="oninput" />
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label" for="dialog-list-url">Adresse de la liste</label>
+                    <label class="form-label" for="dialog-list-url">@L["Adresse de la liste"]</label>
                     <input id="dialog-list-url" type="text" class="form-control font-monospace" placeholder="https://…" @bind="DialogUrl" @bind:event="oninput" />
                 </div>
 
@@ -137,9 +135,9 @@
             </div>
             <div class="card-footer">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDialog" disabled="@IsSavingDialog">Annuler</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CloseDialog" disabled="@IsSavingDialog">@L["Annuler"]</button>
                     <button type="button" class="btn btn-primary" @onclick="SaveDialogAsync" disabled="@IsSavingDialog">
-                        @(IsSavingDialog ? "Téléchargement…" : "Enregistrer")
+                        @(IsSavingDialog ? L["Téléchargement…"] : L["Enregistrer"])
                     </button>
                 </div>
             </div>
@@ -154,16 +152,15 @@
     <div class="modal-static" role="alertdialog" aria-modal="true" aria-labelledby="delete-dialog-title">
         <div class="card dialog-card">
             <div class="card-body">
-                <h2 class="dialog-title" id="delete-dialog-title">Supprimer la liste ?</h2>
+                <h2 class="dialog-title" id="delete-dialog-title">@L["Supprimer la liste ?"]</h2>
                 <p class="dialog-lead mb-0">
-                    « @EntryPendingDeletion.Name » ne sera plus utilisée pour bloquer des domaines. Cette action est
-                    définitive.
+                    @L["« {0} » ne sera plus utilisée pour bloquer des domaines. Cette action est définitive.", EntryPendingDeletion.Name]
                 </p>
             </div>
             <div class="card-footer">
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">Annuler</button>
-                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeleteAsync">Supprimer</button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="CancelDelete">@L["Annuler"]</button>
+                    <button type="button" class="btn btn-danger" @onclick="ConfirmDeleteAsync">@L["Supprimer"]</button>
                 </div>
             </div>
         </div>

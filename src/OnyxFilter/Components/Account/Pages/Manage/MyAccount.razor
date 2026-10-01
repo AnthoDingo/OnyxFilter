@@ -1,13 +1,13 @@
 @page "/account/my-account"
 @attribute [Authorize]
 
-<PageTitle>Mon compte · OnyxFilter</PageTitle>
+<PageTitle>@L["Mon compte"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Compte</p>
-        <h1 class="page-title">Mon compte</h1>
-        <p class="page-lead">Identifiants de connexion à la console d'administration.</p>
+        <p class="page-eyebrow">@L["Compte"]</p>
+        <h1 class="page-title">@L["Mon compte"]</h1>
+        <p class="page-lead">@L["Identifiants de connexion à la console d'administration."]</p>
     </div>
 </header>
 
@@ -17,16 +17,16 @@
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Identifiant</h2>
-            <p class="settings-intro-text">Nom utilisé pour vous connecter.</p>
+            <h2 class="settings-intro-title">@L["Identifiant"]</h2>
+            <p class="settings-intro-text">@L["Nom utilisé pour vous connecter."]</p>
         </div>
 
         <form class="card settings-panel" @formname="change-username" @onsubmit="ChangeUsernameAsync" method="post">
             <AntiforgeryToken />
             <div class="setting setting-stacked">
                 <div class="setting-text">
-                    <label class="setting-label" for="new-username">Nouveau nom d'utilisateur</label>
-                    <p class="setting-help">Actuellement : <strong class="mono">@CurrentUsername</strong></p>
+                    <label class="setting-label" for="new-username">@L["Nouveau nom d'utilisateur"]</label>
+                    <p class="setting-help">@L["Actuellement :"] <strong class="mono">@CurrentUsername</strong></p>
                 </div>
                 <div class="setting-nested field-narrow">
                     <input id="new-username"
@@ -39,15 +39,15 @@
                 </div>
             </div>
             <div class="settings-panel-footer">
-                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <button type="submit" class="btn btn-primary">@L["Enregistrer"]</button>
             </div>
         </form>
     </section>
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Mot de passe</h2>
-            <p class="settings-intro-text">Choisissez une phrase longue et unique.</p>
+            <h2 class="settings-intro-title">@L["Mot de passe"]</h2>
+            <p class="settings-intro-text">@L["Choisissez une phrase longue et unique."]</p>
         </div>
 
         <form class="card settings-panel" @formname="change-password" @onsubmit="ChangePasswordAsync" method="post">
@@ -55,7 +55,7 @@
             <div class="setting setting-stacked">
                 <div class="field-grid">
                     <div>
-                        <label class="form-label" for="current-password">Mot de passe actuel</label>
+                        <label class="form-label" for="current-password">@L["Mot de passe actuel"]</label>
                         <input id="current-password"
                                type="password"
                                class="form-control"
@@ -66,7 +66,7 @@
                 </div>
                 <div class="field-grid mt-3">
                     <div>
-                        <label class="form-label" for="new-password">Nouveau mot de passe</label>
+                        <label class="form-label" for="new-password">@L["Nouveau mot de passe"]</label>
                         <input id="new-password"
                                type="password"
                                class="form-control"
@@ -75,7 +75,7 @@
                                autocomplete="new-password" />
                     </div>
                     <div>
-                        <label class="form-label" for="confirm-password">Confirmation</label>
+                        <label class="form-label" for="confirm-password">@L["Confirmation"]</label>
                         <input id="confirm-password"
                                type="password"
                                class="form-control"
@@ -86,15 +86,15 @@
                 </div>
             </div>
             <div class="settings-panel-footer">
-                <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
+                <button type="submit" class="btn btn-primary">@L["Changer le mot de passe"]</button>
             </div>
         </form>
     </section>
 
     <section class="settings-section">
         <div class="settings-intro">
-            <h2 class="settings-intro-title">Clés d'accès</h2>
-            <p class="settings-intro-text">Connexion sans mot de passe via l'empreinte, le visage ou une clé de sécurité.</p>
+            <h2 class="settings-intro-title">@L["Clés d'accès"]</h2>
+            <p class="settings-intro-text">@L["Connexion sans mot de passe via l'empreinte, le visage ou une clé de sécurité."]</p>
         </div>
 
         <div class="card settings-panel">
@@ -107,13 +107,13 @@
                         <li class="passkey-item">
                             <span class="passkey-icon" aria-hidden="true"><Icon Name="key" /></span>
                             <span class="passkey-text">
-                                <span class="passkey-name">@(passkey.Name ?? "Clé d'accès")</span>
-                                <span class="passkey-date">Ajoutée le @FormatCreatedAt(passkey.CreatedAt)</span>
+                                <span class="passkey-name">@L[passkey.Name ?? "Clé d'accès"]</span>
+                                <span class="passkey-date">@L["Ajoutée le {0}", FormatCreatedAt(passkey.CreatedAt)]</span>
                             </span>
                             <form @formname="@($"delete-passkey-{credentialId}")" @onsubmit="DeletePasskeyAsync" method="post">
                                 <AntiforgeryToken />
                                 <input type="hidden" name="CredentialId" value="@credentialId" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                <button type="submit" class="btn btn-sm btn-outline-danger">@L["Supprimer"]</button>
                             </form>
                         </li>
                     }
@@ -122,8 +122,8 @@
             else
             {
                 <p class="empty-state mb-0">
-                    <span class="empty-state-title">Aucune clé d'accès</span>
-                    Ajoutez-en une pour vous connecter sans mot de passe.
+                    <span class="empty-state-title">@L["Aucune clé d'accès"]</span>
+                    @L["Ajoutez-en une pour vous connecter sans mot de passe."]
                 </p>
             }
 
@@ -131,12 +131,12 @@
                 <AntiforgeryToken />
                 @if (CurrentPasskeys is { Count: >= MaxPasskeyCount })
                 {
-                    <p class="text-danger mb-0">Nombre maximal de clés atteint : supprimez-en une avant d'en ajouter une autre.</p>
+                    <p class="text-danger mb-0">@L["Nombre maximal de clés atteint : supprimez-en une avant d'en ajouter une autre."]</p>
                 }
                 else
                 {
                     <PasskeySubmit Operation="PasskeyOperation.Create" Name="PasskeyInput" class="btn btn-secondary">
-                        <Icon Name="plus" />Ajouter une clé d'accès
+                        <Icon Name="plus" />@L["Ajouter une clé d'accès"]
                     </PasskeySubmit>
                 }
             </form>

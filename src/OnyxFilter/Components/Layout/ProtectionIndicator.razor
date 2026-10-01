@@ -1,7 +1,7 @@
-<a href="" class="protection-indicator @(IsEnabled ? "is-on" : "is-off")" title="Gérer la protection depuis la vue d'ensemble">
+<a href="" class="protection-indicator @(IsEnabled ? "is-on" : "is-off")" title="@L["Gérer la protection depuis la vue d'ensemble"]">
     <span class="protection-dot" aria-hidden="true"></span>
     <span class="protection-text">
-        <span class="protection-state">@(IsEnabled ? "Protection active" : "Protection suspendue")</span>
+        <span class="protection-state">@(IsEnabled ? L["Protection active"] : L["Protection suspendue"])</span>
         <span class="protection-detail">@Detail</span>
     </span>
 </a>

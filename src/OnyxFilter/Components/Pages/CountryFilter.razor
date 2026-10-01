@@ -3,17 +3,17 @@
 @rendermode InteractiveServer
 @using OnyxFilter.Services.ClientLocation
 
-<PageTitle>Filtrage par pays · OnyxFilter</PageTitle>
+<PageTitle>@L["Filtrage par pays"] · OnyxFilter</PageTitle>
 
 <header class="page-header">
     <div class="page-heading">
-        <p class="page-eyebrow">Filtrage</p>
-        <h1 class="page-title">Filtrage par pays</h1>
-        <p class="page-lead">Refusez les requêtes des clients selon le pays de leur adresse IP.</p>
+        <p class="page-eyebrow">@L["Filtrage"]</p>
+        <h1 class="page-title">@L["Filtrage par pays"]</h1>
+        <p class="page-lead">@L["Refusez les requêtes des clients selon le pays de leur adresse IP."]</p>
     </div>
     <div class="page-actions">
         <button type="button" class="btn btn-primary" @onclick="SaveAsync" disabled="@IsSaving">
-            @(IsSaving ? "Enregistrement…" : "Enregistrer")
+            @(IsSaving ? L["Enregistrement…"] : L["Enregistrer"])
         </button>
     </div>
 </header>
@@ -26,28 +26,26 @@
 <div class="card settings-panel">
     <div class="setting setting-stacked">
         <div class="setting-text">
-            <span class="setting-label">Mode</span>
+            <span class="setting-label">@L["Mode"]</span>
             <p class="setting-help">
-                Les clients du réseau local, et ceux des listes « Clients autorisés » ou « Clients toujours
-                autorisés » des <a href="/settings/dns">paramètres DNS</a>, sont toujours servis. Un client refusé
-                ne reçoit aucune réponse.
+                @L["Les clients du réseau local, et ceux des listes « Clients autorisés » ou « Clients toujours autorisés » des"]
+                <a href="/settings/dns">@L["paramètres DNS"]</a>@L[", sont toujours servis. Un client refusé ne reçoit aucune réponse."]
             </p>
         </div>
         <div class="setting-nested">
-            <div class="segmented" role="radiogroup" aria-label="Mode du filtrage par pays">
+            <div class="segmented" role="radiogroup" aria-label="@L["Mode du filtrage par pays"]">
                 <input class="btn-check" type="radio" name="country-mode" id="country-mode-off" checked="@(Mode == CountryFilterMode.Disabled)" @onchange="() => Mode = CountryFilterMode.Disabled" />
-                <label class="segmented-option" for="country-mode-off">Désactivé</label>
+                <label class="segmented-option" for="country-mode-off">@L["Désactivé"]</label>
                 <input class="btn-check" type="radio" name="country-mode" id="country-mode-block" checked="@(Mode == CountryFilterMode.Blocklist)" @onchange="() => Mode = CountryFilterMode.Blocklist" />
-                <label class="segmented-option" for="country-mode-block">Bloquer les pays sélectionnés</label>
+                <label class="segmented-option" for="country-mode-block">@L["Bloquer les pays sélectionnés"]</label>
                 <input class="btn-check" type="radio" name="country-mode" id="country-mode-allow" checked="@(Mode == CountryFilterMode.Allowlist)" @onchange="() => Mode = CountryFilterMode.Allowlist" />
-                <label class="segmented-option" for="country-mode-allow">N'autoriser que les pays sélectionnés</label>
+                <label class="segmented-option" for="country-mode-allow">@L["N'autoriser que les pays sélectionnés"]</label>
             </div>
 
             @if (Mode != CountryFilterMode.Disabled && !LocationService.IsLoaded)
             {
                 <div class="alert alert-warning">
-                    La base des pays (iptoasn.com) n'est pas encore chargée : elle est téléchargée après
-                    l'enregistrement. En attendant, tous les clients sont servis.
+                    @L["La base des pays (iptoasn.com) n'est pas encore chargée : elle est téléchargée après l'enregistrement. En attendant, tous les clients sont servis."]
                 </div>
             }
         </div>
@@ -57,19 +55,18 @@
 <section class="card country-picker">
     <header class="country-picker-head">
         <h2 class="country-picker-title">
-            Pays sélectionnés <span class="country-picker-count">@SelectedCountries.Count</span>
+            @L["Pays sélectionnés"] <span class="country-picker-count">@SelectedCountries.Count</span>
         </h2>
         <div class="country-picker-tools">
-            <input type="search" class="form-control form-control-sm" placeholder="Rechercher un pays" aria-label="Rechercher un pays" @bind="SearchText" @bind:event="oninput" />
-            <button type="button" class="btn btn-link btn-sm" @onclick="SelectedCountries.Clear" disabled="@(SelectedCountries.Count == 0)">Tout désélectionner</button>
+            <input type="search" class="form-control form-control-sm" placeholder="@L["Rechercher un pays"]" aria-label="@L["Rechercher un pays"]" @bind="SearchText" @bind:event="oninput" />
+            <button type="button" class="btn btn-link btn-sm" @onclick="SelectedCountries.Clear" disabled="@(SelectedCountries.Count == 0)">@L["Tout désélectionner"]</button>
         </div>
     </header>
 
     @if (AllCountries.Count == 0)
     {
         <p class="country-picker-empty">
-            La liste des pays sera disponible une fois la base des pays chargée. Activez le filtrage et
-            enregistrez pour lancer son téléchargement.
+            @L["La liste des pays sera disponible une fois la base des pays chargée. Activez le filtrage et enregistrez pour lancer son téléchargement."]
         </p>
     }
     else

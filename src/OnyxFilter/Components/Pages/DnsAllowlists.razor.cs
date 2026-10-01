@@ -13,7 +13,7 @@ namespace OnyxFilter.Components.Pages;
 
 public partial class DnsAllowlists : ComponentBase
 {
-    private static readonly CultureInfo FrenchCulture = CultureInfo.GetCultureInfo("fr-FR");
+    private static CultureInfo DisplayCulture => CultureInfo.CurrentCulture;
 
     private static readonly int[] PageSizeOptions = { 10, 25, 50, 100 };
 
@@ -78,7 +78,7 @@ public partial class DnsAllowlists : ComponentBase
         return StatusById.TryGetValue(entry.Id, out FilterListStatus? status) ? status : null;
     }
 
-    private static string FormatRuleCount(FilterListStatus? status)
+    private string FormatRuleCount(FilterListStatus? status)
     {
         if (status is null)
         {
@@ -87,13 +87,13 @@ public partial class DnsAllowlists : ComponentBase
 
         if (!string.IsNullOrEmpty(status.LastError))
         {
-            return "Erreur";
+            return L["Erreur"];
         }
 
         return status.DomainCount.ToString("N0", CultureInfo.InvariantCulture);
     }
 
-    private static string FormatLastUpdated(FilterListStatus? status)
+    private string FormatLastUpdated(FilterListStatus? status)
     {
         if (status is null || status.LastUpdatedUtc is null)
         {
@@ -101,7 +101,7 @@ public partial class DnsAllowlists : ComponentBase
         }
 
         DateTime localTime = status.LastUpdatedUtc.Value.ToLocalTime();
-        return localTime.ToString("d MMMM yyyy 'à' HH:mm", FrenchCulture);
+        return localTime.ToString(L["d MMMM yyyy 'à' HH:mm"], DisplayCulture);
     }
 
     private void OpenAddDialog()
@@ -141,7 +141,7 @@ public partial class DnsAllowlists : ComponentBase
 
         if (name.Length == 0 || url.Length == 0)
         {
-            DialogError = "Le nom et l'URL sont obligatoires.";
+            DialogError = L["Le nom et l'URL sont obligatoires."];
             return;
         }
 
@@ -150,7 +150,7 @@ public partial class DnsAllowlists : ComponentBase
 
         if (!isValidHttpUrl)
         {
-            DialogError = "L'URL doit être une adresse http:// ou https:// valide.";
+            DialogError = L["L'URL doit être une adresse http:// ou https:// valide."];
             return;
         }
 
@@ -186,7 +186,7 @@ public partial class DnsAllowlists : ComponentBase
         }
         catch (Exception ex)
         {
-            StatusMessage = "Erreur lors de la mise à jour : " + ex.Message;
+            StatusMessage = L["Erreur lors de la mise à jour : {0}", ex.Message];
         }
         finally
         {
@@ -238,11 +238,11 @@ public partial class DnsAllowlists : ComponentBase
         try
         {
             await SettingsStore.UpdateAsync(settings => settings.Allowlist.Lists = listsSnapshot);
-            StatusMessage = "Abonnements enregistrés. La mise à jour des listes se fait en arrière-plan.";
+            StatusMessage = L["Abonnements enregistrés. La mise à jour des listes se fait en arrière-plan."];
         }
         catch (Exception ex)
         {
-            StatusMessage = "Erreur lors de l'enregistrement : " + ex.Message;
+            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
         }
     }
 
@@ -254,11 +254,11 @@ public partial class DnsAllowlists : ComponentBase
         {
             await AllowlistService.RefreshAsync(CancellationToken.None);
             ApplySnapshot();
-            StatusMessage = "Listes d'autorisation mises à jour.";
+            StatusMessage = L["Listes d'autorisation mises à jour."];
         }
         catch (Exception ex)
         {
-            StatusMessage = "Erreur lors de la mise à jour : " + ex.Message;
+            StatusMessage = L["Erreur lors de la mise à jour : {0}", ex.Message];
         }
         finally
         {

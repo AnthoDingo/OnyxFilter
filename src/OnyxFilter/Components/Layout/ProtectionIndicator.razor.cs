@@ -29,14 +29,14 @@ public partial class ProtectionIndicator : ComponentBase, IDisposable
 
         if (IsEnabled)
         {
-            Detail = "Filtrage appliqué";
+            Detail = L["Filtrage appliqué"];
             return;
         }
 
         DateTime? until = ProtectionState.DisabledUntilUtc?.ToLocalTime();
         Detail = until is null
-            ? "Jusqu'à réactivation"
-            : "Reprise à " + until.Value.ToString(until.Value.Date == DateTime.Today ? "HH:mm" : "dd/MM HH:mm");
+            ? L["Jusqu'à réactivation"]
+            : L["Reprise à {0}", until.Value.ToString(until.Value.Date == DateTime.Today ? "t" : "g")];
     }
 
     private void OnProtectionStateChanged(object? sender, EventArgs e)
