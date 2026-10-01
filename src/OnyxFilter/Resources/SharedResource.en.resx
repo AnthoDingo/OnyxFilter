@@ -687,9 +687,6 @@
   <data name="Effacer les statistiques" xml:space="preserve">
     <value>Clear statistics</value>
   </data>
-  <data name="En attendant, le plus simple est d'indiquer l'adresse IP de ce serveur comme serveur DNS dans les réglages DHCP de votre box ou de votre routeur : tous les appareils du réseau l'utiliseront automatiquement." xml:space="preserve">
-    <value>In the meantime, the simplest option is to set this server's IP address as the DNS server in the DHCP settings of your router: every device on the network will use it automatically.</value>
-  </data>
   <data name="En cours" xml:space="preserve">
     <value>In progress</value>
   </data>
@@ -830,9 +827,6 @@
   </data>
   <data name="Guide d'installation" xml:space="preserve">
     <value>Setup guide</value>
-  </data>
-  <data name="Guide en cours de rédaction" xml:space="preserve">
-    <value>Guide in progress</value>
   </data>
   <data name="Général" xml:space="preserve">
     <value>General</value>
@@ -2306,5 +2300,152 @@
   </data>
   <data name="Utiliser CrowdSec" xml:space="preserve">
     <value>Use CrowdSec</value>
+  </data>
+  <data name="À indiquer comme serveur DNS sur vos appareils ou votre routeur." xml:space="preserve">
+    <value>Enter these as the DNS server on your devices or your router.</value>
+  </data>
+  <data name="Activez &lt;strong&gt;IPv4&lt;/strong&gt; et saisissez &lt;code&gt;{0}&lt;/code&gt; dans &lt;strong&gt;DNS préféré&lt;/strong&gt;. Laissez le DNS secondaire vide." xml:space="preserve">
+    <value>Turn on &lt;strong&gt;IPv4&lt;/strong&gt; and enter &lt;code&gt;{0}&lt;/code&gt; in &lt;strong&gt;Preferred DNS&lt;/strong&gt;. Leave the alternate DNS empty.</value>
+  </data>
+  <data name="adresse IP du serveur" xml:space="preserve">
+    <value>server IP address</value>
+  </data>
+  <data name="Adresses de ce serveur" xml:space="preserve">
+    <value>Addresses of this server</value>
+  </data>
+  <data name="Android 9 et plus. Le nom des menus varie selon le fabricant." xml:space="preserve">
+    <value>Android 9 and later. Menu names vary by manufacturer.</value>
+  </data>
+  <data name="Android n'utilise que le port 853 pour le DNS privé : le port DNS-over-TLS configuré ({0}) doit être redirigé vers celui-ci." xml:space="preserve">
+    <value>Android only uses port 853 for Private DNS: the configured DNS-over-TLS port ({0}) must be forwarded from it.</value>
+  </data>
+  <data name="Aucune adresse détectée" xml:space="preserve">
+    <value>No address detected</value>
+  </data>
+  <data name="Ce réglage ne vaut que pour ce réseau Wi-Fi et oblige à fixer l'adresse IP du téléphone. Le DNS privé (DNS chiffré) est plus simple et suit le téléphone partout." xml:space="preserve">
+    <value>This setting only applies to this Wi-Fi network and requires a fixed IP address for the phone. Private DNS (encrypted DNS) is simpler and follows the phone everywhere.</value>
+  </data>
+  <data name="Certaines box d'opérateur ne permettent pas de changer le serveur DNS distribué : configurez alors chaque appareil comme indiqué ci-dessous." xml:space="preserve">
+    <value>Some ISP routers do not let you change the DNS server they hand out: in that case, configure each device as shown below.</value>
+  </data>
+  <data name="Choisissez &lt;strong&gt;Nom d'hôte du fournisseur de DNS privé&lt;/strong&gt; et saisissez &lt;code&gt;{0}&lt;/code&gt;." xml:space="preserve">
+    <value>Choose &lt;strong&gt;Private DNS provider hostname&lt;/strong&gt; and enter &lt;code&gt;{0}&lt;/code&gt;.</value>
+  </data>
+  <data name="Cliquez sur &lt;strong&gt;Détails…&lt;/strong&gt; à côté de la connexion utilisée, puis sur l'onglet &lt;strong&gt;DNS&lt;/strong&gt;." xml:space="preserve">
+    <value>Click &lt;strong&gt;Details…&lt;/strong&gt; next to the connection in use, then the &lt;strong&gt;DNS&lt;/strong&gt; tab.</value>
+  </data>
+  <data name="Cliquez sur &lt;strong&gt;Enregistrer&lt;/strong&gt;." xml:space="preserve">
+    <value>Click &lt;strong&gt;Save&lt;/strong&gt;.</value>
+  </data>
+  <data name="Cliquez sur &lt;strong&gt;Enregistrer&lt;/strong&gt;. Le réglage vaut pour le Wi-Fi comme pour les données mobiles." xml:space="preserve">
+    <value>Tap &lt;strong&gt;Save&lt;/strong&gt;. The setting applies to Wi-Fi and mobile data alike.</value>
+  </data>
+  <data name="Cliquez sur &lt;strong&gt;OK&lt;/strong&gt;." xml:space="preserve">
+    <value>Click &lt;strong&gt;OK&lt;/strong&gt;.</value>
+  </data>
+  <data name="Dans &lt;strong&gt;Options avancées&lt;/strong&gt;, réglez &lt;strong&gt;Paramètres IP&lt;/strong&gt; sur &lt;strong&gt;Statique&lt;/strong&gt;." xml:space="preserve">
+    <value>Under &lt;strong&gt;Advanced options&lt;/strong&gt;, set &lt;strong&gt;IP settings&lt;/strong&gt; to &lt;strong&gt;Static&lt;/strong&gt;.</value>
+  </data>
+  <data name="DNS chiffré indisponible : renseignez le nom du serveur et un certificat valide dans" xml:space="preserve">
+    <value>Encrypted DNS unavailable: set the server name and a valid certificate in</value>
+  </data>
+  <data name="En face de &lt;strong&gt;Attribution du serveur DNS&lt;/strong&gt;, cliquez sur &lt;strong&gt;Modifier&lt;/strong&gt; et choisissez &lt;strong&gt;Manuel&lt;/strong&gt;." xml:space="preserve">
+    <value>Next to &lt;strong&gt;DNS server assignment&lt;/strong&gt;, click &lt;strong&gt;Edit&lt;/strong&gt; and choose &lt;strong&gt;Manual&lt;/strong&gt;.</value>
+  </data>
+  <data name="Enregistrez, puis reconnectez les appareils (ou attendez le renouvellement de leur bail DHCP) pour qu'ils reçoivent le nouveau serveur DNS." xml:space="preserve">
+    <value>Save, then reconnect your devices (or wait for their DHCP lease to renew) so they receive the new DNS server.</value>
+  </data>
+  <data name="Il est nécessaire pour la configuration recommandée sur Android, et possible sous Windows 11." xml:space="preserve">
+    <value>It is required for the recommended Android setup, and available on Windows 11.</value>
+  </data>
+  <data name="Indiquez &lt;code&gt;{0}&lt;/code&gt; comme serveur DNS principal et laissez le serveur secondaire vide : un serveur public en secours permettrait de contourner le filtrage." xml:space="preserve">
+    <value>Enter &lt;code&gt;{0}&lt;/code&gt; as the primary DNS server and leave the secondary server empty: a public fallback server would let devices bypass filtering.</value>
+  </data>
+  <data name="iOS et iPadOS. Le réglage s'applique à un réseau Wi-Fi : à refaire pour chaque réseau." xml:space="preserve">
+    <value>iOS and iPadOS. The setting applies to one Wi-Fi network: repeat it for each network.</value>
+  </data>
+  <data name="iPhone et iPad" xml:space="preserve">
+    <value>iPhone and iPad</value>
+  </data>
+  <data name="Le DNS non chiffré est refusé (page Chiffrement) : seules les configurations en DNS chiffré ci-dessous fonctionneront." xml:space="preserve">
+    <value>Unencrypted DNS is refused (Encryption page): only the encrypted DNS setups below will work.</value>
+  </data>
+  <data name="Les données mobiles ne sont pas couvertes : iOS ne permet d'y imposer un serveur DNS que par un profil de configuration." xml:space="preserve">
+    <value>Mobile data is not covered: iOS only allows a DNS server to be enforced there through a configuration profile.</value>
+  </data>
+  <data name="Linux n'est pas détaillé ici : la marche à suivre dépend du gestionnaire réseau de la distribution (NetworkManager, systemd-resolved…). Indiquez-y l'adresse de ce serveur comme serveur DNS, ou configurez le routeur." xml:space="preserve">
+    <value>Linux is not covered here: the steps depend on the distribution's network manager (NetworkManager, systemd-resolved…). Set this server's address as the DNS server there, or configure the router.</value>
+  </data>
+  <data name="macOS 13 Ventura et plus. Le réglage s'applique à une connexion : à refaire pour le Wi-Fi et l'Ethernet." xml:space="preserve">
+    <value>macOS 13 Ventura and later. The setting applies to one connection: repeat it for Wi-Fi and Ethernet.</value>
+  </data>
+  <data name="Ouvrez &lt;strong&gt;Paramètres › Réseau et Internet › DNS privé&lt;/strong&gt; (Samsung : &lt;strong&gt;Connexions › Autres paramètres de connexion › DNS privé&lt;/strong&gt;)." xml:space="preserve">
+    <value>Open &lt;strong&gt;Settings › Network &amp;amp; internet › Private DNS&lt;/strong&gt; (Samsung: &lt;strong&gt;Connections › More connection settings › Private DNS&lt;/strong&gt;).</value>
+  </data>
+  <data name="Ouvrez &lt;strong&gt;Paramètres › Réseau et Internet&lt;/strong&gt;, puis &lt;strong&gt;Wi-Fi&lt;/strong&gt; ou &lt;strong&gt;Ethernet&lt;/strong&gt; et la connexion utilisée." xml:space="preserve">
+    <value>Open &lt;strong&gt;Settings › Network &amp;amp; internet&lt;/strong&gt;, then &lt;strong&gt;Wi-Fi&lt;/strong&gt; or &lt;strong&gt;Ethernet&lt;/strong&gt; and the connection in use.</value>
+  </data>
+  <data name="Ouvrez &lt;strong&gt;Paramètres › Wi-Fi&lt;/strong&gt;, appuyez longuement sur le réseau (ou sur l'icône des réglages) puis &lt;strong&gt;Modifier&lt;/strong&gt;." xml:space="preserve">
+    <value>Open &lt;strong&gt;Settings › Wi-Fi&lt;/strong&gt;, long-press the network (or tap its settings icon), then &lt;strong&gt;Modify&lt;/strong&gt;.</value>
+  </data>
+  <data name="Ouvrez &lt;strong&gt;Réglages › Wi-Fi&lt;/strong&gt; et touchez l'icône d'information à droite du réseau." xml:space="preserve">
+    <value>Open &lt;strong&gt;Settings › Wi-Fi&lt;/strong&gt; and tap the info icon to the right of the network.</value>
+  </data>
+  <data name="Ouvrez &lt;strong&gt;Réglages Système › Réseau&lt;/strong&gt;, puis &lt;strong&gt;Wi-Fi&lt;/strong&gt; ou &lt;strong&gt;Ethernet&lt;/strong&gt;." xml:space="preserve">
+    <value>Open &lt;strong&gt;System Settings › Network&lt;/strong&gt;, then &lt;strong&gt;Wi-Fi&lt;/strong&gt; or &lt;strong&gt;Ethernet&lt;/strong&gt;.</value>
+  </data>
+  <data name="Ouvrez l'interface d'administration du routeur (souvent &lt;code&gt;192.168.1.1&lt;/code&gt; ou &lt;code&gt;192.168.0.1&lt;/code&gt;), puis les réglages &lt;strong&gt;DHCP&lt;/strong&gt; ou &lt;strong&gt;Réseau local (LAN)&lt;/strong&gt;." xml:space="preserve">
+    <value>Open the router's administration interface (often &lt;code&gt;192.168.1.1&lt;/code&gt; or &lt;code&gt;192.168.0.1&lt;/code&gt;), then the &lt;strong&gt;DHCP&lt;/strong&gt; or &lt;strong&gt;Local network (LAN)&lt;/strong&gt; settings.</value>
+  </data>
+  <data name="port {0}" xml:space="preserve">
+    <value>port {0}</value>
+  </data>
+  <data name="Recommandé : un seul réglage, et tous les appareils du réseau sont protégés, y compris ceux sans réglage DNS (télévisions, consoles, objets connectés)." xml:space="preserve">
+    <value>Recommended: a single setting protects every device on the network, including those without DNS settings (TVs, consoles, smart devices).</value>
+  </data>
+  <data name="Réservez une adresse IP fixe à ce serveur dans les réglages DHCP du routeur (bail statique), pour que l'adresse ci-dessous ne change pas." xml:space="preserve">
+    <value>Reserve a fixed IP address for this server in the router's DHCP settings (static lease), so the address below does not change.</value>
+  </data>
+  <data name="Rien n'apparaît ? Redémarrez la connexion de l'appareil : il peut garder l'ancien serveur DNS en cache quelques minutes." xml:space="preserve">
+    <value>Nothing shows up? Restart the device's connection: it may keep the old DNS server cached for a few minutes.</value>
+  </data>
+  <data name="Routeur ou box" xml:space="preserve">
+    <value>Router</value>
+  </data>
+  <data name="S'assurer qu'un appareil passe bien par OnyxFilter." xml:space="preserve">
+    <value>Make sure a device actually goes through OnyxFilter.</value>
+  </data>
+  <data name="Saisissez &lt;code&gt;{0}&lt;/code&gt; dans &lt;strong&gt;DNS 1&lt;/strong&gt;, laissez &lt;strong&gt;DNS 2&lt;/strong&gt; vide, puis enregistrez." xml:space="preserve">
+    <value>Enter &lt;code&gt;{0}&lt;/code&gt; in &lt;strong&gt;DNS 1&lt;/strong&gt;, leave &lt;strong&gt;DNS 2&lt;/strong&gt; empty, then save.</value>
+  </data>
+  <data name="Ses requêtes doivent apparaître, avec son adresse IP, dans le" xml:space="preserve">
+    <value>Its queries should appear, with its IP address, in the</value>
+  </data>
+  <data name="Si le routeur distribue aussi des serveurs DNS IPv6, indiquez une adresse IPv6 de ce serveur ou désactivez cette distribution : sinon, les appareils pourront interroger le DNS du fournisseur d'accès." xml:space="preserve">
+    <value>If the router also hands out IPv6 DNS servers, enter an IPv6 address of this server or turn that off: otherwise devices may query your ISP's DNS.</value>
+  </data>
+  <data name="Sous &lt;strong&gt;Serveurs DNS&lt;/strong&gt;, cliquez sur &lt;strong&gt;+&lt;/strong&gt; et saisissez &lt;code&gt;{0}&lt;/code&gt;. Retirez les autres serveurs avec &lt;strong&gt;−&lt;/strong&gt;." xml:space="preserve">
+    <value>Under &lt;strong&gt;DNS Servers&lt;/strong&gt;, click &lt;strong&gt;+&lt;/strong&gt; and enter &lt;code&gt;{0}&lt;/code&gt;. Remove the other servers with &lt;strong&gt;−&lt;/strong&gt;.</value>
+  </data>
+  <data name="Supprimez les serveurs existants, touchez &lt;strong&gt;Ajouter un serveur&lt;/strong&gt; et saisissez &lt;code&gt;{0}&lt;/code&gt;." xml:space="preserve">
+    <value>Delete the existing servers, tap &lt;strong&gt;Add Server&lt;/strong&gt; and enter &lt;code&gt;{0}&lt;/code&gt;.</value>
+  </data>
+  <data name="Sur l'appareil configuré, ouvrez quelques sites web." xml:space="preserve">
+    <value>On the configured device, open a few websites.</value>
+  </data>
+  <data name="Touchez &lt;strong&gt;Configurer le DNS&lt;/strong&gt;, puis choisissez &lt;strong&gt;Manuel&lt;/strong&gt;." xml:space="preserve">
+    <value>Tap &lt;strong&gt;Configure DNS&lt;/strong&gt;, then choose &lt;strong&gt;Manual&lt;/strong&gt;.</value>
+  </data>
+  <data name="Touchez &lt;strong&gt;Enregistrer&lt;/strong&gt;." xml:space="preserve">
+    <value>Tap &lt;strong&gt;Save&lt;/strong&gt;.</value>
+  </data>
+  <data name="Vérifier" xml:space="preserve">
+    <value>Check</value>
+  </data>
+  <data name="Windows 10 et 11. Le réglage s'applique à une connexion : à refaire pour le Wi-Fi et l'Ethernet." xml:space="preserve">
+    <value>Windows 10 and 11. The setting applies to one connection: repeat it for Wi-Fi and Ethernet.</value>
+  </data>
+  <data name="Windows 11 : pour chiffrer les requêtes, réglez &lt;strong&gt;DNS sur HTTPS&lt;/strong&gt; sur &lt;strong&gt;Activé (modèle manuel)&lt;/strong&gt; et saisissez &lt;code&gt;{0}&lt;/code&gt; comme modèle." xml:space="preserve">
+    <value>Windows 11: to encrypt queries, set &lt;strong&gt;DNS over HTTPS&lt;/strong&gt; to &lt;strong&gt;On (manual template)&lt;/strong&gt; and enter &lt;code&gt;{0}&lt;/code&gt; as the template.</value>
   </data>
 </root>

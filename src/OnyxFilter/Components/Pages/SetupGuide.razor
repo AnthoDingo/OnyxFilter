@@ -11,10 +11,181 @@
     </div>
 </header>
 
-<div class="card placeholder-card">
-    <span class="placeholder-icon" aria-hidden="true"><Icon Name="book" /></span>
-    <h2 class="placeholder-title">@L["Guide en cours de rédaction"]</h2>
-    <p class="placeholder-text">
-        @L["En attendant, le plus simple est d'indiquer l'adresse IP de ce serveur comme serveur DNS dans les réglages DHCP de votre box ou de votre routeur : tous les appareils du réseau l'utiliseront automatiquement."]
-    </p>
+@if (!Encryption.EnablePlainDns)
+{
+    <div class="alert alert-warning page-status">
+        @L["Le DNS non chiffré est refusé (page Chiffrement) : seules les configurations en DNS chiffré ci-dessous fonctionneront."]
+    </div>
+}
+
+<div class="settings-sections">
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">@L["Adresses de ce serveur"]</h2>
+            <p class="settings-intro-text">@L["À indiquer comme serveur DNS sur vos appareils ou votre routeur."]</p>
+        </div>
+
+        <div class="card settings-panel">
+            <dl class="guide-addresses">
+                <dt>IPv4</dt>
+                <dd>
+                    @if (Ipv4Addresses.Count == 0)
+                    {
+                        <span class="text-body-secondary">@L["Aucune adresse détectée"]</span>
+                    }
+                    @foreach (string address in Ipv4Addresses)
+                    {
+                        <code>@address</code>
+                    }
+                </dd>
+                @if (Ipv6Addresses.Count > 0)
+                {
+                    <dt>IPv6</dt>
+                    <dd>
+                        @foreach (string address in Ipv6Addresses)
+                        {
+                            <code>@address</code>
+                        }
+                    </dd>
+                }
+                @if (EncryptedDnsAvailable)
+                {
+                    <dt>DNS-over-HTTPS</dt>
+                    <dd><code>@DohUrl</code></dd>
+                    <dt>DNS-over-TLS</dt>
+                    <dd><code>@Encryption.ServerName</code> <span class="text-body-secondary">(@L["port {0}", Encryption.DnsOverTlsPort])</span></dd>
+                }
+            </dl>
+            @if (!EncryptedDnsAvailable)
+            {
+                <p class="guide-note">
+                    @L["DNS chiffré indisponible : renseignez le nom du serveur et un certificat valide dans"] <a href="/settings/encryption">@L["Chiffrement"]</a>.
+                    @L["Il est nécessaire pour la configuration recommandée sur Android, et possible sous Windows 11."]
+                </p>
+            }
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">@L["Routeur ou box"]</h2>
+            <p class="settings-intro-text">@L["Recommandé : un seul réglage, et tous les appareils du réseau sont protégés, y compris ceux sans réglage DNS (télévisions, consoles, objets connectés)."]</p>
+        </div>
+
+        <div class="card settings-panel">
+            <ol class="guide-steps">
+                <li>@L["Réservez une adresse IP fixe à ce serveur dans les réglages DHCP du routeur (bail statique), pour que l'adresse ci-dessous ne change pas."]</li>
+                <li>@Html("Ouvrez l'interface d'administration du routeur (souvent <code>192.168.1.1</code> ou <code>192.168.0.1</code>), puis les réglages <strong>DHCP</strong> ou <strong>Réseau local (LAN)</strong>.")</li>
+                <li>@Html("Indiquez <code>{0}</code> comme serveur DNS principal et laissez le serveur secondaire vide : un serveur public en secours permettrait de contourner le filtrage.", ServerAddress)</li>
+                <li>@L["Si le routeur distribue aussi des serveurs DNS IPv6, indiquez une adresse IPv6 de ce serveur ou désactivez cette distribution : sinon, les appareils pourront interroger le DNS du fournisseur d'accès."]</li>
+                <li>@L["Enregistrez, puis reconnectez les appareils (ou attendez le renouvellement de leur bail DHCP) pour qu'ils reçoivent le nouveau serveur DNS."]</li>
+            </ol>
+            <p class="guide-note">@L["Certaines box d'opérateur ne permettent pas de changer le serveur DNS distribué : configurez alors chaque appareil comme indiqué ci-dessous."]</p>
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Windows</h2>
+            <p class="settings-intro-text">@L["Windows 10 et 11. Le réglage s'applique à une connexion : à refaire pour le Wi-Fi et l'Ethernet."]</p>
+        </div>
+
+        <div class="card settings-panel">
+            <ol class="guide-steps">
+                <li>@Html("Ouvrez <strong>Paramètres › Réseau et Internet</strong>, puis <strong>Wi-Fi</strong> ou <strong>Ethernet</strong> et la connexion utilisée.")</li>
+                <li>@Html("En face de <strong>Attribution du serveur DNS</strong>, cliquez sur <strong>Modifier</strong> et choisissez <strong>Manuel</strong>.")</li>
+                <li>@Html("Activez <strong>IPv4</strong> et saisissez <code>{0}</code> dans <strong>DNS préféré</strong>. Laissez le DNS secondaire vide.", ServerAddress)</li>
+                @if (EncryptedDnsAvailable)
+                {
+                    <li>@Html("Windows 11 : pour chiffrer les requêtes, réglez <strong>DNS sur HTTPS</strong> sur <strong>Activé (modèle manuel)</strong> et saisissez <code>{0}</code> comme modèle.", DohUrl)</li>
+                }
+                <li>@Html("Cliquez sur <strong>Enregistrer</strong>.")</li>
+            </ol>
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">Android</h2>
+            <p class="settings-intro-text">@L["Android 9 et plus. Le nom des menus varie selon le fabricant."]</p>
+        </div>
+
+        <div class="card settings-panel">
+            @if (EncryptedDnsAvailable)
+            {
+                <ol class="guide-steps">
+                    <li>@Html("Ouvrez <strong>Paramètres › Réseau et Internet › DNS privé</strong> (Samsung : <strong>Connexions › Autres paramètres de connexion › DNS privé</strong>).")</li>
+                    <li>@Html("Choisissez <strong>Nom d'hôte du fournisseur de DNS privé</strong> et saisissez <code>{0}</code>.", Encryption.ServerName)</li>
+                    <li>@Html("Cliquez sur <strong>Enregistrer</strong>. Le réglage vaut pour le Wi-Fi comme pour les données mobiles.")</li>
+                </ol>
+                @if (Encryption.DnsOverTlsPort != 853)
+                {
+                    <p class="guide-note guide-note-warn">@L["Android n'utilise que le port 853 pour le DNS privé : le port DNS-over-TLS configuré ({0}) doit être redirigé vers celui-ci.", Encryption.DnsOverTlsPort]</p>
+                }
+            }
+            else
+            {
+                <ol class="guide-steps">
+                    <li>@Html("Ouvrez <strong>Paramètres › Wi-Fi</strong>, appuyez longuement sur le réseau (ou sur l'icône des réglages) puis <strong>Modifier</strong>.")</li>
+                    <li>@Html("Dans <strong>Options avancées</strong>, réglez <strong>Paramètres IP</strong> sur <strong>Statique</strong>.")</li>
+                    <li>@Html("Saisissez <code>{0}</code> dans <strong>DNS 1</strong>, laissez <strong>DNS 2</strong> vide, puis enregistrez.", ServerAddress)</li>
+                </ol>
+                <p class="guide-note">@L["Ce réglage ne vaut que pour ce réseau Wi-Fi et oblige à fixer l'adresse IP du téléphone. Le DNS privé (DNS chiffré) est plus simple et suit le téléphone partout."]</p>
+            }
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">@L["iPhone et iPad"]</h2>
+            <p class="settings-intro-text">@L["iOS et iPadOS. Le réglage s'applique à un réseau Wi-Fi : à refaire pour chaque réseau."]</p>
+        </div>
+
+        <div class="card settings-panel">
+            <ol class="guide-steps">
+                <li>@Html("Ouvrez <strong>Réglages › Wi-Fi</strong> et touchez l'icône d'information à droite du réseau.")</li>
+                <li>@Html("Touchez <strong>Configurer le DNS</strong>, puis choisissez <strong>Manuel</strong>.")</li>
+                <li>@Html("Supprimez les serveurs existants, touchez <strong>Ajouter un serveur</strong> et saisissez <code>{0}</code>.", ServerAddress)</li>
+                <li>@Html("Touchez <strong>Enregistrer</strong>.")</li>
+            </ol>
+            <p class="guide-note">@L["Les données mobiles ne sont pas couvertes : iOS ne permet d'y imposer un serveur DNS que par un profil de configuration."]</p>
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">macOS</h2>
+            <p class="settings-intro-text">@L["macOS 13 Ventura et plus. Le réglage s'applique à une connexion : à refaire pour le Wi-Fi et l'Ethernet."]</p>
+        </div>
+
+        <div class="card settings-panel">
+            <ol class="guide-steps">
+                <li>@Html("Ouvrez <strong>Réglages Système › Réseau</strong>, puis <strong>Wi-Fi</strong> ou <strong>Ethernet</strong>.")</li>
+                <li>@Html("Cliquez sur <strong>Détails…</strong> à côté de la connexion utilisée, puis sur l'onglet <strong>DNS</strong>.")</li>
+                <li>@Html("Sous <strong>Serveurs DNS</strong>, cliquez sur <strong>+</strong> et saisissez <code>{0}</code>. Retirez les autres serveurs avec <strong>−</strong>.", ServerAddress)</li>
+                <li>@Html("Cliquez sur <strong>OK</strong>.")</li>
+            </ol>
+        </div>
+    </section>
+
+    <section class="settings-section">
+        <div class="settings-intro">
+            <h2 class="settings-intro-title">@L["Vérifier"]</h2>
+            <p class="settings-intro-text">@L["S'assurer qu'un appareil passe bien par OnyxFilter."]</p>
+        </div>
+
+        <div class="card settings-panel">
+            <ol class="guide-steps">
+                <li>@L["Sur l'appareil configuré, ouvrez quelques sites web."]</li>
+                <li>@L["Ses requêtes doivent apparaître, avec son adresse IP, dans le"] <a href="/query-log">@L["Journal des requêtes"]</a>.</li>
+                <li>@L["Rien n'apparaît ? Redémarrez la connexion de l'appareil : il peut garder l'ancien serveur DNS en cache quelques minutes."]</li>
+            </ol>
+        </div>
+    </section>
+
 </div>
+
+<p class="page-note">
+    @L["Linux n'est pas détaillé ici : la marche à suivre dépend du gestionnaire réseau de la distribution (NetworkManager, systemd-resolved…). Indiquez-y l'adresse de ce serveur comme serveur DNS, ou configurez le routeur."]
+</p>

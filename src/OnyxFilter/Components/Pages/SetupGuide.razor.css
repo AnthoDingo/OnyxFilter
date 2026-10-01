@@ -1,0 +1,59 @@
+.guide-addresses {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+    gap: 0.6rem 1.5rem;
+    margin: 0;
+    padding: 1.25rem 1.5rem;
+}
+
+    .guide-addresses dt {
+        color: var(--of-text-3);
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .guide-addresses dd {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem 0.75rem;
+        margin: 0;
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+.guide-steps {
+    margin: 0;
+    padding: 1.25rem 1.5rem 1.25rem 2.75rem;
+    display: grid;
+    gap: 0.65rem;
+    line-height: 1.55;
+}
+
+    .guide-steps li::marker {
+        color: var(--of-accent-text);
+        font-weight: 700;
+    }
+
+.guide-note {
+    margin: 0;
+    padding: 0.9rem 1.5rem;
+    border-top: 1px solid var(--of-line);
+    color: var(--of-text-3);
+    font-size: 0.82rem;
+    line-height: 1.55;
+}
+
+.guide-note-warn {
+    color: var(--of-warn);
+}
+
+@media (max-width: 640px) {
+    .guide-addresses {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.3rem;
+    }
+
+        .guide-addresses dd {
+            margin-bottom: 0.5rem;
+        }
+}

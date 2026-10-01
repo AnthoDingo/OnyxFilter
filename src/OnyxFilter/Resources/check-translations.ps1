@@ -1,9 +1,9 @@
-# Vérifie que chaque texte d'interface L["..."] a sa traduction dans chaque SharedResource.<langue>.resx.
+# Vérifie que chaque texte d'interface L["..."] (ou Html("...") pour un texte avec balisage) a sa traduction dans chaque SharedResource.<langue>.resx.
 # Une clé manquante s'afficherait en français dans l'interface traduite.
 # Usage : pwsh src/OnyxFilter/Resources/check-translations.ps1
 $components = Join-Path $PSScriptRoot '..' 'Components'
 $keys = Get-ChildItem $components -Recurse -Include *.razor, *.razor.cs |
-    Select-String -Pattern 'L\["([^"]*)"' -AllMatches |
+    Select-String -Pattern '(?:L\[|Html\()"([^"]*)"' -AllMatches |
     ForEach-Object { $_.Matches } |
     ForEach-Object { $_.Groups[1].Value } |
     Sort-Object -Unique -CaseSensitive
