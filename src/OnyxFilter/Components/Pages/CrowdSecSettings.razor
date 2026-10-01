@@ -1,0 +1,102 @@
+@page "/settings/crowdsec"
+@attribute [Authorize]
+@rendermode InteractiveServer
+@using OnyxFilter.Services.CrowdSec
+
+<PageTitle>CrowdSec · OnyxFilter</PageTitle>
+
+<header class="page-header">
+    <div class="page-heading">
+        <p class="page-eyebrow">@L["Configuration"]</p>
+        <h1 class="page-title">CrowdSec</h1>
+        <p class="page-lead">@L["Refusez l'accès aux adresses bannies par votre instance CrowdSec."]</p>
+    </div>
+    <div class="page-actions">
+        <button type="button" class="btn btn-outline-secondary" @onclick="TestAsync" disabled="@IsTesting">
+            @(IsTesting ? L["Test en cours…"] : L["Tester la connexion"])
+        </button>
+        <button type="button" class="btn btn-primary" @onclick="SaveAsync" disabled="@IsSaving">
+            @(IsSaving ? L["Enregistrement…"] : L["Enregistrer"])
+        </button>
+    </div>
+</header>
+
+@if (!string.IsNullOrEmpty(StatusMessage))
+{
+    <div class="alert page-status @(StatusIsError ? "alert-danger" : "alert-success")">@StatusMessage</div>
+}
+
+<div class="card settings-panel">
+    <div class="setting">
+        <div class="setting-text">
+            <label class="setting-label" for="crowdsec-enabled">@L["Utiliser CrowdSec"]</label>
+            <p class="setting-help">
+                @L["OnyxFilter interroge l'API locale de CrowdSec et ne répond plus aux adresses bannies. Les clients toujours autorisés des"]
+                <a href="/settings/dns">@L["paramètres DNS"]</a>@L[" restent servis."]
+            </p>
+        </div>
+        <div class="form-check form-switch setting-control">
+            <input class="form-check-input" type="checkbox" role="switch" id="crowdsec-enabled" @bind="Enabled" />
+        </div>
+    </div>
+
+    <div class="setting setting-stacked">
+        <div class="setting-text">
+            <span class="setting-label">@L["Connexion à l'API locale"]</span>
+            <p class="setting-help">
+                @L["Créez la clé sur la machine CrowdSec avec"] <code>cscli bouncers add onyxfilter</code>.
+            </p>
+        </div>
+        <div class="setting-nested crowdsec-fields">
+            <div>
+                <label class="form-label" for="crowdsec-url">@L["Adresse de l'API locale"]</label>
+                <input id="crowdsec-url" type="url" class="form-control" placeholder="http://127.0.0.1:8080" @bind="LapiUrl" />
+            </div>
+            <div>
+                <label class="form-label" for="crowdsec-key">@L["Clé du bouncer"]</label>
+                <input id="crowdsec-key" type="password" class="form-control font-monospace" autocomplete="off" placeholder="@(HasSavedKey ? L["Clé enregistrée (laisser vide pour la conserver)"] : string.Empty)" @bind="ApiKey" />
+            </div>
+            <div class="field-narrow">
+                <label class="form-label" for="crowdsec-interval">@L["Actualisation (secondes)"]</label>
+                <input id="crowdsec-interval" type="number" class="form-control" min="1" max="3600" @bind="PollIntervalSeconds" />
+            </div>
+        </div>
+    </div>
+
+    <div class="setting">
+        <div class="setting-text">
+            <label class="setting-label" for="crowdsec-web">@L["Protéger aussi l'interface web"]</label>
+            <p class="setting-help">@L["Les adresses bannies reçoivent une erreur 403 sur l'interface web et l'API."]</p>
+        </div>
+        <div class="form-check form-switch setting-control">
+            <input class="form-check-input" type="checkbox" role="switch" id="crowdsec-web" @bind="ProtectWebInterface" />
+        </div>
+    </div>
+
+    <div class="setting setting-stacked">
+        <div class="setting-text">
+            <span class="setting-label">@L["État"]</span>
+        </div>
+        <div class="setting-nested">
+            @if (!Status.Enabled)
+            {
+                <p class="crowdsec-status">@L["Désactivé."]</p>
+            }
+            else
+            {
+                <p class="crowdsec-status">
+                    <span class="badge @(Status.Connected ? "bg-success" : "bg-danger")">@(Status.Connected ? L["Connecté"] : L["Injoignable"])</span>
+                    @L["{0} décision(s) appliquée(s)", Status.DecisionCount]
+                    @if (Status.LastSyncUtc is DateTime lastSync)
+                    {
+                        <span class="text-body-secondary">· @L["dernière synchronisation à {0}", lastSync.ToLocalTime().ToString("T", System.Globalization.CultureInfo.CurrentCulture)]</span>
+                    }
+                </p>
+                @if (Status.LastError is not null)
+                {
+                    <p class="crowdsec-status text-danger">@Status.LastError</p>
+                }
+            }
+        </div>
+    </div>
+</div>
