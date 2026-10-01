@@ -70,3 +70,10 @@
     font-size: 0.85rem;
     color: var(--of-text-3);
 }
+
+.rank-detail {
+    margin-left: 0.4rem;
+    font-family: var(--of-font);
+    font-size: 0.72rem;
+    color: var(--of-text-2);
+}

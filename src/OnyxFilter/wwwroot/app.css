@@ -154,6 +154,21 @@
 }
 
 /* ---------- Base ---------- */
+/* Drapeaux des pays (indicateurs régionaux Unicode) : Windows n'a pas d'emoji de drapeau. Police limitée
+   à ces caractères via unicode-range. "Twemoji Country Flags" (country-flag-emoji-polyfill, MIT),
+   graphismes Twemoji © Twitter, Inc. et contributeurs, licence CC-BY 4.0. */
+@font-face {
+    font-family: "Twemoji Country Flags";
+    unicode-range: U+1F1E6-1F1FF, U+1F3F4, U+E0062-E0063, U+E0065, U+E0067, U+E006C, U+E006E, U+E0073-E0074, U+E0077, U+E007F;
+    src: url("fonts/TwemojiCountryFlags.woff2") format("woff2");
+    font-display: swap;
+}
+
+.client-flag {
+    margin-right: 0.3rem;
+    font-family: "Twemoji Country Flags", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
 :root {
     --of-font: Inter, "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
     --of-mono: "JetBrains Mono", "Cascadia Mono", "SF Mono", ui-monospace, Menlo, Consolas, "Liberation Mono", monospace;
