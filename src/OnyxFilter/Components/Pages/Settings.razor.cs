@@ -53,6 +53,8 @@ public partial class Settings : ComponentBase
 
     private bool AnonymizeClientIp { get; set; }
 
+    private bool ShowClientLocation { get; set; }
+
     private RetentionPeriod LogRetention { get; set; } = RetentionPeriod.TwentyFourHours;
 
     private int LogRetentionCustomHours { get; set; } = 48;
@@ -104,6 +106,7 @@ public partial class Settings : ComponentBase
         SafeSearchYoutube = data.SafeSearchYoutube;
         EnableQueryLog = data.EnableQueryLog;
         AnonymizeClientIp = data.AnonymizeClientIp;
+        ShowClientLocation = data.ShowClientLocation;
         LogRetention = data.LogRetention;
         LogRetentionCustomHours = data.LogRetentionCustomHours;
         IgnoreDomainsInLog = data.IgnoreDomainsInLog;
@@ -133,6 +136,7 @@ public partial class Settings : ComponentBase
             SafeSearchYoutube = SafeSearchYoutube,
             EnableQueryLog = EnableQueryLog,
             AnonymizeClientIp = AnonymizeClientIp,
+            ShowClientLocation = ShowClientLocation,
             LogRetention = LogRetention,
             LogRetentionCustomHours = LogRetentionCustomHours,
             IgnoreDomainsInLog = IgnoreDomainsInLog,
@@ -212,6 +216,11 @@ public partial class Settings : ComponentBase
     private void OnAnonymizeClientIpChanged(ChangeEventArgs e)
     {
         AnonymizeClientIp = e.Value is bool value && value;
+    }
+
+    private void OnShowClientLocationChanged(ChangeEventArgs e)
+    {
+        ShowClientLocation = e.Value is bool value && value;
     }
 
     private void SetLogRetention(RetentionPeriod period)

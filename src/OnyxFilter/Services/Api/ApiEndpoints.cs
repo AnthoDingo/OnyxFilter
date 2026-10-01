@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using OnyxFilter.Models.Settings;
+using OnyxFilter.Services.ClientLocation;
 using OnyxFilter.Services.DnsForwarding;
 using OnyxFilter.Services.QueryLog;
 using OnyxFilter.Services.Statistics;
@@ -169,7 +170,7 @@ public static class ApiEndpoints
         return Results.Ok(ToProtectionResponse(protectionState));
     }
 
-    private static StatsResponse GetStats(IDnsStatisticsService statisticsService)
+    private static StatsResponse GetStats(IDnsStatisticsService statisticsService, IClientLocationService clientLocationService)
     {
         DnsStatisticsSnapshot snapshot = statisticsService.GetSnapshot();
         long allowed = Math.Max(0, snapshot.TotalQueries - snapshot.BlockedQueries);
@@ -185,7 +186,9 @@ public static class ApiEndpoints
             AverageProcessingTimeMs: snapshot.AverageProcessingTimeMs,
             TopQueriedDomains: ToRanking(snapshot.TopSearchedDomains),
             TopBlockedDomains: ToRanking(snapshot.TopBlockedDomains),
-            TopClients: ToRanking(snapshot.TopClients),
+            TopClients: snapshot.TopClients
+                .Select(entry => new RankedClient(entry.Label, entry.Count, ToLocationInfo(clientLocationService.Lookup(entry.Label))))
+                .ToList(),
             Upstreams: snapshot.BuildUpstreamSummaries()
                 .Select(summary => new UpstreamStats(summary.Upstream, summary.RequestCount, summary.AverageResponseTimeMs))
                 .ToList(),
@@ -196,6 +199,7 @@ public static class ApiEndpoints
 
     private static async Task<IResult> GetQueryLogAsync(
         IDnsQueryLogService queryLogService,
+        IClientLocationService clientLocationService,
         int? limit,
         int? offset,
         string? search,
@@ -240,6 +244,7 @@ public static class ApiEndpoints
                 record.Domain,
                 record.QueryType,
                 record.ClientKey,
+                ToLocationInfo(clientLocationService.Lookup(record.ClientKey)),
                 record.Reason.ToString(),
                 record.Blocked,
                 record.ReasonDetail,
@@ -473,6 +478,13 @@ public static class ApiEndpoints
 
         long remaining = Math.Max(0, (long)Math.Ceiling((untilUtc.Value - DateTime.UtcNow).TotalSeconds));
         return new ProtectionStatusResponse(enabled, ToUtcOffset(untilUtc.Value), remaining);
+    }
+
+    private static ClientLocationInfo? ToLocationInfo(ClientLocation.ClientLocation? location)
+    {
+        return location is null
+            ? null
+            : new ClientLocationInfo(location.CountryCode.Length == 0 ? null : location.CountryCode, location.Asn, location.Provider);
     }
 
     private static IReadOnlyList<RankedItem> ToRanking(IReadOnlyList<DnsStatisticsEntry> entries)

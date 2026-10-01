@@ -25,6 +25,7 @@ using OnyxFilter.Services;
 using OnyxFilter.Services.Api;
 using OnyxFilter.Services.BlockedServices;
 using OnyxFilter.Services.BrowsingSecurity;
+using OnyxFilter.Services.ClientLocation;
 using OnyxFilter.Services.DnsForwarding;
 using OnyxFilter.Services.Encryption;
 using OnyxFilter.Services.Encryption.Acme;
@@ -266,6 +267,12 @@ public class Program
         // client", "Rotation des journaux de requêtes" et "Domaines ignorés" (/settings/general).
         builder.Services.AddSingleton<IDnsQueryLogRepository, SqliteDnsQueryLogRepository>();
         builder.Services.AddSingleton<IDnsQueryLogService, DnsQueryLogService>();
+
+        // Pays et fournisseur d'accès des clients (journal des requêtes, tableau de bord) : base publique
+        // iptoasn.com téléchargée dans le dossier des données et rafraîchie chaque semaine.
+        builder.Services.AddSingleton<ClientLocationService>();
+        builder.Services.AddSingleton<IClientLocationService>(serviceProvider => serviceProvider.GetRequiredService<ClientLocationService>());
+        builder.Services.AddHostedService(serviceProvider => serviceProvider.GetRequiredService<ClientLocationService>());
 
         builder.Services.AddHostedService<DnsProxyService>();
 
