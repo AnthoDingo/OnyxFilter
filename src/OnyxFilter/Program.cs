@@ -344,11 +344,13 @@ public class Program
             await next();
         });
 
-        app.UseAntiforgery();
-
         // Add Authentication and Authorization
         app.UseAuthentication();
         app.UseAuthorization();
+
+        // Après l'authentification : le jeton antiforgery d'un utilisateur connecté est lié à son
+        // identité, sinon tout formulaire envoyé une fois connecté est rejeté (issue #12).
+        app.UseAntiforgery();
 
         app.MapStaticAssets();
 
