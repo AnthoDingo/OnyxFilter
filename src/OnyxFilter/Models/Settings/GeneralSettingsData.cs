@@ -31,6 +31,10 @@ public sealed class GeneralSettingsData
 
     public bool AnonymizeClientIp { get; set; }
 
+    // Pays et fournisseur d'accès des clients (journal, tableau de bord, API) : nécessite le
+    // téléchargement hebdomadaire d'une base publique (iptoasn.com, voir ClientLocationService).
+    public bool ShowClientLocation { get; set; } = true;
+
     public RetentionPeriod LogRetention { get; set; } = RetentionPeriod.TwentyFourHours;
 
     // Durée de rétention (en heures) utilisée quand LogRetention vaut RetentionPeriod.Custom

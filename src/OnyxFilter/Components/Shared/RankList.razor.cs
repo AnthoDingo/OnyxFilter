@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Components;
+using OnyxFilter.Services.ClientLocation;
 
 namespace OnyxFilter.Components.Shared;
 
-public sealed record RankItem(string Label, long Count);
+// "Location" : pays et fournisseur d'accès, renseignés uniquement pour le classement des clients.
+public sealed record RankItem(string Label, long Count, ClientLocation? Location = null);
 
 public enum RankTone
 {

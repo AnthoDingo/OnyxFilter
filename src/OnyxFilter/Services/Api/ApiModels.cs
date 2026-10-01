@@ -20,6 +20,12 @@ public sealed record DisableProtectionRequest(int? DurationSeconds, DateTimeOffs
 
 public sealed record RankedItem(string Name, long Count);
 
+// Pays (code ISO 3166-1 alpha-2, null si inconnu) et fournisseur d'accès d'un client. Null pour les
+// adresses privées, ou si "Afficher le pays et le fournisseur des clients" est désactivé.
+public sealed record ClientLocationInfo(string? Country, int Asn, string Provider);
+
+public sealed record RankedClient(string Name, long Count, ClientLocationInfo? Location);
+
 public sealed record UpstreamStats(string Server, long? Queries, int? AverageResponseTimeMs);
 
 public sealed record HourlyStats(DateTimeOffset HourStart, long TotalQueries, long BlockedQueries);
@@ -34,7 +40,7 @@ public sealed record StatsResponse(
     int AverageProcessingTimeMs,
     IReadOnlyList<RankedItem> TopQueriedDomains,
     IReadOnlyList<RankedItem> TopBlockedDomains,
-    IReadOnlyList<RankedItem> TopClients,
+    IReadOnlyList<RankedClient> TopClients,
     IReadOnlyList<UpstreamStats> Upstreams,
     IReadOnlyList<HourlyStats> Hourly);
 
@@ -43,6 +49,7 @@ public sealed record QueryLogItem(
     string Domain,
     string Type,
     string Client,
+    ClientLocationInfo? ClientLocation,
     string Reason,
     bool Blocked,
     string? ReasonDetail,

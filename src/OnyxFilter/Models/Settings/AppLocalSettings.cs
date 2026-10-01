@@ -19,6 +19,8 @@ public sealed class AppLocalSettings
 
     public BlockedServicesSettingsData BlockedServices { get; set; } = new BlockedServicesSettingsData();
 
+    public CountryFilterSettingsData CountryFilter { get; set; } = new CountryFilterSettingsData();
+
     public ClientsSettingsData Clients { get; set; } = new ClientsSettingsData();
 
     public ApiSettingsData Api { get; set; } = new ApiSettingsData();

@@ -5,23 +5,29 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using OnyxFilter.Models.Settings;
+using OnyxFilter.Services.ClientLocation;
 
 namespace OnyxFilter.Services.DnsForwarding;
 
 // Applique les paramètres d'accès (AllowedClients, DisallowedClients, AlwaysAllowedClients, DisallowedDomains)
 // de la page
-// "Paramètres DNS". Conçu pour rester léger : les règles clients sont précompilées en préfixes de
+// "Paramètres DNS", puis le filtrage par pays (/filters/countries). Conçu pour rester léger : les règles clients sont précompilées en préfixes de
 // 128 bits (ClientAccessRule, aucune allocation par requête), les domaines interdits sont stockés dans un
 // HashSet.
 public sealed class DnsAccessControl : IDnsAccessControl, IDisposable
 {
     private readonly ILocalSettingsStore settingsStore;
+    private readonly IClientLocationService clientLocationService;
     private readonly ILogger<DnsAccessControl> logger;
     private readonly object syncRoot = new object();
 
     private ClientAccessRule[] allowedClients = Array.Empty<ClientAccessRule>();
     private ClientAccessRule[] disallowedClients = Array.Empty<ClientAccessRule>();
     private ClientAccessRule[] alwaysAllowedClients = Array.Empty<ClientAccessRule>();
+
+    // Filtrage par pays : codes en majuscules.
+    private CountryFilterMode countryFilterMode = CountryFilterMode.Disabled;
+    private HashSet<string> filteredCountries = new HashSet<string>(StringComparer.Ordinal);
 
     // Numéro de chaque rechargement, pour qu'un rechargement lent, commencé avant une modification, n'écrase
     // pas les règles appliquées par un rechargement plus récent.
@@ -34,9 +40,10 @@ public sealed class DnsAccessControl : IDnsAccessControl, IDisposable
     private HashSet<string> disallowedDomains = new HashSet<string>(StringComparer.Ordinal);
     private string[] disallowedDomainSuffixes = Array.Empty<string>();
 
-    public DnsAccessControl(ILocalSettingsStore settingsStore, ILogger<DnsAccessControl> logger)
+    public DnsAccessControl(ILocalSettingsStore settingsStore, IClientLocationService clientLocationService, ILogger<DnsAccessControl> logger)
     {
         this.settingsStore = settingsStore;
+        this.clientLocationService = clientLocationService;
         this.logger = logger;
         this.settingsStore.SettingsChanged += OnSettingsChanged;
     }
@@ -59,12 +66,16 @@ public sealed class DnsAccessControl : IDnsAccessControl, IDisposable
         ClientAccessRule[] allowed;
         ClientAccessRule[] disallowed;
         ClientAccessRule[] alwaysAllowed;
+        CountryFilterMode countryMode;
+        HashSet<string> countries;
 
         lock (syncRoot)
         {
             allowed = allowedClients;
             disallowed = disallowedClients;
             alwaysAllowed = alwaysAllowedClients;
+            countryMode = countryFilterMode;
+            countries = filteredCountries;
         }
 
         AddressBits address = AddressBits.FromIpAddress(clientAddress);
@@ -88,9 +99,27 @@ public sealed class DnsAccessControl : IDnsAccessControl, IDisposable
         }
 
         string? blockingRule = FindMatch(disallowed, address);
-        return blockingRule is null
-            ? new ClientAccessDecision(true, mode, null, null)
-            : new ClientAccessDecision(false, mode, blockingRule, ClientAccessList.Blocked);
+
+        if (blockingRule is not null)
+        {
+            return new ClientAccessDecision(false, mode, blockingRule, ClientAccessList.Blocked);
+        }
+
+        // Filtrage par pays : seulement pour les clients qu'aucune règle d'adresse ne vise (une adresse
+        // explicitement autorisée ci-dessus reste servie quel que soit son pays). Pays inconnu (réseau
+        // local, base pas encore chargée) : client servi, pour ne jamais couper l'accès par accident. Liste
+        // vide : filtre ignoré (en mode liste blanche, elle refuserait tous les clients d'Internet).
+        if (countryMode != CountryFilterMode.Disabled && countries.Count != 0)
+        {
+            string? country = clientLocationService.LookupCountry(clientAddress);
+
+            if (country is not null && countries.Contains(country) == (countryMode == CountryFilterMode.Blocklist))
+            {
+                return new ClientAccessDecision(false, mode, "pays " + country, null);
+            }
+        }
+
+        return new ClientAccessDecision(true, mode, null, null);
     }
 
     public bool IsDomainDisallowed(string domain)
@@ -158,6 +187,12 @@ public sealed class DnsAccessControl : IDnsAccessControl, IDisposable
             ClientAccessRule[] allowed = ParseClientRules(settings.Dns.AllowedClients, "clients autorisés");
             ClientAccessRule[] disallowed = ParseClientRules(settings.Dns.DisallowedClients, "clients interdits");
             ClientAccessRule[] alwaysAllowed = ParseClientRules(settings.Dns.AlwaysAllowedClients, "clients toujours autorisés");
+            HashSet<string> countries = new HashSet<string>(StringComparer.Ordinal);
+
+            foreach (string country in settings.CountryFilter.Countries)
+            {
+                countries.Add(country.Trim().ToUpperInvariant());
+            }
             HashSet<string> exactDomains = new HashSet<string>(StringComparer.Ordinal);
             List<string> suffixes = new List<string>();
 
@@ -199,6 +234,8 @@ public sealed class DnsAccessControl : IDnsAccessControl, IDisposable
                 allowedClients = allowed;
                 disallowedClients = disallowed;
                 alwaysAllowedClients = alwaysAllowed;
+                countryFilterMode = settings.CountryFilter.Mode;
+                filteredCountries = countries;
                 disallowedDomains = exactDomains;
                 disallowedDomainSuffixes = suffixes.ToArray();
             }

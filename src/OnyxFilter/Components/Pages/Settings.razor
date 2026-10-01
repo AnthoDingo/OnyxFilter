@@ -153,6 +153,16 @@
                 </div>
             </div>
 
+            <div class="setting">
+                <div class="setting-text">
+                    <label class="setting-label" for="show-client-location">@L["Afficher le pays et le fournisseur des clients"]</label>
+                    <p class="setting-help">@L["Télécharge chaque semaine une base publique d'adresses (iptoasn.com, environ 9 Mo). Aucune adresse de client n'est envoyée."]</p>
+                </div>
+                <div class="form-check form-switch setting-control">
+                    <input class="form-check-input" type="checkbox" role="switch" id="show-client-location" checked="@ShowClientLocation" @onchange="OnShowClientLocationChanged" />
+                </div>
+            </div>
+
             <div class="setting setting-stacked">
                 <div class="setting-text">
                     <span class="setting-label">@L["Durée de conservation"]</span>

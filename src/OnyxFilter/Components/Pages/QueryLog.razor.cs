@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using OnyxFilter.Services.ClientLocation;
 using OnyxFilter.Services.QueryLog;
 
 namespace OnyxFilter.Components.Pages;
@@ -16,6 +17,9 @@ public partial class QueryLog : ComponentBase, IDisposable
 
     [Inject]
     public IDnsQueryLogService QueryLogService { get; set; } = default!;
+
+    [Inject]
+    public IClientLocationService ClientLocationService { get; set; } = default!;
 
     private List<DnsQueryLogRecord> Entries { get; set; } = new List<DnsQueryLogRecord>();
 

@@ -145,7 +145,18 @@ else if (!IsDatabaseHealthy)
                                     <span class="log-ms">@entry.ProcessingTimeMs ms</span>
                                 </span>
                             </td>
-                            <td class="col-client log-client">@entry.ClientKey</td>
+                            <td class="col-client log-client">
+                                @{ ClientLocation? location = ClientLocationService.Lookup(entry.ClientKey); }
+                                @if (location is not null)
+                                {
+                                    <span class="client-flag" title="@location.CountryCode" aria-label="@location.CountryCode">@location.Flag</span>
+                                }
+                                @entry.ClientKey
+                                @if (location is not null)
+                                {
+                                    <span class="log-secondary"><span title="AS@(location.Asn) — @location.Description">@(location.CountryCode.Length == 0 ? "" : location.CountryCode + " · ")@location.Provider</span></span>
+                                }
+                            </td>
                         </tr>
                     }
                 </tbody>

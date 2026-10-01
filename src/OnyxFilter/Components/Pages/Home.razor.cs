@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Components.Shared;
+using OnyxFilter.Services.ClientLocation;
 using OnyxFilter.Services.DnsForwarding;
 using OnyxFilter.Services.Statistics;
 
@@ -26,6 +27,9 @@ public partial class Home : ComponentBase, IDisposable
 
     [Inject]
     public IDnsProtectionState ProtectionState { get; set; } = default!;
+
+    [Inject]
+    public IClientLocationService ClientLocationService { get; set; } = default!;
 
     private sealed class ProtectionPauseOption
     {
@@ -156,7 +160,12 @@ public partial class Home : ComponentBase, IDisposable
         BlockedByFiltersCount = snapshot.BlockedQueries;
         AverageProcessingTimeMs = snapshot.AverageProcessingTimeMs;
 
-        FillRanking(TopClients, snapshot.TopClients);
+        TopClients.Clear();
+        foreach (DnsStatisticsEntry entry in snapshot.TopClients)
+        {
+            TopClients.Add(new RankItem(entry.Label, entry.Count, ClientLocationService.Lookup(entry.Label)));
+        }
+
         FillRanking(TopSearchedDomains, snapshot.TopSearchedDomains);
         FillRanking(TopBlockedDomains, snapshot.TopBlockedDomains);
 

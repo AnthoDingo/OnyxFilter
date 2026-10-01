@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OnyxFilter.Models.Settings;
@@ -18,8 +19,34 @@ public interface IApiTokenService
     Task<bool> RevokeAsync(string id);
 
     // Retourne le jeton correspondant à la valeur présentée, ou null si elle ne correspond à aucun jeton
-    // existant. Comparaison en temps constant sur les empreintes.
+    // existant. Comparaison en temps constant sur les empreintes. Un jeton d'appairage encore valide est
+    // enregistré comme jeton permanent à sa première utilisation (voir CreatePairingToken).
     Task<ApiTokenEntry?> ValidateAsync(string presentedToken);
+
+    // Jeton d'appairage (QR code de connexion d'un smartphone) : gardé en mémoire seulement, valable
+    // "lifetime", à usage unique. Il ne devient un jeton permanent (listé, révocable) qu'à sa première
+    // utilisation par l'API, avant expiration.
+    ApiTokenCreationResult CreatePairingToken(string name, TimeSpan lifetime);
+
+    PairingTokenState GetPairingTokenState(string id);
+
+    // Oublie un jeton d'appairage non utilisé (QR code fermé ou remplacé).
+    void DiscardPairingToken(string id);
 }
 
 public sealed record ApiTokenCreationResult(ApiTokenEntry Entry, string Token);
+
+public enum PairingTokenState
+{
+    // En attente d'utilisation, encore valable.
+    Pending,
+
+    // Utilisé : enregistré comme jeton permanent.
+    Consumed,
+
+    // Utilisé, mais non enregistré (nombre maximal de jetons atteint).
+    Rejected,
+
+    // Expiré, oublié ou inconnu.
+    Expired,
+}

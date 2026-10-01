@@ -145,3 +145,6 @@ src/OnyxFilter.db-wal
 src/OnyxFilter/filterlists-cache
 *.db-shm
 *.db-wal
+
+# Base de localisation des clients (iptoasn.com), téléchargée au démarrage
+ip2asn-combined.tsv.gz*

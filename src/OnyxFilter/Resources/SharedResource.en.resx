@@ -2145,4 +2145,91 @@
   <data name="≈ {0} par heure" xml:space="preserve">
     <value>≈ {0} per hour</value>
   </data>
+  <data name="Connecter un smartphone" xml:space="preserve">
+    <value>Connect a smartphone</value>
+  </data>
+  <data name="Affiche un QR code à scanner avec l'application OnyxFilter pour Android : elle se connecte sans saisie. Le code change toutes les {0} secondes et ne sert qu'une fois ; le jeton créé apparaît ensuite dans la liste ci-dessous." xml:space="preserve">
+    <value>Shows a QR code to scan with the OnyxFilter Android app: it connects without typing anything. The code changes every {0} seconds and works only once; the token it creates then appears in the list below.</value>
+  </data>
+  <data name="Afficher le QR code" xml:space="preserve">
+    <value>Show QR code</value>
+  </data>
+  <data name="Scannez ce code avec l'appareil photo du téléphone, ou depuis l'écran de connexion de l'application OnyxFilter." xml:space="preserve">
+    <value>Scan this code with the phone's camera, or from the sign-in screen of the OnyxFilter app.</value>
+  </data>
+  <data name="QR code de connexion" xml:space="preserve">
+    <value>Sign-in QR code</value>
+  </data>
+  <data name="Nouveau code dans {0} s" xml:space="preserve">
+    <value>New code in {0} s</value>
+  </data>
+  <data name="Nom de l'appareil" xml:space="preserve">
+    <value>Device name</value>
+  </data>
+  <data name="Adresse du serveur, vue du smartphone" xml:space="preserve">
+    <value>Server address, as seen from the smartphone</value>
+  </data>
+  <data name="En HTTP, le jeton circule en clair : réservez-le à votre réseau local." xml:space="preserve">
+    <value>Over HTTP, the token travels unencrypted: use it only on your local network.</value>
+  </data>
+  <data name="Fermer" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Erreur : nombre maximal de jetons atteint ({0}). Révoquez-en un avant de connecter un smartphone." xml:space="preserve">
+    <value>Error: maximum number of tokens reached ({0}). Revoke one before connecting a smartphone.</value>
+  </data>
+  <data name="Smartphone « {0} » connecté : son jeton figure dans la liste." xml:space="preserve">
+    <value>Smartphone “{0}” connected: its token is in the list.</value>
+  </data>
+  <data name="Erreur : nombre maximal de jetons atteint ({0}). Révoquez-en un, puis réessayez." xml:space="preserve">
+    <value>Error: maximum number of tokens reached ({0}). Revoke one, then try again.</value>
+  </data>
+  <data name="Filtrage par pays" xml:space="preserve">
+    <value>Country filtering</value>
+  </data>
+  <data name="Refusez les requêtes des clients selon le pays de leur adresse IP." xml:space="preserve">
+    <value>Reject client queries based on the country of their IP address.</value>
+  </data>
+  <data name="Mode" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="Les clients du réseau local, et ceux des listes « Clients autorisés » ou « Clients toujours autorisés » des" xml:space="preserve">
+    <value>Clients on the local network, and those in the “Allowed clients” or “Always allowed clients” lists of the</value>
+  </data>
+  <data name="paramètres DNS" xml:space="preserve">
+    <value>DNS settings</value>
+  </data>
+  <data name=", sont toujours servis. Un client refusé ne reçoit aucune réponse." xml:space="preserve">
+    <value>, are always served. A rejected client gets no response.</value>
+  </data>
+  <data name="Mode du filtrage par pays" xml:space="preserve">
+    <value>Country filtering mode</value>
+  </data>
+  <data name="Bloquer les pays sélectionnés" xml:space="preserve">
+    <value>Block selected countries</value>
+  </data>
+  <data name="N'autoriser que les pays sélectionnés" xml:space="preserve">
+    <value>Allow selected countries only</value>
+  </data>
+  <data name="La base des pays (iptoasn.com) n'est pas encore chargée : elle est téléchargée après l'enregistrement. En attendant, tous les clients sont servis." xml:space="preserve">
+    <value>The country database (iptoasn.com) is not loaded yet: it is downloaded after saving. Until then, all clients are served.</value>
+  </data>
+  <data name="Pays sélectionnés" xml:space="preserve">
+    <value>Selected countries</value>
+  </data>
+  <data name="Rechercher un pays" xml:space="preserve">
+    <value>Search for a country</value>
+  </data>
+  <data name="Tout désélectionner" xml:space="preserve">
+    <value>Clear selection</value>
+  </data>
+  <data name="La liste des pays sera disponible une fois la base des pays chargée. Activez le filtrage et enregistrez pour lancer son téléchargement." xml:space="preserve">
+    <value>The country list will be available once the country database is loaded. Enable filtering and save to start its download.</value>
+  </data>
+  <data name="Sélectionnez au moins un pays à autoriser." xml:space="preserve">
+    <value>Select at least one country to allow.</value>
+  </data>
+  <data name="Filtrage par pays enregistré." xml:space="preserve">
+    <value>Country filtering saved.</value>
+  </data>
 </root>
