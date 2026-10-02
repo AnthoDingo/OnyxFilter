@@ -11,7 +11,7 @@ using OnyxFilter.Services.ClientLocation;
 
 namespace OnyxFilter.Components.Pages;
 
-public partial class CountryFilter : ComponentBase
+public partial class CountryFilter : ComponentBase, IAsyncDisposable
 {
     [Inject]
     public ILocalSettingsStore SettingsStore { get; set; } = default!;
@@ -21,6 +21,16 @@ public partial class CountryFilter : ComponentBase
 
     [Inject]
     public IJSRuntime JS { get; set; } = default!;
+
+    [Inject]
+    public NavigationManager Navigation { get; set; } = default!;
+
+    // Carte interactive (CountryFilter.razor.js) : module chargé au premier rendu, puis état (mode et
+    // pays sélectionnés) renvoyé à chaque rendu.
+    private ElementReference mapContainer;
+    private IJSObjectReference? module;
+    private DotNetObjectReference<CountryFilter>? dotNetRef;
+    private bool mapReady;
 
     private CountryFilterMode Mode { get; set; }
 
@@ -98,21 +108,78 @@ public partial class CountryFilter : ComponentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender || AllCountries.Count == 0)
+        if (firstRender)
         {
+            try
+            {
+                module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/CountryFilter.razor.js");
+
+                if (AllCountries.Count != 0)
+                {
+                    CountryNames = await module.InvokeAsync<Dictionary<string, string>>("getCountryNames", AllCountries);
+                }
+
+                dotNetRef = DotNetObjectReference.Create(this);
+                string svgUrl = Navigation.ToAbsoluteUri(Assets["maps/world.svg"]).ToString();
+                await module.InvokeVoidAsync("initMap", mapContainer, dotNetRef, svgUrl, new { allowed = L["Autorisé"].Value, blocked = L["Bloqué"].Value });
+                mapReady = true;
+                StateHasChanged();
+            }
+            catch (JSException)
+            {
+                // Navigateur sans Intl.DisplayNames ou carte indisponible : la liste reste utilisable.
+            }
+
             return;
         }
 
+        if (mapReady && module is not null)
+        {
+            await module.InvokeVoidAsync("setMapState", mapContainer, Mode.ToString(), SelectedCountries);
+        }
+    }
+
+    // Clic sur un pays de la carte : il change d'état (sélectionné ou non). Un pays absent de la base
+    // iptoasn est ajouté à la liste pour rester visible et décochable.
+    [JSInvokable]
+    public async Task ToggleCountryFromMap(string code)
+    {
+        if (!SelectedCountries.Remove(code))
+        {
+            SelectedCountries.Add(code);
+        }
+
+        if (!AllCountries.Contains(code))
+        {
+            AllCountries.Add(code);
+
+            if (module is not null)
+            {
+                foreach ((string key, string name) in await module.InvokeAsync<Dictionary<string, string>>("getCountryNames", new[] { code }))
+                {
+                    CountryNames[key] = name;
+                }
+            }
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
         try
         {
-            await using IJSObjectReference module = await JS.InvokeAsync<IJSObjectReference>("import", "./Components/Pages/CountryFilter.razor.js");
-            CountryNames = await module.InvokeAsync<Dictionary<string, string>>("getCountryNames", AllCountries);
-            StateHasChanged();
+            if (module is not null)
+            {
+                await module.DisposeAsync();
+            }
         }
-        catch (JSException)
+        catch (JSDisconnectedException)
         {
-            // Navigateur sans Intl.DisplayNames : les codes pays restent affichés.
+            // Circuit déjà fermé : rien à libérer côté navigateur.
         }
+
+        dotNetRef?.Dispose();
     }
 
     private string NameOf(string code)

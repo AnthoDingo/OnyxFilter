@@ -2478,4 +2478,13 @@
   <data name="Aucun pays ne correspond à la recherche." xml:space="preserve">
     <value>Nessun paese corrisponde alla ricerca.</value>
   </data>
+  <data name="Carte des pays" xml:space="preserve">
+    <value>Mappa dei paesi</value>
+  </data>
+  <data name="Cliquez sur un pays de la carte pour l'autoriser ou l'interdire." xml:space="preserve">
+    <value>Fai clic su un paese della mappa per autorizzarlo o bloccarlo.</value>
+  </data>
+  <data name="Filtrage désactivé : la carte montre un aperçu du mode « Bloquer les pays sélectionnés »." xml:space="preserve">
+    <value>Filtraggio disattivato: la mappa mostra un'anteprima della modalità «Blocca i paesi selezionati».</value>
+  </data>
 </root>
