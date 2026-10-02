@@ -275,7 +275,7 @@
 
 /* Sélecteur de langue : mêmes pastilles que le thème, en liens. */
 .language-toggle {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     margin-top: 0.4rem;
 }
 

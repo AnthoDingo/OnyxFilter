@@ -11,5 +11,5 @@ public static class SupportedLanguages
 {
     public const string Default = "fr";
 
-    public static readonly string[] All = ["fr", "en"];
+    public static readonly string[] All = ["fr", "en", "de", "it", "es"];
 }

@@ -1,0 +1,2451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="# 20 dernières requêtes bloquées par une liste" xml:space="preserve">
+    <value># Letzte 20 von einer Liste blockierte Anfragen</value>
+  </data>
+  <data name="# Couper le DNS à un appareil, puis le lui rendre" xml:space="preserve">
+    <value># DNS für ein Gerät sperren und wieder freigeben</value>
+  </data>
+  <data name="# Le réactiver" xml:space="preserve">
+    <value># Wieder aktivieren</value>
+  </data>
+  <data name="# Statistiques d'usage" xml:space="preserve">
+    <value># Nutzungsstatistiken</value>
+  </data>
+  <data name="# Suspendre le filtrage pendant 10 minutes" xml:space="preserve">
+    <value># Filterung für 10 Minuten pausieren</value>
+  </data>
+  <data name="(facultatif)" xml:space="preserve">
+    <value>(optional)</value>
+  </data>
+  <data name="(obligatoire)." xml:space="preserve">
+    <value>(erforderlich).</value>
+  </data>
+  <data name=", où se règle aussi la fréquence d'actualisation automatique." xml:space="preserve">
+    <value>, wo auch das automatische Aktualisierungsintervall eingestellt wird.</value>
+  </data>
+  <data name=", quelle que soit la réponse configurée dans" xml:space="preserve">
+    <value>, unabhängig von der Antwort, die konfiguriert ist in</value>
+  </data>
+  <data name="1 h" xml:space="preserve">
+    <value>1 Std.</value>
+  </data>
+  <data name="1 min" xml:space="preserve">
+    <value>1 Min.</value>
+  </data>
+  <data name="10 min" xml:space="preserve">
+    <value>10 Min.</value>
+  </data>
+  <data name="192.168.1.20, ::1 ou autre.exemple.fr" xml:space="preserve">
+    <value>192.168.1.20, ::1 oder anderes.beispiel.de</value>
+  </data>
+  <data name="192.168.1.42 ou identifiant" xml:space="preserve">
+    <value>192.168.1.42 oder Kennung</value>
+  </data>
+  <data name="24 h" xml:space="preserve">
+    <value>24 Std.</value>
+  </data>
+  <data name="30 jours" xml:space="preserve">
+    <value>30 Tage</value>
+  </data>
+  <data name="30 s" xml:space="preserve">
+    <value>30 Sek.</value>
+  </data>
+  <data name="6 h" xml:space="preserve">
+    <value>6 Std.</value>
+  </data>
+  <data name="7 jours" xml:space="preserve">
+    <value>7 Tage</value>
+  </data>
+  <data name="90 jours" xml:space="preserve">
+    <value>90 Tage</value>
+  </data>
+  <data name="Abonnements enregistrés. La mise à jour des listes se fait en arrière-plan." xml:space="preserve">
+    <value>Abonnements gespeichert. Die Listen werden im Hintergrund aktualisiert.</value>
+  </data>
+  <data name="Abonnements à des listes de domaines à bloquer, au format Adblock ou fichier hosts, actualisés automatiquement." xml:space="preserve">
+    <value>Abonnements von Listen zu blockierender Domains im Adblock- oder Hosts-Format, automatisch aktualisiert.</value>
+  </data>
+  <data name="Accepter le DNS non chiffré" xml:space="preserve">
+    <value>Unverschlüsseltes DNS akzeptieren</value>
+  </data>
+  <data name="Accès API" xml:space="preserve">
+    <value>API-Zugriff</value>
+  </data>
+  <data name="Accès des clients au DNS : mode (&lt;code&gt;Blocklist&lt;/code&gt; : tous sauf les refusés ; &lt;code&gt;Allowlist&lt;/code&gt; : seulement les autorisés) et listes &lt;code&gt;allowedClients&lt;/code&gt;, &lt;code&gt;blockedClients&lt;/code&gt;, &lt;code&gt;alwaysAllowedClients&lt;/code&gt; (servis dans tous les cas)." xml:space="preserve">
+    <value>Zugriff der Clients auf das DNS: Modus (&lt;code&gt;Blocklist&lt;/code&gt;: alle außer den abgelehnten; &lt;code&gt;Allowlist&lt;/code&gt;: nur die erlaubten) und Listen &lt;code&gt;allowedClients&lt;/code&gt;, &lt;code&gt;blockedClients&lt;/code&gt;, &lt;code&gt;alwaysAllowedClients&lt;/code&gt; (werden immer bedient).</value>
+  </data>
+  <data name="Accédez à la console d'administration." xml:space="preserve">
+    <value>Zur Verwaltungskonsole.</value>
+  </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Aktionen</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="Activer la réécriture de {0}" xml:space="preserve">
+    <value>Umschreibung für {0} aktivieren</value>
+  </data>
+  <data name="Activer le cache" xml:space="preserve">
+    <value>Cache aktivieren</value>
+  </data>
+  <data name="Activer le chiffrement" xml:space="preserve">
+    <value>Verschlüsselung aktivieren</value>
+  </data>
+  <data name="Activer {0}" xml:space="preserve">
+    <value>{0} aktivieren</value>
+  </data>
+  <data name="Actives" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="Activez le chiffrement puis fournissez un certificat valide pour le nom du serveur, ou laissez Let's Encrypt s'en charger (section suivante)." xml:space="preserve">
+    <value>Aktivieren Sie die Verschlüsselung und stellen Sie dann ein gültiges Zertifikat für den Servernamen bereit, oder überlassen Sie dies Let's Encrypt (nächster Abschnitt).</value>
+  </data>
+  <data name="Activité du résolveur sur les dernières 24 heures." xml:space="preserve">
+    <value>Aktivität des Resolvers in den letzten 24 Stunden.</value>
+  </data>
+  <data name="Activité horaire" xml:space="preserve">
+    <value>Stündliche Aktivität</value>
+  </data>
+  <data name="Actualisation des listes" xml:space="preserve">
+    <value>Aktualisierung der Listen</value>
+  </data>
+  <data name="Actualisation…" xml:space="preserve">
+    <value>Wird aktualisiert…</value>
+  </data>
+  <data name="Actualise le journal toutes les 5 secondes" xml:space="preserve">
+    <value>Aktualisiert das Protokoll alle 5 Sekunden</value>
+  </data>
+  <data name="Actualise les statistiques toutes les 5 secondes" xml:space="preserve">
+    <value>Aktualisiert die Statistiken alle 5 Sekunden</value>
+  </data>
+  <data name="Actualiser" xml:space="preserve">
+    <value>Aktualisieren</value>
+  </data>
+  <data name="Actualiser les listes" xml:space="preserve">
+    <value>Listen aktualisieren</value>
+  </data>
+  <data name="Actuellement :" xml:space="preserve">
+    <value>Derzeit:</value>
+  </data>
+  <data name="Adresse" xml:space="preserve">
+    <value>Adresse</value>
+  </data>
+  <data name="Adresse IPv4 renvoyée" xml:space="preserve">
+    <value>Zurückgegebene IPv4-Adresse</value>
+  </data>
+  <data name="Adresse IPv6 renvoyée" xml:space="preserve">
+    <value>Zurückgegebene IPv6-Adresse</value>
+  </data>
+  <data name="Adresse IPv6, entre crochets pour préciser le port" xml:space="preserve">
+    <value>IPv6-Adresse, in eckigen Klammern zur Angabe des Ports</value>
+  </data>
+  <data name="Adresse de base" xml:space="preserve">
+    <value>Basisadresse</value>
+  </data>
+  <data name="Adresse de la liste" xml:space="preserve">
+    <value>Adresse der Liste</value>
+  </data>
+  <data name="Adresse e-mail" xml:space="preserve">
+    <value>E-Mail-Adresse</value>
+  </data>
+  <data name="Adresse la plus rapide" xml:space="preserve">
+    <value>Schnellste Adresse</value>
+  </data>
+  <data name="Adresse nulle" xml:space="preserve">
+    <value>Null-Adresse</value>
+  </data>
+  <data name="Adresse personnalisée" xml:space="preserve">
+    <value>Benutzerdefinierte Adresse</value>
+  </data>
+  <data name="Adresse(s) invalide(s) : {0} (adresse IP ou notation CIDR attendue, ex. 192.168.1.42 ou 192.168.1.0/24)." xml:space="preserve">
+    <value>Ungültige Adresse(n): {0} (IP-Adresse oder CIDR-Notation erwartet, z. B. 192.168.1.42 oder 192.168.1.0/24).</value>
+  </data>
+  <data name="Adresses IP ou plages CIDR (une par ligne)" xml:space="preserve">
+    <value>IP-Adressen oder CIDR-Bereiche (eine pro Zeile)</value>
+  </data>
+  <data name="Adresses IP ou sous-réseaux CIDR, un par ligne. Si la liste n'est pas vide, seuls ces clients (et les clients toujours autorisés) sont servis." xml:space="preserve">
+    <value>IP-Adressen oder CIDR-Subnetze, eine pro Zeile. Ist die Liste nicht leer, werden nur diese Clients (und die immer erlaubten Clients) bedient.</value>
+  </data>
+  <data name="Adresses IP servant à résoudre le nom des serveurs chiffrés" xml:space="preserve">
+    <value>IP-Adressen zur Auflösung der Namen der verschlüsselten Server</value>
+  </data>
+  <data name="Adresses vues dans les statistiques qui ne correspondent à aucun client déclaré." xml:space="preserve">
+    <value>In den Statistiken gesehene Adressen, die keinem deklarierten Client entsprechen.</value>
+  </data>
+  <data name="Afficher le pays et le fournisseur des clients" xml:space="preserve">
+    <value>Land und Anbieter der Clients anzeigen</value>
+  </data>
+  <data name="Ajouter un client" xml:space="preserve">
+    <value>Client hinzufügen</value>
+  </data>
+  <data name="Ajouter une clé d'accès" xml:space="preserve">
+    <value>Passkey hinzufügen</value>
+  </data>
+  <data name="Ajouter une liste" xml:space="preserve">
+    <value>Liste hinzufügen</value>
+  </data>
+  <data name="Ajouter une réécriture" xml:space="preserve">
+    <value>Umschreibung hinzufügen</value>
+  </data>
+  <data name="Ajoutez une liste pour commencer à bloquer des domaines." xml:space="preserve">
+    <value>Fügen Sie eine Liste hinzu, um Domains zu blockieren.</value>
+  </data>
+  <data name="Ajoutez une liste pour exempter des domaines du blocage." xml:space="preserve">
+    <value>Fügen Sie eine Liste hinzu, um Domains von der Blockierung auszunehmen.</value>
+  </data>
+  <data name="Ajoutez-en une pour forcer la réponse d'un domaine." xml:space="preserve">
+    <value>Fügen Sie eine hinzu, um die Antwort für eine Domain festzulegen.</value>
+  </data>
+  <data name="Ajoutez-en une pour vous connecter sans mot de passe." xml:space="preserve">
+    <value>Fügen Sie einen hinzu, um sich ohne Passwort anzumelden.</value>
+  </data>
+  <data name="Ajoutée le {0}" xml:space="preserve">
+    <value>Hinzugefügt am {0}</value>
+  </data>
+  <data name="Alimente la vue d'ensemble (volumes, classements, activité horaire)." xml:space="preserve">
+    <value>Speist die Übersicht (Volumen, Ranglisten, stündliche Aktivität).</value>
+  </data>
+  <data name="Amont" xml:space="preserve">
+    <value>Upstream</value>
+  </data>
+  <data name="Annuler" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Anonymiser les adresses des clients" xml:space="preserve">
+    <value>Client-Adressen anonymisieren</value>
+  </data>
+  <data name="Appareils détectés" xml:space="preserve">
+    <value>Erkannte Geräte</value>
+  </data>
+  <data name="Applique les" xml:space="preserve">
+    <value>Wendet die</value>
+  </data>
+  <data name="Appliquer les règles" xml:space="preserve">
+    <value>Regeln anwenden</value>
+  </data>
+  <data name="Attend toutes les réponses puis renvoie l'adresse IP la plus rapide à joindre en TCP. Plus lent si un serveur tarde à répondre." xml:space="preserve">
+    <value>Wartet auf alle Antworten und gibt dann die per TCP am schnellsten erreichbare IP-Adresse zurück. Langsamer, wenn ein Server spät antwortet.</value>
+  </data>
+  <data name="Attention : baisser cette valeur efface définitivement les données au-delà." xml:space="preserve">
+    <value>Achtung: Wird dieser Wert verringert, werden die darüber hinausgehenden Daten endgültig gelöscht.</value>
+  </data>
+  <data name="Au moins une adresse IP ou plage CIDR est obligatoire." xml:space="preserve">
+    <value>Mindestens eine IP-Adresse oder ein CIDR-Bereich ist erforderlich.</value>
+  </data>
+  <data name="Aucun appareil détecté" xml:space="preserve">
+    <value>Keine Geräte erkannt</value>
+  </data>
+  <data name="Aucun certificat obtenu pour l'instant." xml:space="preserve">
+    <value>Bisher kein Zertifikat erhalten.</value>
+  </data>
+  <data name="Aucun client déclaré" xml:space="preserve">
+    <value>Keine deklarierten Clients</value>
+  </data>
+  <data name="Aucun client observé pour le moment." xml:space="preserve">
+    <value>Noch keine Clients gesehen.</value>
+  </data>
+  <data name="Aucun domaine bloqué pour le moment." xml:space="preserve">
+    <value>Noch keine Domains blockiert.</value>
+  </data>
+  <data name="Aucun domaine demandé pour le moment." xml:space="preserve">
+    <value>Noch keine Domains angefragt.</value>
+  </data>
+  <data name="Aucun jeton" xml:space="preserve">
+    <value>Keine Token</value>
+  </data>
+  <data name="Aucune clé d'accès" xml:space="preserve">
+    <value>Keine Passkeys</value>
+  </data>
+  <data name="Aucune donnée pour le moment." xml:space="preserve">
+    <value>Noch keine Daten.</value>
+  </data>
+  <data name="Aucune liste d'autorisation" xml:space="preserve">
+    <value>Keine Zulassungslisten</value>
+  </data>
+  <data name="Aucune liste de blocage" xml:space="preserve">
+    <value>Keine Sperrlisten</value>
+  </data>
+  <data name="Aucune requête" xml:space="preserve">
+    <value>Keine Anfragen</value>
+  </data>
+  <data name="Aucune requête enregistrée sur cette période." xml:space="preserve">
+    <value>In diesem Zeitraum wurden keine Anfragen erfasst.</value>
+  </data>
+  <data name="Aucune requête transmise en amont pour le moment." xml:space="preserve">
+    <value>Noch keine Anfragen an Upstream-Server weitergeleitet.</value>
+  </data>
+  <data name="Aucune réécriture" xml:space="preserve">
+    <value>Keine Umschreibungen</value>
+  </data>
+  <data name="Auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="Auto-hébergé · open source" xml:space="preserve">
+    <value>Selbst gehostet · Open Source</value>
+  </data>
+  <data name="Automatique" xml:space="preserve">
+    <value>Automatisch</value>
+  </data>
+  <data name="Autorise exemple.org et ses sous-domaines, même s'ils sont bloqués ailleurs." xml:space="preserve">
+    <value>Erlaubt beispiel.org und seine Subdomains, auch wenn sie anderswo blockiert sind.</value>
+  </data>
+  <data name="Autorise une adresse IP ou un sous-réseau, même format. Une adresse couverte par un sous-réseau refusé est ajoutée aux clients toujours autorisés : elle seule est débloquée." xml:space="preserve">
+    <value>Erlaubt eine IP-Adresse oder ein Subnetz, gleiches Format. Eine Adresse innerhalb eines abgelehnten Subnetzes wird den immer erlaubten Clients hinzugefügt: Nur sie wird freigegeben.</value>
+  </data>
+  <data name="Autorisez temporairement les services bloqués à certaines heures de la semaine (heure locale du serveur)." xml:space="preserve">
+    <value>Erlauben Sie blockierte Dienste vorübergehend zu bestimmten Zeiten der Woche (lokale Serverzeit).</value>
+  </data>
+  <data name="Autorisé" xml:space="preserve">
+    <value>Erlaubt</value>
+  </data>
+  <data name="Autorisée par une exception des règles de filtrage personnalisées : ne sera jamais bloquée, y compris par les listes de blocage abonnées." xml:space="preserve">
+    <value>Durch eine Ausnahme der benutzerdefinierten Filterregeln erlaubt: wird nie blockiert, auch nicht durch abonnierte Sperrlisten.</value>
+  </data>
+  <data name="Autorisée par une liste d'autorisation DNS : ne sera pas bloquée par les listes de blocage abonnées." xml:space="preserve">
+    <value>Durch eine DNS-Zulassungsliste erlaubt: wird von abonnierten Sperrlisten nicht blockiert.</value>
+  </data>
+  <data name="Autorisées" xml:space="preserve">
+    <value>Erlaubt</value>
+  </data>
+  <data name="Avec le jeton dans la variable d'environnement" xml:space="preserve">
+    <value>Mit dem Token in der Umgebungsvariable</value>
+  </data>
+  <data name="Base de données inaccessible : les nouvelles requêtes sont écrites dans un fichier de secours" xml:space="preserve">
+    <value>Datenbank nicht erreichbar: Neue Anfragen werden in eine Ausweichdatei geschrieben</value>
+  </data>
+  <data name="Base de données temporairement inaccessible, nouvelle tentative en cours : les requêtes récentes peuvent manquer ci-dessous." xml:space="preserve">
+    <value>Datenbank vorübergehend nicht erreichbar, neuer Versuch läuft: Neuere Anfragen können unten fehlen.</value>
+  </data>
+  <data name="Blocage des publicités et des traqueurs pour tous les appareils" xml:space="preserve">
+    <value>Blockierung von Werbung und Trackern für alle Geräte</value>
+  </data>
+  <data name="Bloque exemple.org et tous ses sous-domaines." xml:space="preserve">
+    <value>Blockiert beispiel.org und alle seine Subdomains.</value>
+  </data>
+  <data name="Bloque les domaines connus pour diffuser des logiciels malveillants ou de l'hameçonnage. La vérification est anonyme : seul un court préfixe de l'empreinte SHA-256 du domaine quitte le serveur." xml:space="preserve">
+    <value>Blockiert Domains, die für die Verbreitung von Schadsoftware oder Phishing bekannt sind. Die Prüfung ist anonym: Nur ein kurzes Präfix des SHA-256-Hashes der Domain verlässt den Server.</value>
+  </data>
+  <data name="Bloque les domaines correspondant à l'expression régulière." xml:space="preserve">
+    <value>Blockiert Domains, die dem regulären Ausdruck entsprechen.</value>
+  </data>
+  <data name="Bloque les sites pour adultes, avec le même mécanisme de vérification anonyme que la sécurité de navigation." xml:space="preserve">
+    <value>Blockiert Websites für Erwachsene, mit derselben anonymen Prüfung wie die Browsing-Sicherheit.</value>
+  </data>
+  <data name="Bloque une adresse IP ou un sous-réseau : &lt;code&gt;{&amp;quot;client&amp;quot;: &amp;quot;192.168.1.50&amp;quot;}&lt;/code&gt; (ou &lt;code&gt;?client=…&lt;/code&gt;). Effet immédiat, visible dans Paramètres DNS. 409 si une règle autorisée plus large le couvre, ou si le blocage viderait la liste des clients autorisés." xml:space="preserve">
+    <value>Blockiert eine IP-Adresse oder ein Subnetz: &lt;code&gt;{&amp;quot;client&amp;quot;: &amp;quot;192.168.1.50&amp;quot;}&lt;/code&gt; (oder &lt;code&gt;?client=…&lt;/code&gt;). Sofort wirksam, sichtbar in den DNS-Einstellungen. 409, wenn eine umfassendere Erlaubnisregel sie abdeckt oder wenn die Blockierung die Liste der erlaubten Clients leeren würde.</value>
+  </data>
+  <data name="Bloquer via les listes et fichiers hosts" xml:space="preserve">
+    <value>Über Listen und Hosts-Dateien blockieren</value>
+  </data>
+  <data name="Bloqué" xml:space="preserve">
+    <value>Blockiert</value>
+  </data>
+  <data name="Bloquée par la Sécurité de navigation d'OnyxFilter." xml:space="preserve">
+    <value>Durch die Browsing-Sicherheit von OnyxFilter blockiert.</value>
+  </data>
+  <data name="Bloquée par le Contrôle parental d'OnyxFilter." xml:space="preserve">
+    <value>Durch die Kindersicherung von OnyxFilter blockiert.</value>
+  </data>
+  <data name="Bloquée par les listes de blocage DNS abonnées." xml:space="preserve">
+    <value>Durch die abonnierten DNS-Sperrlisten blockiert.</value>
+  </data>
+  <data name="Bloquée par les règles de filtrage personnalisées." xml:space="preserve">
+    <value>Durch die benutzerdefinierten Filterregeln blockiert.</value>
+  </data>
+  <data name="Bloquées" xml:space="preserve">
+    <value>Blockiert</value>
+  </data>
+  <data name="Bloquées par une liste" xml:space="preserve">
+    <value>Durch eine Liste blockiert</value>
+  </data>
+  <data name="Cache" xml:space="preserve">
+    <value>Cache</value>
+  </data>
+  <data name="Cache optimiste" xml:space="preserve">
+    <value>Optimistischer Cache</value>
+  </data>
+  <data name="Cache vidé." xml:space="preserve">
+    <value>Cache geleert.</value>
+  </data>
+  <data name="Ce que reçoit un appareil lorsqu'il demande un domaine bloqué." xml:space="preserve">
+    <value>Was ein Gerät erhält, wenn es eine blockierte Domain anfragt.</value>
+  </data>
+  <data name="Ce qui est enregistré dans le" xml:space="preserve">
+    <value>Was erfasst wird im</value>
+  </data>
+  <data name="Ce qui est enregistré et la durée de conservation se règlent dans" xml:space="preserve">
+    <value>Was erfasst wird und wie lange es aufbewahrt wird, legen Sie fest in</value>
+  </data>
+  <data name="Certificat Let's Encrypt" xml:space="preserve">
+    <value>Let's-Encrypt-Zertifikat</value>
+  </data>
+  <data name="Certificat automatique" xml:space="preserve">
+    <value>Automatisches Zertifikat</value>
+  </data>
+  <data name="Certificat enregistré inutilisable : {0}" xml:space="preserve">
+    <value>Gespeichertes Zertifikat unbrauchbar: {0}</value>
+  </data>
+  <data name="Certificat et clé" xml:space="preserve">
+    <value>Zertifikat und Schlüssel</value>
+  </data>
+  <data name="Certificat valide pour votre domaine (PEM, ou PKCS#12 sans mot de passe). Les certificats intermédiaires du fichier sont envoyés aux appareils." xml:space="preserve">
+    <value>Gültiges Zertifikat für Ihre Domain (PEM oder PKCS#12 ohne Passwort). Die Zwischenzertifikate der Datei werden an die Geräte gesendet.</value>
+  </data>
+  <data name="Ces requêtes ne sont pas traitées du tout, ni comptées, ni journalisées." xml:space="preserve">
+    <value>Diese Anfragen werden überhaupt nicht verarbeitet, weder gezählt noch protokolliert.</value>
+  </data>
+  <data name="Changer le mot de passe" xml:space="preserve">
+    <value>Passwort ändern</value>
+  </data>
+  <data name="Chaque jeton donne un accès complet à l'API. Sa valeur n'est affichée qu'une fois, à la création : conservez-la en lieu sûr et révoquez le jeton s'il a pu fuiter." xml:space="preserve">
+    <value>Jedes Token gewährt vollen Zugriff auf die API. Sein Wert wird nur einmal bei der Erstellung angezeigt: Bewahren Sie ihn sicher auf und widerrufen Sie das Token, falls es kompromittiert sein könnte.</value>
+  </data>
+  <data name="Chaque jour" xml:space="preserve">
+    <value>Täglich</value>
+  </data>
+  <data name="Chaque jour activé doit avoir une heure de début antérieure à l'heure de fin." xml:space="preserve">
+    <value>Jeder aktivierte Tag muss eine Startzeit vor der Endzeit haben.</value>
+  </data>
+  <data name="Chaque requête DNS traitée, avec la décision prise et le client à l'origine." xml:space="preserve">
+    <value>Jede verarbeitete DNS-Anfrage, mit der getroffenen Entscheidung und dem anfragenden Client.</value>
+  </data>
+  <data name="Chaque semaine" xml:space="preserve">
+    <value>Wöchentlich</value>
+  </data>
+  <data name="Chargement…" xml:space="preserve">
+    <value>Wird geladen…</value>
+  </data>
+  <data name="Chaîne de certificats" xml:space="preserve">
+    <value>Zertifikatskette</value>
+  </data>
+  <data name="Chemin du fichier" xml:space="preserve">
+    <value>Dateipfad</value>
+  </data>
+  <data name="Chemin du fichier de certificats" xml:space="preserve">
+    <value>Pfad der Zertifikatsdatei</value>
+  </data>
+  <data name="Chemin du fichier de clé privée" xml:space="preserve">
+    <value>Pfad der Datei mit dem privaten Schlüssel</value>
+  </data>
+  <data name="Chiffrement" xml:space="preserve">
+    <value>Verschlüsselung</value>
+  </data>
+  <data name="Choisissez une phrase longue et unique." xml:space="preserve">
+    <value>Wählen Sie eine lange, einzigartige Passphrase.</value>
+  </data>
+  <data name="Clair" xml:space="preserve">
+    <value>Hell</value>
+  </data>
+  <data name="Client" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="Client simulé" xml:space="preserve">
+    <value>Simulierter Client</value>
+  </data>
+  <data name="Clients" xml:space="preserve">
+    <value>Clients</value>
+  </data>
+  <data name="Clients autorisés" xml:space="preserve">
+    <value>Erlaubte Clients</value>
+  </data>
+  <data name="Clients déclarés" xml:space="preserve">
+    <value>Deklarierte Clients</value>
+  </data>
+  <data name="Clients les plus actifs" xml:space="preserve">
+    <value>Aktivste Clients</value>
+  </data>
+  <data name="Clients persistants enregistrés." xml:space="preserve">
+    <value>Clients gespeichert.</value>
+  </data>
+  <data name="Clients refusés" xml:space="preserve">
+    <value>Abgelehnte Clients</value>
+  </data>
+  <data name="Clients toujours autorisés" xml:space="preserve">
+    <value>Immer erlaubte Clients</value>
+  </data>
+  <data name="Clé associée au certificat ci-dessus. Laissez vide si elle figure dans le même fichier." xml:space="preserve">
+    <value>Schlüssel zum obigen Zertifikat. Leer lassen, wenn er in derselben Datei steht.</value>
+  </data>
+  <data name="Clé d'accès" xml:space="preserve">
+    <value>Passkey</value>
+  </data>
+  <data name="Clé d'accès supprimée." xml:space="preserve">
+    <value>Passkey gelöscht.</value>
+  </data>
+  <data name="Clé privée" xml:space="preserve">
+    <value>Privater Schlüssel</value>
+  </data>
+  <data name="Clés d'accès" xml:space="preserve">
+    <value>Passkeys</value>
+  </data>
+  <data name="Code source" xml:space="preserve">
+    <value>Quellcode</value>
+  </data>
+  <data name="Collecter les statistiques" xml:space="preserve">
+    <value>Statistiken erfassen</value>
+  </data>
+  <data name="Comment répartir les requêtes entre les serveurs principaux." xml:space="preserve">
+    <value>Wie die Anfragen auf die Hauptserver verteilt werden.</value>
+  </data>
+  <data name="Commentaire, ligne ignorée" xml:space="preserve">
+    <value>Kommentar, Zeile ignoriert</value>
+  </data>
+  <data name="Commentaire." xml:space="preserve">
+    <value>Kommentar.</value>
+  </data>
+  <data name="Compacte" xml:space="preserve">
+    <value>Kompakt</value>
+  </data>
+  <data name="Compilation de développement : les publications sont signalées ici, mais l'installation automatique ne concerne que les versions publiées." xml:space="preserve">
+    <value>Entwicklungs-Build: Veröffentlichungen werden hier angezeigt, die automatische Installation betrifft aber nur veröffentlichte Versionen.</value>
+  </data>
+  <data name="Comportement du serveur" xml:space="preserve">
+    <value>Serververhalten</value>
+  </data>
+  <data name="Compte" xml:space="preserve">
+    <value>Konto</value>
+  </data>
+  <data name="Compteurs agrégés affichés sur la" xml:space="preserve">
+    <value>Aggregierte Zähler, angezeigt in der</value>
+  </data>
+  <data name="Conditions : le nom du serveur doit pointer, dans le DNS public, vers l'adresse publique de cette machine, et le port 80 doit lui parvenir depuis Internet (redirection de port sur la box) : Let's Encrypt s'y connecte pour vérifier que le domaine vous appartient." xml:space="preserve">
+    <value>Voraussetzungen: Der Servername muss im öffentlichen DNS auf die öffentliche Adresse dieses Rechners zeigen, und Port 80 muss ihn aus dem Internet erreichen (Portweiterleitung am Router): Let's Encrypt verbindet sich dorthin, um zu prüfen, dass Ihnen die Domain gehört.</value>
+  </data>
+  <data name="Conditions d'utilisation" xml:space="preserve">
+    <value>Nutzungsbedingungen</value>
+  </data>
+  <data name="Configuration" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Confirmation" xml:space="preserve">
+    <value>Bestätigung</value>
+  </data>
+  <data name="Connexion" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+  <data name="Connexion au serveur perdue, reconnexion…" xml:space="preserve">
+    <value>Verbindung zum Server verloren, Verbindung wird wiederhergestellt…</value>
+  </data>
+  <data name="Connexion sans mot de passe via l'empreinte, le visage ou une clé de sécurité." xml:space="preserve">
+    <value>Anmeldung ohne Passwort per Fingerabdruck, Gesicht oder Sicherheitsschlüssel.</value>
+  </data>
+  <data name="Conserve les réponses des serveurs en amont pendant leur durée de validité (TTL)." xml:space="preserve">
+    <value>Speichert die Antworten der Upstream-Server für ihre Gültigkeitsdauer (TTL).</value>
+  </data>
+  <data name="Conserve une ligne par requête DNS traitée." xml:space="preserve">
+    <value>Speichert eine Zeile pro verarbeiteter DNS-Anfrage.</value>
+  </data>
+  <data name="Contenu PEM" xml:space="preserve">
+    <value>PEM-Inhalt</value>
+  </data>
+  <data name="Contenu de la clé privée" xml:space="preserve">
+    <value>Inhalt des privaten Schlüssels</value>
+  </data>
+  <data name="Contenu du certificat" xml:space="preserve">
+    <value>Inhalt des Zertifikats</value>
+  </data>
+  <data name="Contenu pour adultes" xml:space="preserve">
+    <value>Inhalte für Erwachsene</value>
+  </data>
+  <data name="Contrôle d'accès" xml:space="preserve">
+    <value>Zugriffskontrolle</value>
+  </data>
+  <data name="Contrôle parental" xml:space="preserve">
+    <value>Kindersicherung</value>
+  </data>
+  <data name="Copier" xml:space="preserve">
+    <value>Kopieren</value>
+  </data>
+  <data name="Copié" xml:space="preserve">
+    <value>Kopiert</value>
+  </data>
+  <data name="Couper la protection" xml:space="preserve">
+    <value>Schutz ausschalten</value>
+  </data>
+  <data name="Coupez l'accès à des plateformes entières en un geste, sans connaître leurs domaines." xml:space="preserve">
+    <value>Sperren Sie ganze Plattformen mit einem Klick, ohne deren Domains zu kennen.</value>
+  </data>
+  <data name="Créer" xml:space="preserve">
+    <value>Erstellen</value>
+  </data>
+  <data name="Créé le" xml:space="preserve">
+    <value>Erstellt am</value>
+  </data>
+  <data name="DNS chiffré : HTTPS, TLS et QUIC" xml:space="preserve">
+    <value>Verschlüsseltes DNS: HTTPS, TLS und QUIC</value>
+  </data>
+  <data name="DNS classique, port 53" xml:space="preserve">
+    <value>Klassisches DNS, Port 53</value>
+  </data>
+  <data name="DNS-over-HTTPS chiffré" xml:space="preserve">
+    <value>Verschlüsseltes DNS-over-HTTPS</value>
+  </data>
+  <data name="DNS-over-TLS chiffré (port 853 par défaut)" xml:space="preserve">
+    <value>Verschlüsseltes DNS-over-TLS (standardmäßig Port 853)</value>
+  </data>
+  <data name="Demande en cours…" xml:space="preserve">
+    <value>Anfrage läuft…</value>
+  </data>
+  <data name="Densité d'affichage" xml:space="preserve">
+    <value>Anzeigedichte</value>
+  </data>
+  <data name="Dernière actualisation" xml:space="preserve">
+    <value>Letzte Aktualisierung</value>
+  </data>
+  <data name="Dernière actualisation des statistiques" xml:space="preserve">
+    <value>Letzte Aktualisierung der Statistiken</value>
+  </data>
+  <data name="Dernière publication" xml:space="preserve">
+    <value>Neueste Veröffentlichung</value>
+  </data>
+  <data name="Dernière vérification : {0}." xml:space="preserve">
+    <value>Letzte Prüfung: {0}.</value>
+  </data>
+  <data name="Dimanche" xml:space="preserve">
+    <value>Sonntag</value>
+  </data>
+  <data name="Direct" xml:space="preserve">
+    <value>Live</value>
+  </data>
+  <data name="Doit figurer parmi les noms du certificat. Renseigné, il active la détection des identifiants de client, les réponses DDR et des contrôles de connexion supplémentaires." xml:space="preserve">
+    <value>Muss einer der Namen des Zertifikats sein. Wenn gesetzt, aktiviert er die Erkennung von Client-Kennungen, DDR-Antworten und zusätzliche Verbindungsprüfungen.</value>
+  </data>
+  <data name="Domaine" xml:space="preserve">
+    <value>Domain</value>
+  </data>
+  <data name="Domaines exclus des statistiques" xml:space="preserve">
+    <value>Von den Statistiken ausgeschlossene Domains</value>
+  </data>
+  <data name="Domaines exclus du journal" xml:space="preserve">
+    <value>Vom Protokoll ausgeschlossene Domains</value>
+  </data>
+  <data name="Domaines ignorés" xml:space="preserve">
+    <value>Ignorierte Domains</value>
+  </data>
+  <data name="Domaines les plus bloqués" xml:space="preserve">
+    <value>Am häufigsten blockierte Domains</value>
+  </data>
+  <data name="Domaines les plus demandés" xml:space="preserve">
+    <value>Am häufigsten angefragte Domains</value>
+  </data>
+  <data name="Domaines toujours résolus normalement, même s'ils figurent dans une liste de blocage. Même format et même actualisation automatique que les listes de blocage." xml:space="preserve">
+    <value>Domains, die immer normal aufgelöst werden, auch wenn sie in einer Sperrliste stehen. Gleiches Format und gleiche automatische Aktualisierung wie die Sperrlisten.</value>
+  </data>
+  <data name="Donnez un nom aux appareils du réseau et, si besoin, des réglages propres : protections, services bloqués, serveurs en amont." xml:space="preserve">
+    <value>Benennen Sie die Geräte im Netzwerk und geben Sie ihnen bei Bedarf eigene Einstellungen: Schutzfunktionen, blockierte Dienste, Upstream-Server.</value>
+  </data>
+  <data name="Données et réglages (base, &lt;code&gt;appsettings*.json&lt;/code&gt;, caches) ne sont jamais touchés par une mise à jour. Pour restaurer les fichiers de l'application précédente :" xml:space="preserve">
+    <value>Daten und Einstellungen (Datenbank, &lt;code&gt;appsettings*.json&lt;/code&gt;, Caches) werden von einem Update nie verändert. Um die Dateien der vorherigen Version wiederherzustellen:</value>
+  </data>
+  <data name="Durée de conservation" xml:space="preserve">
+    <value>Aufbewahrungsdauer</value>
+  </data>
+  <data name="Durée de conservation des statistiques" xml:space="preserve">
+    <value>Aufbewahrungsdauer der Statistiken</value>
+  </data>
+  <data name="Durée de conservation du journal" xml:space="preserve">
+    <value>Aufbewahrungsdauer des Protokolls</value>
+  </data>
+  <data name="Dès qu'un certificat valide est en place, l'interface est aussi servie en HTTPS et le serveur DNS accepte les requêtes en DNS-over-HTTPS, DNS-over-TLS et DNS-over-QUIC." xml:space="preserve">
+    <value>Sobald ein gültiges Zertifikat vorhanden ist, wird die Oberfläche auch über HTTPS bereitgestellt und der DNS-Server akzeptiert Anfragen über DNS-over-HTTPS, DNS-over-TLS und DNS-over-QUIC.</value>
+  </data>
+  <data name="Début, {0}" xml:space="preserve">
+    <value>Beginn, {0}</value>
+  </data>
+  <data name="Décision" xml:space="preserve">
+    <value>Entscheidung</value>
+  </data>
+  <data name="Désactivez-le pour imposer un protocole chiffré à tous les appareils (au moins un protocole chiffré doit alors être actif)." xml:space="preserve">
+    <value>Deaktivieren Sie es, um für alle Geräte ein verschlüsseltes Protokoll vorzuschreiben (mindestens ein verschlüsseltes Protokoll muss dann aktiv sein).</value>
+  </data>
+  <data name="Désactivé" xml:space="preserve">
+    <value>Deaktiviert</value>
+  </data>
+  <data name="Détaillée" xml:space="preserve">
+    <value>Ausführlich</value>
+  </data>
+  <data name="Détections spécifiques, 24 h" xml:space="preserve">
+    <value>Spezifische Erkennungen, 24 Std.</value>
+  </data>
+  <data name="Développement de logiciels" xml:space="preserve">
+    <value>Softwareentwicklung</value>
+  </data>
+  <data name="Effacer les statistiques" xml:space="preserve">
+    <value>Statistiken löschen</value>
+  </data>
+  <data name="En cours" xml:space="preserve">
+    <value>Läuft</value>
+  </data>
+  <data name="En parallèle" xml:space="preserve">
+    <value>Parallel</value>
+  </data>
+  <data name="En pause" xml:space="preserve">
+    <value>Pausiert</value>
+  </data>
+  <data name="Enregistrement…" xml:space="preserve">
+    <value>Wird gespeichert…</value>
+  </data>
+  <data name="Enregistrer" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="Enregistrer les requêtes" xml:space="preserve">
+    <value>Anfragen protokollieren</value>
+  </data>
+  <data name="Environnement" xml:space="preserve">
+    <value>Umgebung</value>
+  </data>
+  <data name="Environnement Let's Encrypt" xml:space="preserve">
+    <value>Let's-Encrypt-Umgebung</value>
+  </data>
+  <data name="Envoie une partie de l'adresse du client aux serveurs en amont pour obtenir des réponses géographiquement proches." xml:space="preserve">
+    <value>Sendet einen Teil der Client-Adresse an die Upstream-Server, um geografisch nahe Antworten zu erhalten.</value>
+  </data>
+  <data name="Erreur" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="Erreur : ce compte est temporairement verrouillé." xml:space="preserve">
+    <value>Fehler: Dieses Konto ist vorübergehend gesperrt.</value>
+  </data>
+  <data name="Erreur : copie automatique indisponible (HTTPS requis). Sélectionnez le jeton et copiez-le manuellement." xml:space="preserve">
+    <value>Fehler: Automatisches Kopieren nicht verfügbar (HTTPS erforderlich). Markieren Sie das Token und kopieren Sie es manuell.</value>
+  </data>
+  <data name="Erreur : identifiant de clé d'accès invalide." xml:space="preserve">
+    <value>Fehler: ungültige Passkey-Kennung.</value>
+  </data>
+  <data name="Erreur : identifiant de clé d'accès manquant." xml:space="preserve">
+    <value>Fehler: fehlende Passkey-Kennung.</value>
+  </data>
+  <data name="Erreur : identifiants invalides." xml:space="preserve">
+    <value>Fehler: ungültige Anmeldedaten.</value>
+  </data>
+  <data name="Erreur : impossible d'ajouter la clé d'accès : {0}" xml:space="preserve">
+    <value>Fehler: Passkey konnte nicht hinzugefügt werden: {0}</value>
+  </data>
+  <data name="Erreur : impossible de modifier le mot de passe. Vérifiez votre mot de passe actuel." xml:space="preserve">
+    <value>Fehler: Das Passwort konnte nicht geändert werden. Prüfen Sie Ihr aktuelles Passwort.</value>
+  </data>
+  <data name="Erreur : impossible de modifier le nom d'utilisateur." xml:space="preserve">
+    <value>Fehler: Der Benutzername konnte nicht geändert werden.</value>
+  </data>
+  <data name="Erreur : la base est inaccessible, le journal en base n'a pas pu être effacé (il le sera une fois la base rétablie)." xml:space="preserve">
+    <value>Fehler: Die Datenbank ist nicht erreichbar, das gespeicherte Protokoll konnte nicht gelöscht werden (dies geschieht, sobald die Datenbank wieder verfügbar ist).</value>
+  </data>
+  <data name="Erreur : la clé d'accès n'a pas pu être enregistrée." xml:space="preserve">
+    <value>Fehler: Der Passkey konnte nicht gespeichert werden.</value>
+  </data>
+  <data name="Erreur : la clé d'accès n'a pas pu être supprimée." xml:space="preserve">
+    <value>Fehler: Der Passkey konnte nicht gelöscht werden.</value>
+  </data>
+  <data name="Erreur : le jeton « {0} » n'existe plus." xml:space="preserve">
+    <value>Fehler: Das Token „{0}“ existiert nicht mehr.</value>
+  </data>
+  <data name="Erreur : le navigateur n'a pas fourni de clé d'accès." xml:space="preserve">
+    <value>Fehler: Der Browser hat keinen Passkey bereitgestellt.</value>
+  </data>
+  <data name="Erreur : le nom d'utilisateur ne peut pas être vide." xml:space="preserve">
+    <value>Fehler: Der Benutzername darf nicht leer sein.</value>
+  </data>
+  <data name="Erreur : les mots de passe ne correspondent pas." xml:space="preserve">
+    <value>Fehler: Die Passwörter stimmen nicht überein.</value>
+  </data>
+  <data name="Erreur : nombre maximal de clés d'accès atteint." xml:space="preserve">
+    <value>Fehler: Maximale Anzahl an Passkeys erreicht.</value>
+  </data>
+  <data name="Erreur : {0}" xml:space="preserve">
+    <value>Fehler: {0}</value>
+  </data>
+  <data name="Erreur lors de l'enregistrement : {0}" xml:space="preserve">
+    <value>Fehler beim Speichern: {0}</value>
+  </data>
+  <data name="Erreur lors de l'enregistrement du jeton : {0}" xml:space="preserve">
+    <value>Fehler beim Speichern des Tokens: {0}</value>
+  </data>
+  <data name="Erreur lors de la mise à jour : {0}" xml:space="preserve">
+    <value>Fehler bei der Aktualisierung: {0}</value>
+  </data>
+  <data name="Erreur lors de la révocation : {0}" xml:space="preserve">
+    <value>Fehler beim Widerrufen: {0}</value>
+  </data>
+  <data name="Erreur lors de la vérification : {0}" xml:space="preserve">
+    <value>Fehler bei der Prüfung: {0}</value>
+  </data>
+  <data name="Exclure des domaines des statistiques" xml:space="preserve">
+    <value>Domains von den Statistiken ausschließen</value>
+  </data>
+  <data name="Exclure des domaines du journal" xml:space="preserve">
+    <value>Domains vom Protokoll ausschließen</value>
+  </data>
+  <data name="Exemples" xml:space="preserve">
+    <value>Beispiele</value>
+  </data>
+  <data name="Facultatif, un par ligne. Certificat demandé pour :" xml:space="preserve">
+    <value>Optional, einer pro Zeile. Zertifikat angefordert für:</value>
+  </data>
+  <data name="Facultative, associée au compte Let's Encrypt." xml:space="preserve">
+    <value>Optional, mit dem Let's-Encrypt-Konto verknüpft.</value>
+  </data>
+  <data name="Faire passer les appareils de votre réseau par OnyxFilter." xml:space="preserve">
+    <value>Leiten Sie die Geräte in Ihrem Netzwerk über OnyxFilter.</value>
+  </data>
+  <data name="Fermer le menu" xml:space="preserve">
+    <value>Menü schließen</value>
+  </data>
+  <data name="Filtrage" xml:space="preserve">
+    <value>Filterung</value>
+  </data>
+  <data name="Filtrage appliqué" xml:space="preserve">
+    <value>Filterung aktiv</value>
+  </data>
+  <data name="Filtrer par domaine ou client" xml:space="preserve">
+    <value>Nach Domain oder Client filtern</value>
+  </data>
+  <data name="Filtrer par décision" xml:space="preserve">
+    <value>Nach Entscheidung filtern</value>
+  </data>
+  <data name="Fin, {0}" xml:space="preserve">
+    <value>Ende, {0}</value>
+  </data>
+  <data name="Garde les réponses en mémoire pour répondre instantanément aux requêtes répétées." xml:space="preserve">
+    <value>Hält Antworten im Speicher, um wiederholte Anfragen sofort zu beantworten.</value>
+  </data>
+  <data name="Globaux" xml:space="preserve">
+    <value>Global</value>
+  </data>
+  <data name="Guide d'installation" xml:space="preserve">
+    <value>Installationsanleitung</value>
+  </data>
+  <data name="Général" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="Gérer la protection depuis la vue d'ensemble" xml:space="preserve">
+    <value>Schutz über die Übersicht verwalten</value>
+  </data>
+  <data name="HTTPS actif" xml:space="preserve">
+    <value>HTTPS aktiv</value>
+  </data>
+  <data name="HTTPS inactif" xml:space="preserve">
+    <value>HTTPS inaktiv</value>
+  </data>
+  <data name="HTTPS pour l'interface d'administration, DNS-over-HTTPS, DNS-over-TLS et DNS-over-QUIC pour les appareils." xml:space="preserve">
+    <value>HTTPS für die Verwaltungsoberfläche, DNS-over-HTTPS, DNS-over-TLS und DNS-over-QUIC für die Geräte.</value>
+  </data>
+  <data name="Heure" xml:space="preserve">
+    <value>Uhrzeit</value>
+  </data>
+  <data name="Heure de pointe" xml:space="preserve">
+    <value>Spitzenstunde</value>
+  </data>
+  <data name="Horaire de suspension enregistré." xml:space="preserve">
+    <value>Pausenzeitplan gespeichert.</value>
+  </data>
+  <data name="Hébergement Web" xml:space="preserve">
+    <value>Webhosting</value>
+  </data>
+  <data name="Identifiant" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="Identifiant de la requête :" xml:space="preserve">
+    <value>Anfrage-ID:</value>
+  </data>
+  <data name="Identifiants de connexion à la console d'administration." xml:space="preserve">
+    <value>Anmeldedaten für die Verwaltungskonsole.</value>
+  </data>
+  <data name="Identifiés par adresse IP ou plage CIDR." xml:space="preserve">
+    <value>Identifiziert per IP-Adresse oder CIDR-Bereich.</value>
+  </data>
+  <data name="Ignorer IPv6" xml:space="preserve">
+    <value>IPv6 ignorieren</value>
+  </data>
+  <data name="Ignoré tant que la liste des clients autorisés n'est pas vide." xml:space="preserve">
+    <value>Ignoriert, solange die Liste der erlaubten Clients nicht leer ist.</value>
+  </data>
+  <data name="Il reste soumis à la sécurité de navigation et au contrôle parental s'ils sont activés dans" xml:space="preserve">
+    <value>Sie unterliegt weiterhin der Browsing-Sicherheit und der Kindersicherung, wenn diese aktiviert sind in</value>
+  </data>
+  <data name="Impose le mode « recherche sécurisée » sur les moteurs sélectionnés ci-dessous." xml:space="preserve">
+    <value>Erzwingt den Modus „SafeSearch“ bei den unten ausgewählten Suchmaschinen.</value>
+  </data>
+  <data name="Impossible de reprendre la session." xml:space="preserve">
+    <value>Die Sitzung kann nicht fortgesetzt werden.</value>
+  </data>
+  <data name="Impossible de se reconnecter." xml:space="preserve">
+    <value>Verbindung kann nicht wiederhergestellt werden.</value>
+  </data>
+  <data name="Inclure les préversions" xml:space="preserve">
+    <value>Vorabversionen einbeziehen</value>
+  </data>
+  <data name="Indicateurs clés" xml:space="preserve">
+    <value>Kennzahlen</value>
+  </data>
+  <data name="Installation des nouveaux fichiers…" xml:space="preserve">
+    <value>Neue Dateien werden installiert…</value>
+  </data>
+  <data name="Installe la nouvelle version puis redémarre OnyxFilter (réponse 202, suivi via &lt;code&gt;GET /update&lt;/code&gt; ; 409 si rien à installer ou installation impossible)." xml:space="preserve">
+    <value>Installiert die neue Version und startet OnyxFilter neu (Antwort 202, Verfolgung über &lt;code&gt;GET /update&lt;/code&gt;; 409, wenn nichts zu installieren ist oder die Installation nicht möglich ist).</value>
+  </data>
+  <data name="Installer OnyxFilter {0} ?" xml:space="preserve">
+    <value>OnyxFilter {0} installieren?</value>
+  </data>
+  <data name="Installer et redémarrer" xml:space="preserve">
+    <value>Installieren und neu starten</value>
+  </data>
+  <data name="Installer {0}" xml:space="preserve">
+    <value>{0} installieren</value>
+  </data>
+  <data name="Installée" xml:space="preserve">
+    <value>Installiert</value>
+  </data>
+  <data name="Intelligence artificielle" xml:space="preserve">
+    <value>Künstliche Intelligenz</value>
+  </data>
+  <data name="Interface :" xml:space="preserve">
+    <value>Oberfläche:</value>
+  </data>
+  <data name="Invité" xml:space="preserve">
+    <value>Gast</value>
+  </data>
+  <data name="J'accepte les" xml:space="preserve">
+    <value>Ich akzeptiere die</value>
+  </data>
+  <data name="Jamais" xml:space="preserve">
+    <value>Nie</value>
+  </data>
+  <data name="Jeton" xml:space="preserve">
+    <value>Token</value>
+  </data>
+  <data name="Jeton « {0} » créé. Copiez-le maintenant, il ne sera plus affiché." xml:space="preserve">
+    <value>Token „{0}“ erstellt. Kopieren Sie es jetzt, es wird nicht erneut angezeigt.</value>
+  </data>
+  <data name="Jeton « {0} » révoqué : il ne donne plus accès à l'API." xml:space="preserve">
+    <value>Token „{0}“ widerrufen: Es gewährt keinen Zugriff mehr auf die API.</value>
+  </data>
+  <data name="Jetons d'accès" xml:space="preserve">
+    <value>Zugriffstoken</value>
+  </data>
+  <data name="Jeudi" xml:space="preserve">
+    <value>Donnerstag</value>
+  </data>
+  <data name="Jeux de hasard et paris sportifs" xml:space="preserve">
+    <value>Glücksspiel und Sportwetten</value>
+  </data>
+  <data name="Jeux vidéo" xml:space="preserve">
+    <value>Videospiele</value>
+  </data>
+  <data name="Journal des requêtes" xml:space="preserve">
+    <value>Anfrageprotokoll</value>
+  </data>
+  <data name="Journal des requêtes effacé." xml:space="preserve">
+    <value>Anfrageprotokoll gelöscht.</value>
+  </data>
+  <data name="Journal et statistiques gardés chez vous" xml:space="preserve">
+    <value>Protokoll und Statistiken bleiben bei Ihnen</value>
+  </data>
+  <data name="Journal, du plus récent au plus ancien. Paramètres : &lt;code&gt;limit&lt;/code&gt; (1 à 500, 50 par défaut), &lt;code&gt;offset&lt;/code&gt;, &lt;code&gt;search&lt;/code&gt; (domaine ou client), &lt;code&gt;reason&lt;/code&gt;" xml:space="preserve">
+    <value>Protokoll, vom neuesten zum ältesten. Parameter: &lt;code&gt;limit&lt;/code&gt; (1 bis 500, standardmäßig 50), &lt;code&gt;offset&lt;/code&gt;, &lt;code&gt;search&lt;/code&gt; (Domain oder Client), &lt;code&gt;reason&lt;/code&gt;</value>
+  </data>
+  <data name="Jusqu'à demain" xml:space="preserve">
+    <value>Bis morgen</value>
+  </data>
+  <data name="Jusqu'à réactivation" xml:space="preserve">
+    <value>Bis zur Reaktivierung</value>
+  </data>
+  <data name="L'API reste inaccessible tant qu'aucun jeton n'a été créé." xml:space="preserve">
+    <value>Die API bleibt unzugänglich, solange kein Token erstellt wurde.</value>
+  </data>
+  <data name="L'URL doit être une adresse http:// ou https:// valide." xml:space="preserve">
+    <value>Die URL muss eine gültige http://- oder https://-Adresse sein.</value>
+  </data>
+  <data name="L'adresse IP complète n'est conservée ni dans le journal ni dans les statistiques." xml:space="preserve">
+    <value>Die vollständige IP-Adresse wird weder im Protokoll noch in den Statistiken gespeichert.</value>
+  </data>
+  <data name="L'adresse demandée ne correspond à aucune page de la console." xml:space="preserve">
+    <value>Die angeforderte Adresse entspricht keiner Seite der Konsole.</value>
+  </data>
+  <data name="L'archive est téléchargée depuis GitHub et son empreinte SHA-256 vérifiée ; les fichiers actuels sont sauvegardés, puis OnyxFilter redémarre." xml:space="preserve">
+    <value>Das Archiv wird von GitHub heruntergeladen und sein SHA-256-Hash geprüft; die aktuellen Dateien werden gesichert, dann startet OnyxFilter neu.</value>
+  </data>
+  <data name="L'enregistrement des requêtes est désactivé. Activez-le dans" xml:space="preserve">
+    <value>Die Protokollierung der Anfragen ist deaktiviert. Aktivieren Sie sie in</value>
+  </data>
+  <data name="L'environnement de test délivre des certificats non reconnus par les appareils, mais sans les limites d'émission : pratique pour vérifier la configuration." xml:space="preserve">
+    <value>Die Testumgebung stellt Zertifikate aus, denen die Geräte nicht vertrauen, aber ohne Ausstellungslimits: praktisch, um die Konfiguration zu prüfen.</value>
+  </data>
+  <data name="L'exclure des statistiques" xml:space="preserve">
+    <value>Von den Statistiken ausschließen</value>
+  </data>
+  <data name="La fréquence d'actualisation automatique se règle également dans Général." xml:space="preserve">
+    <value>Das automatische Aktualisierungsintervall wird ebenfalls unter Allgemein eingestellt.</value>
+  </data>
+  <data name="La liste est téléchargée et analysée dès l'enregistrement." xml:space="preserve">
+    <value>Die Liste wird beim Speichern heruntergeladen und analysiert.</value>
+  </data>
+  <data name="La recherche automatique ne télécharge ni n'installe jamais rien d'elle-même." xml:space="preserve">
+    <value>Die automatische Suche lädt nie selbstständig etwas herunter und installiert nichts.</value>
+  </data>
+  <data name="La requête n'a pas pu être traitée." xml:space="preserve">
+    <value>Die Anfrage konnte nicht verarbeitet werden.</value>
+  </data>
+  <data name="La résolution DNS est interrompue quelques secondes" xml:space="preserve">
+    <value>Die DNS-Auflösung wird für einige Sekunden unterbrochen</value>
+  </data>
+  <data name="La session a été mise en pause par le serveur." xml:space="preserve">
+    <value>Die Sitzung wurde vom Server pausiert.</value>
+  </data>
+  <data name="La syntaxe suit le format Adblock des listes de blocage DNS." xml:space="preserve">
+    <value>Die Syntax folgt dem Adblock-Format der DNS-Sperrlisten.</value>
+  </data>
+  <data name="Langue de l'interface" xml:space="preserve">
+    <value>Sprache der Oberfläche</value>
+  </data>
+  <data name="Latence" xml:space="preserve">
+    <value>Latenz</value>
+  </data>
+  <data name="Le blocage ne s'applique que si « Bloquer via les listes et fichiers hosts » est activé dans" xml:space="preserve">
+    <value>Die Blockierung gilt nur, wenn „Über Listen und Hosts-Dateien blockieren“ aktiviert ist in</value>
+  </data>
+  <data name="Le certificat Let's Encrypt (section suivante) remplace le certificat et la clé fournis à la main, conservés pour le cas où vous le désactiveriez." xml:space="preserve">
+    <value>Das Let's-Encrypt-Zertifikat (nächster Abschnitt) ersetzt das manuell bereitgestellte Zertifikat und den Schlüssel, die für den Fall einer Deaktivierung aufbewahrt werden.</value>
+  </data>
+  <data name="Le domaine est présenté comme inexistant." xml:space="preserve">
+    <value>Die Domain wird als nicht existent dargestellt.</value>
+  </data>
+  <data name="Le domaine et la réponse sont obligatoires." xml:space="preserve">
+    <value>Domain und Antwort sind erforderlich.</value>
+  </data>
+  <data name="Le filtrage reprend dans quelques secondes ; cette page se rechargera d'elle-même." xml:space="preserve">
+    <value>Die Filterung wird in wenigen Sekunden fortgesetzt; diese Seite lädt sich selbst neu.</value>
+  </data>
+  <data name="Le joker" xml:space="preserve">
+    <value>Der Platzhalter</value>
+  </data>
+  <data name="Le mot de passe est requis." xml:space="preserve">
+    <value>Das Passwort ist erforderlich.</value>
+  </data>
+  <data name="Le nom d'hôte est obligatoire." xml:space="preserve">
+    <value>Der Hostname ist erforderlich.</value>
+  </data>
+  <data name="Le nom d'utilisateur est requis." xml:space="preserve">
+    <value>Der Benutzername ist erforderlich.</value>
+  </data>
+  <data name="Le nom du serveur" xml:space="preserve">
+    <value>Der Servername</value>
+  </data>
+  <data name="Le nom est obligatoire." xml:space="preserve">
+    <value>Der Name ist erforderlich.</value>
+  </data>
+  <data name="Le nom et l'URL sont obligatoires." xml:space="preserve">
+    <value>Name und URL sind erforderlich.</value>
+  </data>
+  <data name="Le serveur refuse explicitement de répondre." xml:space="preserve">
+    <value>Der Server verweigert ausdrücklich die Antwort.</value>
+  </data>
+  <data name="Les appareils apparaissent ci-dessous dès leurs premières requêtes." xml:space="preserve">
+    <value>Die Geräte erscheinen unten, sobald sie ihre ersten Anfragen senden.</value>
+  </data>
+  <data name="Les entrées plus anciennes sont supprimées automatiquement." xml:space="preserve">
+    <value>Ältere Einträge werden automatisch gelöscht.</value>
+  </data>
+  <data name="Les fichiers remplacés par la dernière mise à jour sont conservés sur le serveur." xml:space="preserve">
+    <value>Die durch das letzte Update ersetzten Dateien werden auf dem Server aufbewahrt.</value>
+  </data>
+  <data name="Les requêtes AAAA reçoivent une réponse vide." xml:space="preserve">
+    <value>AAAA-Anfragen erhalten eine leere Antwort.</value>
+  </data>
+  <data name="Les requêtes sont résolues sans filtrage jusqu'à ce que vous réactiviez la protection." xml:space="preserve">
+    <value>Anfragen werden ohne Filterung aufgelöst, bis Sie den Schutz wieder aktivieren.</value>
+  </data>
+  <data name="Les requêtes sont résolues sans filtrage. Reprise automatique le {0} à {1}." xml:space="preserve">
+    <value>Anfragen werden ohne Filterung aufgelöst. Automatische Wiederaufnahme am {0} um {1}.</value>
+  </data>
+  <data name="Les requêtes sont résolues sans filtrage. Reprise automatique à {0}." xml:space="preserve">
+    <value>Anfragen werden ohne Filterung aufgelöst. Automatische Wiederaufnahme um {0}.</value>
+  </data>
+  <data name="Les requêtes vers ces domaines (un par ligne) ne sont jamais enregistrées." xml:space="preserve">
+    <value>Anfragen an diese Domains (eine pro Zeile) werden nie protokolliert.</value>
+  </data>
+  <data name="Les requêtes vers ces domaines (un par ligne) ne sont pas comptabilisées." xml:space="preserve">
+    <value>Anfragen an diese Domains (eine pro Zeile) werden nicht gezählt.</value>
+  </data>
+  <data name="Let's Encrypt limite à 5 par semaine les certificats demandés pour les mêmes noms." xml:space="preserve">
+    <value>Let's Encrypt begrenzt die für dieselben Namen angeforderten Zertifikate auf 5 pro Woche.</value>
+  </data>
+  <data name="Lignes par page" xml:space="preserve">
+    <value>Zeilen pro Seite</value>
+  </data>
+  <data name="Limitation de débit" xml:space="preserve">
+    <value>Ratenbegrenzung</value>
+  </data>
+  <data name="Limitation de débit, extensions DNS et réponse renvoyée pour un domaine bloqué." xml:space="preserve">
+    <value>Ratenbegrenzung, DNS-Erweiterungen und Antwort für eine blockierte Domain.</value>
+  </data>
+  <data name="Liste" xml:space="preserve">
+    <value>Liste</value>
+  </data>
+  <data name="Liste de blocage" xml:space="preserve">
+    <value>Sperrliste</value>
+  </data>
+  <data name="Listes d'autorisation" xml:space="preserve">
+    <value>Zulassungslisten</value>
+  </data>
+  <data name="Listes d'autorisation mises à jour." xml:space="preserve">
+    <value>Zulassungslisten aktualisiert.</value>
+  </data>
+  <data name="Listes de blocage" xml:space="preserve">
+    <value>Sperrlisten</value>
+  </data>
+  <data name="Listes de blocage mises à jour." xml:space="preserve">
+    <value>Sperrlisten aktualisiert.</value>
+  </data>
+  <data name="Listes de blocage, services bloqués, règles personnalisées et protections avancées s'appliquent à chaque requête." xml:space="preserve">
+    <value>Sperrlisten, blockierte Dienste, benutzerdefinierte Regeln und erweiterte Schutzfunktionen gelten für jede Anfrage.</value>
+  </data>
+  <data name="Lundi" xml:space="preserve">
+    <value>Montag</value>
+  </data>
+  <data name="Mardi" xml:space="preserve">
+    <value>Dienstag</value>
+  </data>
+  <data name="Masquer" xml:space="preserve">
+    <value>Ausblenden</value>
+  </data>
+  <data name="Menace" xml:space="preserve">
+    <value>Bedrohung</value>
+  </data>
+  <data name="Menaces (malware, hameçonnage)" xml:space="preserve">
+    <value>Bedrohungen (Malware, Phishing)</value>
+  </data>
+  <data name="Menu principal" xml:space="preserve">
+    <value>Hauptmenü</value>
+  </data>
+  <data name="Mercredi" xml:space="preserve">
+    <value>Mittwoch</value>
+  </data>
+  <data name="Mettre en pause" xml:space="preserve">
+    <value>Pausieren</value>
+  </data>
+  <data name="Mise à jour de la version {0} vers {1} installée le {2}." xml:space="preserve">
+    <value>Update von Version {0} auf {1} installiert am {2}.</value>
+  </data>
+  <data name="Mise à jour en cours…" xml:space="preserve">
+    <value>Update läuft…</value>
+  </data>
+  <data name="Mises à jour" xml:space="preserve">
+    <value>Updates</value>
+  </data>
+  <data name="Mises à jour : version installée, dernière publication, état (&lt;code&gt;state&lt;/code&gt;), progression et possibilité d'installer (&lt;code&gt;canInstall&lt;/code&gt;, &lt;code&gt;installBlocker&lt;/code&gt;)." xml:space="preserve">
+    <value>Updates: installierte Version, neueste Veröffentlichung, Status (&lt;code&gt;state&lt;/code&gt;), Fortschritt und Installierbarkeit (&lt;code&gt;canInstall&lt;/code&gt;, &lt;code&gt;installBlocker&lt;/code&gt;).</value>
+  </data>
+  <data name="Modifier" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="Modifier la liste" xml:space="preserve">
+    <value>Liste bearbeiten</value>
+  </data>
+  <data name="Modifier la réécriture" xml:space="preserve">
+    <value>Umschreibung bearbeiten</value>
+  </data>
+  <data name="Modifier la réécriture de {0}" xml:space="preserve">
+    <value>Umschreibung für {0} bearbeiten</value>
+  </data>
+  <data name="Modifier le client" xml:space="preserve">
+    <value>Client bearbeiten</value>
+  </data>
+  <data name="Modifier {0}" xml:space="preserve">
+    <value>{0} bearbeiten</value>
+  </data>
+  <data name="Mon compte" xml:space="preserve">
+    <value>Mein Konto</value>
+  </data>
+  <data name="Mot de passe" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="Mot de passe actuel" xml:space="preserve">
+    <value>Aktuelles Passwort</value>
+  </data>
+  <data name="Mot de passe modifié avec succès." xml:space="preserve">
+    <value>Passwort erfolgreich geändert.</value>
+  </data>
+  <data name="Moteurs concernés par la recherche sécurisée" xml:space="preserve">
+    <value>Von SafeSearch betroffene Suchmaschinen</value>
+  </data>
+  <data name="Mémo de syntaxe" xml:space="preserve">
+    <value>Syntax-Spickzettel</value>
+  </data>
+  <data name="NXDOMAIN ou adresse nulle selon la règle qui a bloqué." xml:space="preserve">
+    <value>NXDOMAIN oder Null-Adresse, je nach blockierender Regel.</value>
+  </data>
+  <data name="Ne laissez jamais ce mode actif sur une installation exposée : il peut afficher des informations sensibles." xml:space="preserve">
+    <value>Lassen Sie diesen Modus nie auf einer exponierten Installation aktiv: Er kann sensible Informationen anzeigen.</value>
+  </data>
+  <data name="Ne pas journaliser ses requêtes" xml:space="preserve">
+    <value>Anfragen nicht protokollieren</value>
+  </data>
+  <data name="Nom" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Nom d'hôte ou domaine à tester" xml:space="preserve">
+    <value>Zu testender Hostname oder Domain</value>
+  </data>
+  <data name="Nom d'utilisateur" xml:space="preserve">
+    <value>Benutzername</value>
+  </data>
+  <data name="Nom d'utilisateur modifié avec succès." xml:space="preserve">
+    <value>Benutzername erfolgreich geändert.</value>
+  </data>
+  <data name="Nom du jeton" xml:space="preserve">
+    <value>Name des Tokens</value>
+  </data>
+  <data name="Nom du serveur" xml:space="preserve">
+    <value>Servername</value>
+  </data>
+  <data name="Nom utilisé pour vous connecter." xml:space="preserve">
+    <value>Name für die Anmeldung.</value>
+  </data>
+  <data name="Nombre maximal de clés atteint : supprimez-en une avant d'en ajouter une autre." xml:space="preserve">
+    <value>Maximale Anzahl an Schlüsseln erreicht: Löschen Sie einen, bevor Sie einen weiteren hinzufügen.</value>
+  </data>
+  <data name="Nombre maximal de requêtes par seconde pour un même client (0 = illimité). Les adresses sont regroupées par sous-réseau selon les longueurs de préfixe indiquées." xml:space="preserve">
+    <value>Maximale Anzahl von Anfragen pro Sekunde für einen Client (0 = unbegrenzt). Die Adressen werden nach den angegebenen Präfixlängen in Subnetze gruppiert.</value>
+  </data>
+  <data name="Nommer les clients automatiquement" xml:space="preserve">
+    <value>Clients automatisch benennen</value>
+  </data>
+  <data name="Noms" xml:space="preserve">
+    <value>Namen</value>
+  </data>
+  <data name="Noms supplémentaires" xml:space="preserve">
+    <value>Zusätzliche Namen</value>
+  </data>
+  <data name="Non filtrée : ce nom d'hôte sera résolu normalement auprès des serveurs en amont configurés." xml:space="preserve">
+    <value>Nicht gefiltert: Dieser Hostname wird normal über die konfigurierten Upstream-Server aufgelöst.</value>
+  </data>
+  <data name="Non vérifiée" xml:space="preserve">
+    <value>Nicht geprüft</value>
+  </data>
+  <data name="Nouveau client" xml:space="preserve">
+    <value>Neuer Client</value>
+  </data>
+  <data name="Nouveau jeton" xml:space="preserve">
+    <value>Neues Token</value>
+  </data>
+  <data name="Nouveau mot de passe" xml:space="preserve">
+    <value>Neues Passwort</value>
+  </data>
+  <data name="Nouveau nom d'utilisateur" xml:space="preserve">
+    <value>Neuer Benutzername</value>
+  </data>
+  <data name="Nouvel essai le {0}." xml:space="preserve">
+    <value>Neuer Versuch am {0}.</value>
+  </data>
+  <data name="Nouvel horaire" xml:space="preserve">
+    <value>Neuer Zeitplan</value>
+  </data>
+  <data name="Nouvelle liste d'autorisation" xml:space="preserve">
+    <value>Neue Zulassungsliste</value>
+  </data>
+  <data name="Nouvelle liste de blocage" xml:space="preserve">
+    <value>Neue Sperrliste</value>
+  </data>
+  <data name="Nouvelle réécriture" xml:space="preserve">
+    <value>Neue Umschreibung</value>
+  </data>
+  <data name="Nouvelle version" xml:space="preserve">
+    <value>Neue Version</value>
+  </data>
+  <data name="Obtenir le certificat" xml:space="preserve">
+    <value>Zertifikat anfordern</value>
+  </data>
+  <data name="Obtenu gratuitement et renouvelé sans intervention : OnyxFilter vérifie le certificat toutes les 12 heures et en demande un nouveau 15 jours avant son expiration." xml:space="preserve">
+    <value>Kostenlos bezogen und automatisch erneuert: OnyxFilter prüft das Zertifikat alle 12 Stunden und fordert 15 Tage vor Ablauf ein neues an.</value>
+  </data>
+  <data name="Obtient un certificat Let's Encrypt pour" xml:space="preserve">
+    <value>Fordert ein Let's-Encrypt-Zertifikat an für</value>
+  </data>
+  <data name="OnyxFilter suit ses publications GitHub et s'installe en un clic : archive vérifiée, fichiers actuels sauvegardés, redémarrage automatique." xml:space="preserve">
+    <value>OnyxFilter verfolgt seine GitHub-Veröffentlichungen und installiert sich mit einem Klick: geprüftes Archiv, Sicherung der aktuellen Dateien, automatischer Neustart.</value>
+  </data>
+  <data name="Outils de confidentialité" xml:space="preserve">
+    <value>Datenschutz-Tools</value>
+  </data>
+  <data name="Ouvrir le menu" xml:space="preserve">
+    <value>Menü öffnen</value>
+  </data>
+  <data name="Page introuvable" xml:space="preserve">
+    <value>Seite nicht gefunden</value>
+  </data>
+  <data name="Page {0} sur {1}" xml:space="preserve">
+    <value>Seite {0} von {1}</value>
+  </data>
+  <data name="Paramètres enregistrés." xml:space="preserve">
+    <value>Einstellungen gespeichert.</value>
+  </data>
+  <data name="Pas encore pris en charge (ligne ignorée) :" xml:space="preserve">
+    <value>Noch nicht unterstützt (Zeile ignoriert):</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Pause programmée" xml:space="preserve">
+    <value>Geplante Pause</value>
+  </data>
+  <data name="Pendant ces plages, les services bloqués redeviennent accessibles." xml:space="preserve">
+    <value>In diesen Zeitfenstern sind blockierte Dienste wieder erreichbar.</value>
+  </data>
+  <data name="Personnalisée" xml:space="preserve">
+    <value>Benutzerdefiniert</value>
+  </data>
+  <data name="Personnalisés" xml:space="preserve">
+    <value>Benutzerdefiniert</value>
+  </data>
+  <data name="Pilotez OnyxFilter depuis vos scripts ou votre domotique : suspension temporaire du filtrage, statistiques d'usage, journal des requêtes et mises à jour." xml:space="preserve">
+    <value>Steuern Sie OnyxFilter aus Ihren Skripten oder Ihrer Hausautomation: vorübergehende Pause der Filterung, Nutzungsstatistiken, Anfrageprotokoll und Updates.</value>
+  </data>
+  <data name="Plus anciennes" xml:space="preserve">
+    <value>Ältere</value>
+  </data>
+  <data name="Plus récentes" xml:space="preserve">
+    <value>Neuere</value>
+  </data>
+  <data name="Points d'accès" xml:space="preserve">
+    <value>Endpunkte</value>
+  </data>
+  <data name="Port de validation" xml:space="preserve">
+    <value>Validierungsport</value>
+  </data>
+  <data name="Port ouvert sur cette machine le temps de la validation. Let's Encrypt contacte toujours le port 80 : ne changez ce réglage que si la box redirige ce port vers un autre port de cette machine. S'il est déjà occupé, la validation passe par l'interface web." xml:space="preserve">
+    <value>Port, der auf diesem Rechner während der Validierung geöffnet wird. Let's Encrypt kontaktiert immer Port 80: Ändern Sie diese Einstellung nur, wenn Ihr Router diesen Port auf einen anderen Port dieses Rechners weiterleitet. Ist er bereits belegt, erfolgt die Validierung über die Weboberfläche.</value>
+  </data>
+  <data name="Ports d'écoute" xml:space="preserve">
+    <value>Ports</value>
+  </data>
+  <data name="Pour obtenir le détail de l'erreur, démarrez l'application avec la variable d'environnement" xml:space="preserve">
+    <value>Um die Fehlerdetails zu sehen, starten Sie die Anwendung mit der Umgebungsvariable</value>
+  </data>
+  <data name="Pris en compte lorsque le chiffrement est activé. Le port HTTPS sert aussi le DNS-over-HTTPS sur" xml:space="preserve">
+    <value>Wird berücksichtigt, wenn die Verschlüsselung aktiviert ist. Der HTTPS-Port stellt auch DNS-over-HTTPS bereit unter</value>
+  </data>
+  <data name="Production" xml:space="preserve">
+    <value>Produktion</value>
+  </data>
+  <data name="Propose aussi les versions de test (bêta, candidates), potentiellement moins stables." xml:space="preserve">
+    <value>Bietet auch Testversionen an (Beta, Release Candidates), die weniger stabil sein können.</value>
+  </data>
+  <data name="Protection DNS" xml:space="preserve">
+    <value>DNS-Schutz</value>
+  </data>
+  <data name="Protection active" xml:space="preserve">
+    <value>Schutz aktiv</value>
+  </data>
+  <data name="Protection avancée" xml:space="preserve">
+    <value>Erweiterter Schutz</value>
+  </data>
+  <data name="Protection suspendue" xml:space="preserve">
+    <value>Schutz pausiert</value>
+  </data>
+  <data name="Protections" xml:space="preserve">
+    <value>Schutzfunktionen</value>
+  </data>
+  <data name="Protections appliquées à tous les appareils, sauf ceux dotés de réglages personnalisés (page" xml:space="preserve">
+    <value>Schutzfunktionen für alle Geräte, außer solchen mit eigenen Einstellungen (Seite</value>
+  </data>
+  <data name="Protections appliquées à toutes les requêtes, conservation du journal et des statistiques." xml:space="preserve">
+    <value>Schutzfunktionen für alle Anfragen, Aufbewahrung von Protokoll und Statistiken.</value>
+  </data>
+  <data name="Protocoles" xml:space="preserve">
+    <value>Protokolle</value>
+  </data>
+  <data name="Précédent" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="Préfixe IPv4" xml:space="preserve">
+    <value>IPv4-Präfix</value>
+  </data>
+  <data name="Préfixe IPv6" xml:space="preserve">
+    <value>IPv6-Präfix</value>
+  </data>
+  <data name="Préférences" xml:space="preserve">
+    <value>Präferenzen</value>
+  </data>
+  <data name="Préférences enregistrées." xml:space="preserve">
+    <value>Präferenzen gespeichert.</value>
+  </data>
+  <data name="Préversion" xml:space="preserve">
+    <value>Vorabversion</value>
+  </data>
+  <data name="Publications suivies :" xml:space="preserve">
+    <value>Verfolgte Veröffentlichungen:</value>
+  </data>
+  <data name="Publiée le {0}" xml:space="preserve">
+    <value>Veröffentlicht am {0}</value>
+  </data>
+  <data name="Qui peut utiliser ce serveur, et quels domaines ne sont jamais traités." xml:space="preserve">
+    <value>Wer diesen Server nutzen darf und welche Domains nie verarbeitet werden.</value>
+  </data>
+  <data name="Recharger la page" xml:space="preserve">
+    <value>Seite neu laden</value>
+  </data>
+  <data name="Recherche immédiatement une nouvelle version sur GitHub." xml:space="preserve">
+    <value>Sucht sofort auf GitHub nach einer neuen Version.</value>
+  </data>
+  <data name="Recherche sécurisée" xml:space="preserve">
+    <value>SafeSearch</value>
+  </data>
+  <data name="Recherche sécurisée imposée" xml:space="preserve">
+    <value>SafeSearch erzwungen</value>
+  </data>
+  <data name="Rechercher automatiquement" xml:space="preserve">
+    <value>Automatisch suchen</value>
+  </data>
+  <data name="Rechercher maintenant" xml:space="preserve">
+    <value>Jetzt suchen</value>
+  </data>
+  <data name="Recherche…" xml:space="preserve">
+    <value>Suche…</value>
+  </data>
+  <data name="Rediriger HTTP vers HTTPS" xml:space="preserve">
+    <value>HTTP auf HTTPS umleiten</value>
+  </data>
+  <data name="Redémarrage d'OnyxFilter…" xml:space="preserve">
+    <value>OnyxFilter wird neu gestartet…</value>
+  </data>
+  <data name="Renouveler maintenant" xml:space="preserve">
+    <value>Jetzt erneuern</value>
+  </data>
+  <data name="Renouvellement prévu le {0} ; prochaine vérification le {1}." xml:space="preserve">
+    <value>Erneuerung geplant am {0}; nächste Prüfung am {1}.</value>
+  </data>
+  <data name="Reprendre" xml:space="preserve">
+    <value>Fortsetzen</value>
+  </data>
+  <data name="Reprise à {0}" xml:space="preserve">
+    <value>Wiederaufnahme um {0}</value>
+  </data>
+  <data name="Requête" xml:space="preserve">
+    <value>Anfrage</value>
+  </data>
+  <data name="Requêtes" xml:space="preserve">
+    <value>Anfragen</value>
+  </data>
+  <data name="Requêtes / seconde" xml:space="preserve">
+    <value>Anfragen / Sekunde</value>
+  </data>
+  <data name="Requêtes par heure sur les dernières 24 heures : {0} au total, dont {1} bloquées." xml:space="preserve">
+    <value>Anfragen pro Stunde in den letzten 24 Stunden: insgesamt {0}, davon {1} blockiert.</value>
+  </data>
+  <data name="Requêtes reçues par heure, sur 24 heures glissantes" xml:space="preserve">
+    <value>Pro Stunde empfangene Anfragen, über gleitende 24 Stunden</value>
+  </data>
+  <data name="Requêtes traitées" xml:space="preserve">
+    <value>Verarbeitete Anfragen</value>
+  </data>
+  <data name="Requêtes {0}–{1}" xml:space="preserve">
+    <value>Anfragen {0}–{1}</value>
+  </data>
+  <data name="Retour arrière" xml:space="preserve">
+    <value>Zurücksetzen auf vorherige Version</value>
+  </data>
+  <data name="Retour à la vue d'ensemble" xml:space="preserve">
+    <value>Zurück zur Übersicht</value>
+  </data>
+  <data name="Retrouve le nom d'hôte des clients à partir de leur adresse IP (requête PTR auprès des résolveurs privés pour le réseau local, des serveurs principaux sinon)." xml:space="preserve">
+    <value>Ermittelt den Hostnamen der Clients anhand ihrer IP-Adresse (PTR-Anfrage an die privaten Resolver für das lokale Netzwerk, sonst an die Hauptserver).</value>
+  </data>
+  <data name="Revenir à la version précédente" xml:space="preserve">
+    <value>Zur vorherigen Version zurückkehren</value>
+  </data>
+  <data name="Rien n'a encore été observé dans les statistiques." xml:space="preserve">
+    <value>In den Statistiken wurde noch nichts beobachtet.</value>
+  </data>
+  <data name="Rien à afficher pour ces critères." xml:space="preserve">
+    <value>Für diese Kriterien gibt es nichts anzuzeigen.</value>
+  </data>
+  <data name="Règle perso." xml:space="preserve">
+    <value>Eigene Regel</value>
+  </data>
+  <data name="Règle personnalisée" xml:space="preserve">
+    <value>Benutzerdefinierte Regel</value>
+  </data>
+  <data name="Règles" xml:space="preserve">
+    <value>Regeln</value>
+  </data>
+  <data name="Règles de filtrage personnalisées enregistrées." xml:space="preserve">
+    <value>Benutzerdefinierte Filterregeln gespeichert.</value>
+  </data>
+  <data name="Règles personnalisées" xml:space="preserve">
+    <value>Benutzerdefinierte Regeln</value>
+  </data>
+  <data name="Réactive immédiatement le filtrage et annule toute reprise programmée." xml:space="preserve">
+    <value>Aktiviert die Filterung sofort wieder und bricht jede geplante Wiederaufnahme ab.</value>
+  </data>
+  <data name="Réactiver" xml:space="preserve">
+    <value>Reaktivieren</value>
+  </data>
+  <data name="Réactiver maintenant" xml:space="preserve">
+    <value>Jetzt reaktivieren</value>
+  </data>
+  <data name="Réduire la durée de conservation supprime les données plus anciennes." xml:space="preserve">
+    <value>Eine kürzere Aufbewahrungsdauer löscht ältere Daten.</value>
+  </data>
+  <data name="Réessayer" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="Réessayez ou rechargez la page." xml:space="preserve">
+    <value>Versuchen Sie es erneut oder laden Sie die Seite neu.</value>
+  </data>
+  <data name="Référence" xml:space="preserve">
+    <value>Referenz</value>
+  </data>
+  <data name="Référence complète" xml:space="preserve">
+    <value>Vollständige Referenz</value>
+  </data>
+  <data name="Réglages" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Réinitialiser" xml:space="preserve">
+    <value>Zurücksetzen</value>
+  </data>
+  <data name="Répartition" xml:space="preserve">
+    <value>Lastverteilung</value>
+  </data>
+  <data name="Répond" xml:space="preserve">
+    <value>Antwortet</value>
+  </data>
+  <data name="Répond 127.0.0.1 pour exemple.org (sans les sous-domaines), façon fichier hosts." xml:space="preserve">
+    <value>Antwortet 127.0.0.1 für beispiel.org (ohne Subdomains), wie eine Hosts-Datei.</value>
+  </data>
+  <data name="Répond aux requêtes inverses sur les adresses privées via les résolveurs ci-dessus, le DHCP ou /etc/hosts. Désactivé, OnyxFilter leur répond NXDOMAIN." xml:space="preserve">
+    <value>Beantwortet Rückwärtsanfragen zu privaten Adressen über die obigen Resolver, DHCP oder /etc/hosts. Deaktiviert antwortet OnyxFilter mit NXDOMAIN.</value>
+  </data>
+  <data name="Répond avec les adresses IPv4/IPv6 de votre choix." xml:space="preserve">
+    <value>Antwortet mit den IPv4/IPv6-Adressen Ihrer Wahl.</value>
+  </data>
+  <data name="Répondez vous-même pour un domaine : adresse IP fixe ou redirection vers un autre nom." xml:space="preserve">
+    <value>Antworten Sie selbst für eine Domain: feste IP-Adresse oder Weiterleitung auf einen anderen Namen.</value>
+  </data>
+  <data name="Réponse" xml:space="preserve">
+    <value>Antwort</value>
+  </data>
+  <data name="Réponse aux domaines bloqués" xml:space="preserve">
+    <value>Antwort auf blockierte Domains</value>
+  </data>
+  <data name="Réponses en JSON, dates en UTC (ISO 8601). Le jeton se transmet dans l'en-tête &lt;code&gt;Authorization: Bearer …&lt;/code&gt; ou &lt;code&gt;X-Api-Key&lt;/code&gt;. Hors de votre réseau local, n'utilisez l'API qu'en HTTPS : le jeton accompagne chaque requête." xml:space="preserve">
+    <value>Antworten in JSON, Datumsangaben in UTC (ISO 8601). Das Token wird im Header &lt;code&gt;Authorization: Bearer …&lt;/code&gt; oder &lt;code&gt;X-Api-Key&lt;/code&gt; übertragen. Außerhalb Ihres lokalen Netzwerks verwenden Sie die API nur über HTTPS: Das Token begleitet jede Anfrage.</value>
+  </data>
+  <data name="Réseaux de distribution de contenu (CDN)" xml:space="preserve">
+    <value>Content-Delivery-Netzwerke (CDN)</value>
+  </data>
+  <data name="Réseaux sociaux" xml:space="preserve">
+    <value>Soziale Netzwerke</value>
+  </data>
+  <data name="Résolue" xml:space="preserve">
+    <value>Aufgelöst</value>
+  </data>
+  <data name="Résolues" xml:space="preserve">
+    <value>Aufgelöst</value>
+  </data>
+  <data name="Résolution et suivi" xml:space="preserve">
+    <value>Auflösung und Verfolgung</value>
+  </data>
+  <data name="Résolveur DNS filtrant" xml:space="preserve">
+    <value>Filternder DNS-Resolver</value>
+  </data>
+  <data name="Résolveur filtrant" xml:space="preserve">
+    <value>Filternder Resolver</value>
+  </data>
+  <data name="Résolveurs en amont" xml:space="preserve">
+    <value>Upstream-Resolver</value>
+  </data>
+  <data name="Résolveurs en amont, comportement du serveur, cache et contrôle d'accès." xml:space="preserve">
+    <value>Upstream-Resolver, Serververhalten, Cache und Zugriffskontrolle.</value>
+  </data>
+  <data name="Résolveurs inverses privés" xml:space="preserve">
+    <value>Private Reverse-Resolver</value>
+  </data>
+  <data name="Résoudre les adresses privées" xml:space="preserve">
+    <value>Private Adressen auflösen</value>
+  </data>
+  <data name="Résultat" xml:space="preserve">
+    <value>Ergebnis</value>
+  </data>
+  <data name="Révoquer" xml:space="preserve">
+    <value>Widerrufen</value>
+  </data>
+  <data name="Révoquer le jeton ?" xml:space="preserve">
+    <value>Token widerrufen?</value>
+  </data>
+  <data name="Réécrite" xml:space="preserve">
+    <value>Umgeschrieben</value>
+  </data>
+  <data name="Réécrite par la Recherche Sécurisée (redirection vers la variante sécurisée du moteur concerné)." xml:space="preserve">
+    <value>Durch SafeSearch umgeschrieben (Weiterleitung auf die sichere Variante der betreffenden Suchmaschine).</value>
+  </data>
+  <data name="Réécrite par une réécriture DNS (Réécritures DNS) : la réponse configurée est renvoyée sans consulter les serveurs en amont." xml:space="preserve">
+    <value>Durch eine DNS-Umschreibung umgeschrieben (DNS-Umschreibungen): Die konfigurierte Antwort wird zurückgegeben, ohne die Upstream-Server abzufragen.</value>
+  </data>
+  <data name="Réécrites" xml:space="preserve">
+    <value>Umgeschrieben</value>
+  </data>
+  <data name="Réécritures DNS" xml:space="preserve">
+    <value>DNS-Umschreibungen</value>
+  </data>
+  <data name="Réécritures DNS enregistrées." xml:space="preserve">
+    <value>DNS-Umschreibungen gespeichert.</value>
+  </data>
+  <data name="Samedi" xml:space="preserve">
+    <value>Samstag</value>
+  </data>
+  <data name="Se connecter" xml:space="preserve">
+    <value>Anmelden</value>
+  </data>
+  <data name="Se déconnecter" xml:space="preserve">
+    <value>Abmelden</value>
+  </data>
+  <data name="Sert une réponse expirée immédiatement, puis la rafraîchit en arrière-plan." xml:space="preserve">
+    <value>Liefert eine abgelaufene Antwort sofort aus und aktualisiert sie dann im Hintergrund.</value>
+  </data>
+  <data name="Serveur" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="Serveur DNS" xml:space="preserve">
+    <value>DNS-Server</value>
+  </data>
+  <data name="Serveurs auxquels OnyxFilter transmet les requêtes qu'il ne bloque pas et ne connaît pas déjà." xml:space="preserve">
+    <value>Server, an die OnyxFilter die Anfragen weiterleitet, die es weder blockiert noch bereits kennt.</value>
+  </data>
+  <data name="Serveurs d'amorçage" xml:space="preserve">
+    <value>Bootstrap-Server</value>
+  </data>
+  <data name="Serveurs de secours" xml:space="preserve">
+    <value>Ausweichserver</value>
+  </data>
+  <data name="Serveurs en amont" xml:space="preserve">
+    <value>Upstream-Server</value>
+  </data>
+  <data name="Serveurs en amont dédiés (un par ligne, vide = serveurs globaux)" xml:space="preserve">
+    <value>Eigene Upstream-Server (einer pro Zeile, leer = globale Server)</value>
+  </data>
+  <data name="Serveurs interrogés pour les requêtes PTR, SOA et NS portant sur des adresses privées (par exemple 192.168.x.x) et émises par un client du réseau local. Laissé vide, OnyxFilter utilise les résolveurs du système (par défaut" xml:space="preserve">
+    <value>Server, die für PTR-, SOA- und NS-Anfragen zu privaten Adressen (zum Beispiel 192.168.x.x) von einem Client des lokalen Netzwerks abgefragt werden. Bleibt das Feld leer, verwendet OnyxFilter die Resolver des Systems (standardmäßig</value>
+  </data>
+  <data name="Serveurs principaux" xml:space="preserve">
+    <value>Hauptserver</value>
+  </data>
+  <data name="Service bloqué" xml:space="preserve">
+    <value>Blockierter Dienst</value>
+  </data>
+  <data name="Services bloqués" xml:space="preserve">
+    <value>Blockierte Dienste</value>
+  </data>
+  <data name="Services bloqués enregistrés." xml:space="preserve">
+    <value>Blockierte Dienste gespeichert.</value>
+  </data>
+  <data name="Services de messagerie" xml:space="preserve">
+    <value>Messaging-Dienste</value>
+  </data>
+  <data name="Services de rencontres" xml:space="preserve">
+    <value>Dating-Dienste</value>
+  </data>
+  <data name="Services de streaming" xml:space="preserve">
+    <value>Streaming-Dienste</value>
+  </data>
+  <data name="Servies depuis le cache" xml:space="preserve">
+    <value>Aus dem Cache bedient</value>
+  </data>
+  <data name="Servis dans tous les cas, même couverts par une règle des clients refusés : par exemple une adresse précise dans un sous-réseau bloqué. Ne restreint pas l'accès des autres clients." xml:space="preserve">
+    <value>Werden immer bedient, auch wenn eine Regel der abgelehnten Clients sie abdeckt: zum Beispiel eine bestimmte Adresse in einem blockierten Subnetz. Schränkt den Zugriff anderer Clients nicht ein.</value>
+  </data>
+  <data name="Shopping" xml:space="preserve">
+    <value>Shopping</value>
+  </data>
+  <data name="Signaler un bug" xml:space="preserve">
+    <value>Fehler melden</value>
+  </data>
+  <data name="Simulez une requête pour savoir si un domaine serait bloqué, autorisé ou réécrit, et pourquoi." xml:space="preserve">
+    <value>Simulieren Sie eine Anfrage, um zu erfahren, ob eine Domain blockiert, erlaubt oder umgeschrieben würde, und warum.</value>
+  </data>
+  <data name="Sombre" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Quelle</value>
+  </data>
+  <data name="Source de la clé privée" xml:space="preserve">
+    <value>Quelle des privaten Schlüssels</value>
+  </data>
+  <data name="Source du certificat" xml:space="preserve">
+    <value>Quelle des Zertifikats</value>
+  </data>
+  <data name="Statistiques" xml:space="preserve">
+    <value>Statistiken</value>
+  </data>
+  <data name="Statistiques effacées." xml:space="preserve">
+    <value>Statistiken gelöscht.</value>
+  </data>
+  <data name="Stratégie d'interrogation" xml:space="preserve">
+    <value>Abfragestrategie</value>
+  </data>
+  <data name="Suivant" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="Suivre la page Services bloqués" xml:space="preserve">
+    <value>Der Seite „Blockierte Dienste“ folgen</value>
+  </data>
+  <data name="Suivre les réglages de la page Général" xml:space="preserve">
+    <value>Den Einstellungen der Seite „Allgemein“ folgen</value>
+  </data>
+  <data name="Supervision" xml:space="preserve">
+    <value>Überwachung</value>
+  </data>
+  <data name="Supprimer" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Supprimer la liste ?" xml:space="preserve">
+    <value>Liste löschen?</value>
+  </data>
+  <data name="Supprimer la réécriture ?" xml:space="preserve">
+    <value>Umschreibung löschen?</value>
+  </data>
+  <data name="Supprimer la réécriture de {0}" xml:space="preserve">
+    <value>Umschreibung für {0} löschen</value>
+  </data>
+  <data name="Supprimer le client ?" xml:space="preserve">
+    <value>Client löschen?</value>
+  </data>
+  <data name="Supprimer {0}" xml:space="preserve">
+    <value>{0} löschen</value>
+  </data>
+  <data name="Suspend le filtrage. Corps JSON optionnel : &lt;code&gt;{&amp;quot;durationSeconds&amp;quot;: 600}&lt;/code&gt; ou &lt;code&gt;{&amp;quot;until&amp;quot;: &amp;quot;2026-01-01T08:00:00Z&amp;quot;}&lt;/code&gt; (aussi acceptés dans l'adresse : &lt;code&gt;?durationSeconds=600&lt;/code&gt;). Sans durée, jusqu'à réactivation." xml:space="preserve">
+    <value>Pausiert die Filterung. Optionaler JSON-Body: &lt;code&gt;{&amp;quot;durationSeconds&amp;quot;: 600}&lt;/code&gt; oder &lt;code&gt;{&amp;quot;until&amp;quot;: &amp;quot;2026-01-01T08:00:00Z&amp;quot;}&lt;/code&gt; (auch in der Adresse akzeptiert: &lt;code&gt;?durationSeconds=600&lt;/code&gt;). Ohne Dauer bis zur Reaktivierung.</value>
+  </data>
+  <data name="Suspendre 1 heure" xml:space="preserve">
+    <value>1 Stunde pausieren</value>
+  </data>
+  <data name="Suspendre 1 minute" xml:space="preserve">
+    <value>1 Minute pausieren</value>
+  </data>
+  <data name="Suspendre 10 minutes" xml:space="preserve">
+    <value>10 Minuten pausieren</value>
+  </data>
+  <data name="Suspendre 30 secondes" xml:space="preserve">
+    <value>30 Sekunden pausieren</value>
+  </data>
+  <data name="Suspendre jusqu'à minuit" xml:space="preserve">
+    <value>Bis Mitternacht pausieren</value>
+  </data>
+  <data name="Suspendre la protection" xml:space="preserve">
+    <value>Schutz pausieren</value>
+  </data>
+  <data name="Suspendue" xml:space="preserve">
+    <value>Pausiert</value>
+  </data>
+  <data name="Syntaxes acceptées" xml:space="preserve">
+    <value>Akzeptierte Syntax</value>
+  </data>
+  <data name="Sécurité de navigation" xml:space="preserve">
+    <value>Browsing-Sicherheit</value>
+  </data>
+  <data name="TCP uniquement" xml:space="preserve">
+    <value>Nur TCP</value>
+  </data>
+  <data name="TTL maximal (s)" xml:space="preserve">
+    <value>Maximale TTL (s)</value>
+  </data>
+  <data name="TTL minimal (s)" xml:space="preserve">
+    <value>Minimale TTL (s)</value>
+  </data>
+  <data name="Taille (octets)" xml:space="preserve">
+    <value>Größe (Bytes)</value>
+  </data>
+  <data name="Taille et durée de vie" xml:space="preserve">
+    <value>Größe und Lebensdauer</value>
+  </data>
+  <data name="Taille à 0 : valeur par défaut choisie par OnyxFilter. TTL à 0 : pas de réécriture de la durée de validité reçue." xml:space="preserve">
+    <value>Größe 0: von OnyxFilter gewählter Standardwert. TTL 0: Die empfangene Gültigkeitsdauer wird nicht umgeschrieben.</value>
+  </data>
+  <data name="Temps de traitement" xml:space="preserve">
+    <value>Verarbeitungszeit</value>
+  </data>
+  <data name="Test" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="Tester" xml:space="preserve">
+    <value>Testen</value>
+  </data>
+  <data name="Tester les serveurs" xml:space="preserve">
+    <value>Server testen</value>
+  </data>
+  <data name="Tester un domaine" xml:space="preserve">
+    <value>Domain testen</value>
+  </data>
+  <data name="Thème clair" xml:space="preserve">
+    <value>Helles Design</value>
+  </data>
+  <data name="Thème de l'interface" xml:space="preserve">
+    <value>Design der Oberfläche</value>
+  </data>
+  <data name="Thème du système" xml:space="preserve">
+    <value>Systemdesign</value>
+  </data>
+  <data name="Thème sombre" xml:space="preserve">
+    <value>Dunkles Design</value>
+  </data>
+  <data name="Top 24 h" xml:space="preserve">
+    <value>Top 24 Std.</value>
+  </data>
+  <data name="Tous les 3 jours" xml:space="preserve">
+    <value>Alle 3 Tage</value>
+  </data>
+  <data name="Tous les serveurs sont interrogés en même temps ; la première réponse l'emporte." xml:space="preserve">
+    <value>Alle Server werden gleichzeitig abgefragt; die erste Antwort gewinnt.</value>
+  </data>
+  <data name="Tout autoriser" xml:space="preserve">
+    <value>Alle erlauben</value>
+  </data>
+  <data name="Tout bloquer" xml:space="preserve">
+    <value>Alle blockieren</value>
+  </data>
+  <data name="Toutes les 12 heures" xml:space="preserve">
+    <value>Alle 12 Stunden</value>
+  </data>
+  <data name="Toutes les 12 heures ; une pastille apparaît dans le menu quand une version est disponible." xml:space="preserve">
+    <value>Alle 12 Stunden; im Menü erscheint ein Hinweis, wenn eine Version verfügbar ist.</value>
+  </data>
+  <data name="Toutes les décisions" xml:space="preserve">
+    <value>Alle Entscheidungen</value>
+  </data>
+  <data name="Toutes les heures" xml:space="preserve">
+    <value>Stündlich</value>
+  </data>
+  <data name="Transmettre le sous-réseau du client (EDNS)" xml:space="preserve">
+    <value>Subnetz des Clients übermitteln (EDNS)</value>
+  </data>
+  <data name="Type d'enregistrement" xml:space="preserve">
+    <value>Eintragstyp</value>
+  </data>
+  <data name="Télécharge chaque semaine une base publique d'adresses (iptoasn.com, environ 9 Mo). Aucune adresse de client n'est envoyée." xml:space="preserve">
+    <value>Lädt wöchentlich eine öffentliche Adressdatenbank herunter (iptoasn.com, etwa 9 MB). Es werden keine Client-Adressen gesendet.</value>
+  </data>
+  <data name="Téléchargement de l'archive…" xml:space="preserve">
+    <value>Archiv wird heruntergeladen…</value>
+  </data>
+  <data name="Téléchargements" xml:space="preserve">
+    <value>Downloads</value>
+  </data>
+  <data name="Téléchargement…" xml:space="preserve">
+    <value>Wird heruntergeladen…</value>
+  </data>
+  <data name="UDP uniquement, port personnalisé" xml:space="preserve">
+    <value>Nur UDP, benutzerdefinierter Port</value>
+  </data>
+  <data name="Un client par ligne" xml:space="preserve">
+    <value>Ein Client pro Zeile</value>
+  </data>
+  <data name="Un client regroupe une ou plusieurs adresses sous un même nom et les mêmes réglages." xml:space="preserve">
+    <value>Ein Client fasst eine oder mehrere Adressen unter einem Namen und denselben Einstellungen zusammen.</value>
+  </data>
+  <data name="Un domaine autorisé n'est jamais bloqué par les" xml:space="preserve">
+    <value>Eine erlaubte Domain wird nie blockiert durch die</value>
+  </data>
+  <data name="Un domaine par ligne" xml:space="preserve">
+    <value>Eine Domain pro Zeile</value>
+  </data>
+  <data name="Un nom pour savoir qui l'utilise (ex. « Home Assistant »)." xml:space="preserve">
+    <value>Ein Name, um zu wissen, wer es nutzt (z. B. „Home Assistant“).</value>
+  </data>
+  <data name="Un serveur de secours par ligne" xml:space="preserve">
+    <value>Ein Ausweichserver pro Zeile</value>
+  </data>
+  <data name="Un serveur par ligne." xml:space="preserve">
+    <value>Ein Server pro Zeile.</value>
+  </data>
+  <data name="Un serveur à la fois, choisi au hasard en privilégiant les plus rapides et les plus fiables." xml:space="preserve">
+    <value>Jeweils ein Server, zufällig gewählt, wobei die schnellsten und zuverlässigsten bevorzugt werden.</value>
+  </data>
+  <data name="Une adresse IP par ligne" xml:space="preserve">
+    <value>Eine IP-Adresse pro Zeile</value>
+  </data>
+  <data name="Une adresse est-elle servie ? &lt;code&gt;?ip=192.168.1.50&lt;/code&gt; ; réponse : &lt;code&gt;allowed&lt;/code&gt;, et la règle en cause (&lt;code&gt;rule&lt;/code&gt;, &lt;code&gt;list&lt;/code&gt;)." xml:space="preserve">
+    <value>Wird eine Adresse bedient? &lt;code&gt;?ip=192.168.1.50&lt;/code&gt;; Antwort: &lt;code&gt;allowed&lt;/code&gt; und die zutreffende Regel (&lt;code&gt;rule&lt;/code&gt;, &lt;code&gt;list&lt;/code&gt;).</value>
+  </data>
+  <data name="Une erreur est survenue" xml:space="preserve">
+    <value>Ein Fehler ist aufgetreten</value>
+  </data>
+  <data name="Une erreur inattendue est survenue." xml:space="preserve">
+    <value>Ein unerwarteter Fehler ist aufgetreten.</value>
+  </data>
+  <data name="Une fois HTTPS actif, les visites en HTTP sont renvoyées vers HTTPS et le navigateur retient de n'utiliser que HTTPS pour ce nom (HSTS, 30 jours)." xml:space="preserve">
+    <value>Sobald HTTPS aktiv ist, werden HTTP-Aufrufe auf HTTPS umgeleitet und der Browser merkt sich, für diesen Namen nur HTTPS zu verwenden (HSTS, 30 Tage).</value>
+  </data>
+  <data name="Une réécriture passe avant toute autre vérification (listes de blocage et d'autorisation, sécurité de navigation, contrôle parental, recherche sécurisée) : la réponse configurée ici l'emporte toujours pour le domaine concerné." xml:space="preserve">
+    <value>Eine Umschreibung hat Vorrang vor jeder anderen Prüfung (Sperr- und Zulassungslisten, Browsing-Sicherheit, Kindersicherung, SafeSearch): Die hier konfigurierte Antwort gewinnt für die betreffende Domain immer.</value>
+  </data>
+  <data name="Usage sur 24 heures glissantes : volumes (total, bloquées, autorisées, taux), temps de traitement, domaines et clients les plus actifs, serveurs en amont, série horaire." xml:space="preserve">
+    <value>Nutzung über gleitende 24 Stunden: Volumen (gesamt, blockiert, erlaubt, Quote), Verarbeitungszeit, aktivste Domains und Clients, Upstream-Server, stündliche Reihe.</value>
+  </data>
+  <data name="Utiliser une clé d'accès" xml:space="preserve">
+    <value>Passkey verwenden</value>
+  </data>
+  <data name="Utilisés uniquement si aucun serveur principal ne répond. Même syntaxe que ci-dessus." xml:space="preserve">
+    <value>Nur verwendet, wenn kein Hauptserver antwortet. Gleiche Syntax wie oben.</value>
+  </data>
+  <data name="Valeur du jeton" xml:space="preserve">
+    <value>Wert des Tokens</value>
+  </data>
+  <data name="Valide" xml:space="preserve">
+    <value>Gültig</value>
+  </data>
+  <data name="Valider DNSSEC" xml:space="preserve">
+    <value>DNSSEC validieren</value>
+  </data>
+  <data name="Vendredi" xml:space="preserve">
+    <value>Freitag</value>
+  </data>
+  <data name="Version" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="Version installée · mises à jour" xml:space="preserve">
+    <value>Installierte Version · Updates</value>
+  </data>
+  <data name="Version {0} disponible" xml:space="preserve">
+    <value>Version {0} verfügbar</value>
+  </data>
+  <data name="Vider le cache" xml:space="preserve">
+    <value>Cache leeren</value>
+  </data>
+  <data name="Vider le journal" xml:space="preserve">
+    <value>Protokoll leeren</value>
+  </data>
+  <data name="Volume transmis et latence moyenne de réponse" xml:space="preserve">
+    <value>Weitergeleitetes Volumen und durchschnittliche Antwortlatenz</value>
+  </data>
+  <data name="Vos propres règles, prioritaires sur toutes les listes abonnées. Une règle par ligne." xml:space="preserve">
+    <value>Ihre eigenen Regeln, mit Vorrang vor allen abonnierten Listen. Eine Regel pro Zeile.</value>
+  </data>
+  <data name="Votre clé d'accès a été ajoutée." xml:space="preserve">
+    <value>Ihr Passkey wurde hinzugefügt.</value>
+  </data>
+  <data name="Votre identifiant" xml:space="preserve">
+    <value>Ihr Benutzername</value>
+  </data>
+  <data name="Votre réseau, vos règles." xml:space="preserve">
+    <value>Ihr Netzwerk, Ihre Regeln.</value>
+  </data>
+  <data name="Vue d'ensemble" xml:space="preserve">
+    <value>Übersicht</value>
+  </data>
+  <data name="Vérification de l'empreinte SHA-256…" xml:space="preserve">
+    <value>SHA-256-Hash wird geprüft…</value>
+  </data>
+  <data name="Vérification…" xml:space="preserve">
+    <value>Wird geprüft…</value>
+  </data>
+  <data name="Vérifie la signature des réponses lorsque les serveurs en amont la fournissent." xml:space="preserve">
+    <value>Prüft die Signatur der Antworten, wenn die Upstream-Server sie liefern.</value>
+  </data>
+  <data name="[/domaine/]serveur" xml:space="preserve">
+    <value>[/domain/]server</value>
+  </data>
+  <data name="archive de {0}" xml:space="preserve">
+    <value>Archiv von {0}</value>
+  </data>
+  <data name="aucune activité enregistrée" xml:space="preserve">
+    <value>keine Aktivität erfasst</value>
+  </data>
+  <data name="conditions d'utilisation de Let's Encrypt" xml:space="preserve">
+    <value>Nutzungsbedingungen von Let's Encrypt</value>
+  </data>
+  <data name="couvre tous les sous-domaines." xml:space="preserve">
+    <value>deckt alle Subdomains ab.</value>
+  </data>
+  <data name="d MMMM yyyy 'à' HH:mm" xml:space="preserve">
+    <value>d. MMMM yyyy 'um' HH:mm</value>
+  </data>
+  <data name="dans moins de 2 heures" xml:space="preserve">
+    <value>in weniger als 2 Stunden</value>
+  </data>
+  <data name="dans {0} heures" xml:space="preserve">
+    <value>in {0} Stunden</value>
+  </data>
+  <data name="dans {0} jours" xml:space="preserve">
+    <value>in {0} Tagen</value>
+  </data>
+  <data name="dns.exemple.fr" xml:space="preserve">
+    <value>dns.beispiel.de</value>
+  </data>
+  <data name="du {0} au {1}" xml:space="preserve">
+    <value>vom {0} bis {1}</value>
+  </data>
+  <data name="encore 1 jour" xml:space="preserve">
+    <value>noch 1 Tag</value>
+  </data>
+  <data name="encore {0} jours" xml:space="preserve">
+    <value>noch {0} Tage</value>
+  </data>
+  <data name="et" xml:space="preserve">
+    <value>und</value>
+  </data>
+  <data name="et l'utilise à la place du certificat fourni à la main." xml:space="preserve">
+    <value>und verwendet es anstelle des manuell bereitgestellten Zertifikats.</value>
+  </data>
+  <data name="et le routage par domaine" xml:space="preserve">
+    <value>und das domainbasierte Routing</value>
+  </data>
+  <data name="et les" xml:space="preserve">
+    <value>und die</value>
+  </data>
+  <data name="et n'apparaissent pas ci-dessous tant que la base n'est pas rétablie. La résolution DNS n'est pas affectée." xml:space="preserve">
+    <value>und erscheinen unten erst, wenn die Datenbank wieder verfügbar ist. Die DNS-Auflösung ist nicht betroffen.</value>
+  </data>
+  <data name="et pendant combien de temps." xml:space="preserve">
+    <value>und wie lange.</value>
+  </data>
+  <data name="exemple.fr" xml:space="preserve">
+    <value>beispiel.de</value>
+  </data>
+  <data name="expire aujourd'hui" xml:space="preserve">
+    <value>läuft heute ab</value>
+  </data>
+  <data name="expiré" xml:space="preserve">
+    <value>abgelaufen</value>
+  </data>
+  <data name="heure(s)" xml:space="preserve">
+    <value>Stunde(n)</value>
+  </data>
+  <data name="indiqués ci-dessus. Commentaires non autorisés." xml:space="preserve">
+    <value>oben angegeben. Kommentare nicht erlaubt.</value>
+  </data>
+  <data name="journal" xml:space="preserve">
+    <value>Protokoll</value>
+  </data>
+  <data name="la réponse renvoyée dépend du réglage « Réponse aux domaines bloqués » de" xml:space="preserve">
+    <value>die zurückgegebene Antwort hängt von der Einstellung „Antwort auf blockierte Domains“ ab in</value>
+  </data>
+  <data name="le nom de ce serveur" xml:space="preserve">
+    <value>den Namen dieses Servers</value>
+  </data>
+  <data name="listes de blocage abonnées" xml:space="preserve">
+    <value>abonnierten Sperrlisten</value>
+  </data>
+  <data name="moyenne par requête" xml:space="preserve">
+    <value>Durchschnitt pro Anfrage</value>
+  </data>
+  <data name="nas.maison ou *.exemple.fr" xml:space="preserve">
+    <value>nas.zuhause oder *.beispiel.de</value>
+  </data>
+  <data name="ne figure pas dans ce certificat : les appareils refuseront la connexion chiffrée." xml:space="preserve">
+    <value>ist nicht in diesem Zertifikat enthalten: Die Geräte werden die verschlüsselte Verbindung ablehnen.</value>
+  </data>
+  <data name="ou" xml:space="preserve">
+    <value>oder</value>
+  </data>
+  <data name="page d'accueil" xml:space="preserve">
+    <value>Startseite</value>
+  </data>
+  <data name="pas encore valide" xml:space="preserve">
+    <value>noch nicht gültig</value>
+  </data>
+  <data name="pendant le redémarrage." xml:space="preserve">
+    <value>während des Neustarts.</value>
+  </data>
+  <data name="requêtes de {0} h à {1} h" xml:space="preserve">
+    <value>Anfragen von {0} bis {1} Uhr</value>
+  </data>
+  <data name="règles de filtrage personnalisées" xml:space="preserve">
+    <value>benutzerdefinierten Filterregeln</value>
+  </data>
+  <data name="vers" xml:space="preserve">
+    <value>auf</value>
+  </data>
+  <data name="voir sur GitHub" xml:space="preserve">
+    <value>auf GitHub ansehen</value>
+  </data>
+  <data name="vous@exemple.fr" xml:space="preserve">
+    <value>sie@beispiel.de</value>
+  </data>
+  <data name="vérification en cours…" xml:space="preserve">
+    <value>wird geprüft…</value>
+  </data>
+  <data name="{0} Mo" xml:space="preserve">
+    <value>{0} MB</value>
+  </data>
+  <data name="{0} h" xml:space="preserve">
+    <value>{0} Uhr</value>
+  </data>
+  <data name="{0} h – {1} h · {2} requête(s), dont {3} bloquée(s)" xml:space="preserve">
+    <value>{0} – {1} Uhr · {2} Anfrage(n), davon {3} blockiert</value>
+  </data>
+  <data name="{0} par page" xml:space="preserve">
+    <value>{0} pro Seite</value>
+  </data>
+  <data name="{0} serveur(s)" xml:space="preserve">
+    <value>{0} Server</value>
+  </data>
+  <data name="{0} service(s)" xml:space="preserve">
+    <value>{0} Dienst(e)</value>
+  </data>
+  <data name="« {0} » cessera immédiatement de donner accès à l'API. Les scripts qui l'utilisent recevront une erreur 401." xml:space="preserve">
+    <value>„{0}“ gewährt ab sofort keinen Zugriff mehr auf die API. Skripte, die es verwenden, erhalten einen 401-Fehler.</value>
+  </data>
+  <data name="« {0} » ne sera plus utilisée pour autoriser des domaines. Cette action est définitive." xml:space="preserve">
+    <value>„{0}“ wird nicht mehr verwendet, um Domains zu erlauben. Diese Aktion ist endgültig.</value>
+  </data>
+  <data name="« {0} » ne sera plus utilisée pour bloquer des domaines. Cette action est définitive." xml:space="preserve">
+    <value>„{0}“ wird nicht mehr verwendet, um Domains zu blockieren. Diese Aktion ist endgültig.</value>
+  </data>
+  <data name="« {0} » repassera sous les réglages globaux. Cette action est définitive." xml:space="preserve">
+    <value>„{0}“ fällt auf die globalen Einstellungen zurück. Diese Aktion ist endgültig.</value>
+  </data>
+  <data name="« {0} » sera de nouveau résolu normalement. Cette action est définitive." xml:space="preserve">
+    <value>„{0}“ wird wieder normal aufgelöst. Diese Aktion ist endgültig.</value>
+  </data>
+  <data name="À compléter" xml:space="preserve">
+    <value>Unvollständig</value>
+  </data>
+  <data name="À jour" xml:space="preserve">
+    <value>Aktuell</value>
+  </data>
+  <data name="Échec" xml:space="preserve">
+    <value>Fehlgeschlagen</value>
+  </data>
+  <data name="Échec de la reconnexion. Nouvel essai dans" xml:space="preserve">
+    <value>Wiederverbindung fehlgeschlagen. Neuer Versuch in</value>
+  </data>
+  <data name="Émis par" xml:space="preserve">
+    <value>Ausgestellt von</value>
+  </data>
+  <data name="État" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="État du filtrage : &lt;code&gt;enabled&lt;/code&gt;, &lt;code&gt;disabledUntil&lt;/code&gt;, &lt;code&gt;remainingSeconds&lt;/code&gt;." xml:space="preserve">
+    <value>Status der Filterung: &lt;code&gt;enabled&lt;/code&gt;, &lt;code&gt;disabledUntil&lt;/code&gt;, &lt;code&gt;remainingSeconds&lt;/code&gt;.</value>
+  </data>
+  <data name="Étiquettes (une par ligne)" xml:space="preserve">
+    <value>Tags (einer pro Zeile)</value>
+  </data>
+  <data name="≈ {0} par heure" xml:space="preserve">
+    <value>≈ {0} pro Stunde</value>
+  </data>
+  <data name="Connecter un smartphone" xml:space="preserve">
+    <value>Smartphone verbinden</value>
+  </data>
+  <data name="Affiche un QR code à scanner avec l'application OnyxFilter pour Android : elle se connecte sans saisie. Le code change toutes les {0} secondes et ne sert qu'une fois ; le jeton créé apparaît ensuite dans la liste ci-dessous." xml:space="preserve">
+    <value>Zeigt einen QR-Code an, der mit der OnyxFilter-App für Android gescannt wird: Sie verbindet sich ohne Eingabe. Der Code ändert sich alle {0} Sekunden und funktioniert nur einmal; das erstellte Token erscheint anschließend in der Liste unten.</value>
+  </data>
+  <data name="Afficher le QR code" xml:space="preserve">
+    <value>QR-Code anzeigen</value>
+  </data>
+  <data name="Scannez ce code avec l'appareil photo du téléphone, ou depuis l'écran de connexion de l'application OnyxFilter." xml:space="preserve">
+    <value>Scannen Sie diesen Code mit der Kamera des Telefons oder über den Anmeldebildschirm der OnyxFilter-App.</value>
+  </data>
+  <data name="QR code de connexion" xml:space="preserve">
+    <value>Anmelde-QR-Code</value>
+  </data>
+  <data name="Nouveau code dans {0} s" xml:space="preserve">
+    <value>Neuer Code in {0} s</value>
+  </data>
+  <data name="Nom de l'appareil" xml:space="preserve">
+    <value>Gerätename</value>
+  </data>
+  <data name="Adresse du serveur, vue du smartphone" xml:space="preserve">
+    <value>Serveradresse, wie sie das Smartphone sieht</value>
+  </data>
+  <data name="En HTTP, le jeton circule en clair : réservez-le à votre réseau local." xml:space="preserve">
+    <value>Über HTTP wird das Token unverschlüsselt übertragen: Verwenden Sie es nur in Ihrem lokalen Netzwerk.</value>
+  </data>
+  <data name="Fermer" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Erreur : nombre maximal de jetons atteint ({0}). Révoquez-en un avant de connecter un smartphone." xml:space="preserve">
+    <value>Fehler: Maximale Anzahl an Token erreicht ({0}). Widerrufen Sie eines, bevor Sie ein Smartphone verbinden.</value>
+  </data>
+  <data name="Smartphone « {0} » connecté : son jeton figure dans la liste." xml:space="preserve">
+    <value>Smartphone „{0}“ verbunden: Sein Token steht in der Liste.</value>
+  </data>
+  <data name="Erreur : nombre maximal de jetons atteint ({0}). Révoquez-en un, puis réessayez." xml:space="preserve">
+    <value>Fehler: Maximale Anzahl an Token erreicht ({0}). Widerrufen Sie eines und versuchen Sie es erneut.</value>
+  </data>
+  <data name="Filtrage par pays" xml:space="preserve">
+    <value>Länderfilterung</value>
+  </data>
+  <data name="Refusez les requêtes des clients selon le pays de leur adresse IP." xml:space="preserve">
+    <value>Lehnen Sie Anfragen von Clients anhand des Landes ihrer IP-Adresse ab.</value>
+  </data>
+  <data name="Mode" xml:space="preserve">
+    <value>Modus</value>
+  </data>
+  <data name="Les clients du réseau local, et ceux des listes « Clients autorisés » ou « Clients toujours autorisés » des" xml:space="preserve">
+    <value>Clients im lokalen Netzwerk sowie die Clients der Listen „Erlaubte Clients“ oder „Immer erlaubte Clients“ der</value>
+  </data>
+  <data name="paramètres DNS" xml:space="preserve">
+    <value>DNS-Einstellungen</value>
+  </data>
+  <data name=", sont toujours servis. Un client refusé ne reçoit aucune réponse." xml:space="preserve">
+    <value> werden immer bedient. Ein abgelehnter Client erhält keine Antwort.</value>
+  </data>
+  <data name="Mode du filtrage par pays" xml:space="preserve">
+    <value>Modus der Länderfilterung</value>
+  </data>
+  <data name="Bloquer les pays sélectionnés" xml:space="preserve">
+    <value>Ausgewählte Länder blockieren</value>
+  </data>
+  <data name="N'autoriser que les pays sélectionnés" xml:space="preserve">
+    <value>Nur ausgewählte Länder erlauben</value>
+  </data>
+  <data name="La base des pays (iptoasn.com) n'est pas encore chargée : elle est téléchargée après l'enregistrement. En attendant, tous les clients sont servis." xml:space="preserve">
+    <value>Die Länderdatenbank (iptoasn.com) ist noch nicht geladen: Sie wird nach dem Speichern heruntergeladen. Bis dahin werden alle Clients bedient.</value>
+  </data>
+  <data name="Pays sélectionnés" xml:space="preserve">
+    <value>Ausgewählte Länder</value>
+  </data>
+  <data name="Rechercher un pays" xml:space="preserve">
+    <value>Land suchen</value>
+  </data>
+  <data name="Tout désélectionner" xml:space="preserve">
+    <value>Auswahl aufheben</value>
+  </data>
+  <data name="La liste des pays sera disponible une fois la base des pays chargée. Activez le filtrage et enregistrez pour lancer son téléchargement." xml:space="preserve">
+    <value>Die Länderliste ist verfügbar, sobald die Länderdatenbank geladen ist. Aktivieren Sie die Filterung und speichern Sie, um den Download zu starten.</value>
+  </data>
+  <data name="Sélectionnez au moins un pays à autoriser." xml:space="preserve">
+    <value>Wählen Sie mindestens ein zu erlaubendes Land aus.</value>
+  </data>
+  <data name="Filtrage par pays enregistré." xml:space="preserve">
+    <value>Länderfilterung gespeichert.</value>
+  </data>
+  <data name=" restent servis." xml:space="preserve">
+    <value> werden weiterhin bedient.</value>
+  </data>
+  <data name="{0} décision(s) appliquée(s)" xml:space="preserve">
+    <value>{0} Entscheidung(en) angewendet</value>
+  </data>
+  <data name="Actualisation (secondes)" xml:space="preserve">
+    <value>Aktualisierung (Sekunden)</value>
+  </data>
+  <data name="Adresse de l'API locale" xml:space="preserve">
+    <value>Adresse der lokalen API</value>
+  </data>
+  <data name="Adresse de l'API locale invalide (http:// ou https:// attendu)." xml:space="preserve">
+    <value>Ungültige Adresse der lokalen API (http:// oder https:// erwartet).</value>
+  </data>
+  <data name="Clé du bouncer" xml:space="preserve">
+    <value>Bouncer-Schlüssel</value>
+  </data>
+  <data name="Clé enregistrée (laisser vide pour la conserver)" xml:space="preserve">
+    <value>Schlüssel gespeichert (leer lassen, um ihn zu behalten)</value>
+  </data>
+  <data name="Connecté" xml:space="preserve">
+    <value>Verbunden</value>
+  </data>
+  <data name="Connexion à CrowdSec réussie." xml:space="preserve">
+    <value>Verbindung zu CrowdSec erfolgreich.</value>
+  </data>
+  <data name="Connexion à l'API locale" xml:space="preserve">
+    <value>Verbindung zur lokalen API</value>
+  </data>
+  <data name="Créez la clé sur la machine CrowdSec avec" xml:space="preserve">
+    <value>Erstellen Sie den Schlüssel auf dem CrowdSec-Rechner mit</value>
+  </data>
+  <data name="dernière synchronisation à {0}" xml:space="preserve">
+    <value>letzte Synchronisierung um {0}</value>
+  </data>
+  <data name="Désactivé." xml:space="preserve">
+    <value>Deaktiviert.</value>
+  </data>
+  <data name="Échec de la connexion à CrowdSec : {0}" xml:space="preserve">
+    <value>Verbindung zu CrowdSec fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Injoignable" xml:space="preserve">
+    <value>Nicht erreichbar</value>
+  </data>
+  <data name="L'actualisation doit être comprise entre 1 et 3600 secondes." xml:space="preserve">
+    <value>Die Aktualisierung muss zwischen 1 und 3600 Sekunden liegen.</value>
+  </data>
+  <data name="Les adresses bannies reçoivent une erreur 403 sur l'interface web et l'API." xml:space="preserve">
+    <value>Gesperrte Adressen erhalten auf der Weboberfläche und der API einen 403-Fehler.</value>
+  </data>
+  <data name="OnyxFilter interroge l'API locale de CrowdSec et ne répond plus aux adresses bannies. Les clients toujours autorisés des" xml:space="preserve">
+    <value>OnyxFilter fragt die lokale API von CrowdSec ab und antwortet gesperrten Adressen nicht mehr. Die immer erlaubten Clients der</value>
+  </data>
+  <data name="Paramètres CrowdSec enregistrés." xml:space="preserve">
+    <value>CrowdSec-Einstellungen gespeichert.</value>
+  </data>
+  <data name="Protéger aussi l'interface web" xml:space="preserve">
+    <value>Auch die Weboberfläche schützen</value>
+  </data>
+  <data name="Refusez l'accès aux adresses bannies par votre instance CrowdSec." xml:space="preserve">
+    <value>Verweigern Sie Adressen, die Ihre CrowdSec-Instanz gesperrt hat, den Zugriff.</value>
+  </data>
+  <data name="Renseignez la clé du bouncer." xml:space="preserve">
+    <value>Geben Sie den Bouncer-Schlüssel ein.</value>
+  </data>
+  <data name="Test en cours…" xml:space="preserve">
+    <value>Test läuft…</value>
+  </data>
+  <data name="Tester la connexion" xml:space="preserve">
+    <value>Verbindung testen</value>
+  </data>
+  <data name="Utiliser CrowdSec" xml:space="preserve">
+    <value>CrowdSec verwenden</value>
+  </data>
+  <data name="À indiquer comme serveur DNS sur vos appareils ou votre routeur." xml:space="preserve">
+    <value>Als DNS-Server auf Ihren Geräten oder Ihrem Router einzutragen.</value>
+  </data>
+  <data name="Activez &lt;strong&gt;IPv4&lt;/strong&gt; et saisissez &lt;code&gt;{0}&lt;/code&gt; dans &lt;strong&gt;DNS préféré&lt;/strong&gt;. Laissez le DNS secondaire vide." xml:space="preserve">
+    <value>Aktivieren Sie &lt;strong&gt;IPv4&lt;/strong&gt; und geben Sie &lt;code&gt;{0}&lt;/code&gt; unter &lt;strong&gt;Bevorzugter DNS&lt;/strong&gt; ein. Lassen Sie den alternativen DNS leer.</value>
+  </data>
+  <data name="adresse IP du serveur" xml:space="preserve">
+    <value>IP-Adresse des Servers</value>
+  </data>
+  <data name="Adresses de ce serveur" xml:space="preserve">
+    <value>Adressen dieses Servers</value>
+  </data>
+  <data name="Android 9 et plus. Le nom des menus varie selon le fabricant." xml:space="preserve">
+    <value>Android 9 und höher. Die Menübezeichnungen variieren je nach Hersteller.</value>
+  </data>
+  <data name="Android n'utilise que le port 853 pour le DNS privé : le port DNS-over-TLS configuré ({0}) doit être redirigé vers celui-ci." xml:space="preserve">
+    <value>Android verwendet für privates DNS nur Port 853: Der konfigurierte DNS-over-TLS-Port ({0}) muss von diesem aus weitergeleitet werden.</value>
+  </data>
+  <data name="Aucune adresse détectée" xml:space="preserve">
+    <value>Keine Adresse erkannt</value>
+  </data>
+  <data name="Ce réglage ne vaut que pour ce réseau Wi-Fi et oblige à fixer l'adresse IP du téléphone. Le DNS privé (DNS chiffré) est plus simple et suit le téléphone partout." xml:space="preserve">
+    <value>Diese Einstellung gilt nur für dieses WLAN und erfordert eine feste IP-Adresse für das Telefon. Privates DNS (verschlüsseltes DNS) ist einfacher und begleitet das Telefon überallhin.</value>
+  </data>
+  <data name="Certaines box d'opérateur ne permettent pas de changer le serveur DNS distribué : configurez alors chaque appareil comme indiqué ci-dessous." xml:space="preserve">
+    <value>Manche Router von Internetanbietern erlauben nicht, den verteilten DNS-Server zu ändern: Konfigurieren Sie dann jedes Gerät wie unten beschrieben.</value>
+  </data>
+  <data name="Choisissez &lt;strong&gt;Nom d'hôte du fournisseur de DNS privé&lt;/strong&gt; et saisissez &lt;code&gt;{0}&lt;/code&gt;." xml:space="preserve">
+    <value>Wählen Sie &lt;strong&gt;Hostname des privaten DNS-Anbieters&lt;/strong&gt; und geben Sie &lt;code&gt;{0}&lt;/code&gt; ein.</value>
+  </data>
+  <data name="Cliquez sur &lt;strong&gt;Détails…&lt;/strong&gt; à côté de la connexion utilisée, puis sur l'onglet &lt;strong&gt;DNS&lt;/strong&gt;." xml:space="preserve">
+    <value>Klicken Sie neben der verwendeten Verbindung auf &lt;strong&gt;Details …&lt;/strong&gt; und dann auf den Tab &lt;strong&gt;DNS&lt;/strong&gt;.</value>
+  </data>
+  <data name="Cliquez sur &lt;strong&gt;Enregistrer&lt;/strong&gt;." xml:space="preserve">
+    <value>Klicken Sie auf &lt;strong&gt;Speichern&lt;/strong&gt;.</value>
+  </data>
+  <data name="Cliquez sur &lt;strong&gt;Enregistrer&lt;/strong&gt;. Le réglage vaut pour le Wi-Fi comme pour les données mobiles." xml:space="preserve">
+    <value>Tippen Sie auf &lt;strong&gt;Speichern&lt;/strong&gt;. Die Einstellung gilt für WLAN und mobile Daten gleichermaßen.</value>
+  </data>
+  <data name="Cliquez sur &lt;strong&gt;OK&lt;/strong&gt;." xml:space="preserve">
+    <value>Klicken Sie auf &lt;strong&gt;OK&lt;/strong&gt;.</value>
+  </data>
+  <data name="Dans &lt;strong&gt;Options avancées&lt;/strong&gt;, réglez &lt;strong&gt;Paramètres IP&lt;/strong&gt; sur &lt;strong&gt;Statique&lt;/strong&gt;." xml:space="preserve">
+    <value>Setzen Sie unter &lt;strong&gt;Erweiterte Optionen&lt;/strong&gt; die &lt;strong&gt;IP-Einstellungen&lt;/strong&gt; auf &lt;strong&gt;Statisch&lt;/strong&gt;.</value>
+  </data>
+  <data name="DNS chiffré indisponible : renseignez le nom du serveur et un certificat valide dans" xml:space="preserve">
+    <value>Verschlüsseltes DNS nicht verfügbar: Geben Sie den Servernamen und ein gültiges Zertifikat an in</value>
+  </data>
+  <data name="En face de &lt;strong&gt;Attribution du serveur DNS&lt;/strong&gt;, cliquez sur &lt;strong&gt;Modifier&lt;/strong&gt; et choisissez &lt;strong&gt;Manuel&lt;/strong&gt;." xml:space="preserve">
+    <value>Klicken Sie neben &lt;strong&gt;DNS-Serverzuweisung&lt;/strong&gt; auf &lt;strong&gt;Bearbeiten&lt;/strong&gt; und wählen Sie &lt;strong&gt;Manuell&lt;/strong&gt;.</value>
+  </data>
+  <data name="Enregistrez, puis reconnectez les appareils (ou attendez le renouvellement de leur bail DHCP) pour qu'ils reçoivent le nouveau serveur DNS." xml:space="preserve">
+    <value>Speichern Sie und verbinden Sie die Geräte neu (oder warten Sie auf die Erneuerung ihrer DHCP-Lease), damit sie den neuen DNS-Server erhalten.</value>
+  </data>
+  <data name="Il est nécessaire pour la configuration recommandée sur Android, et possible sous Windows 11." xml:space="preserve">
+    <value>Es ist für die empfohlene Konfiguration unter Android erforderlich und unter Windows 11 möglich.</value>
+  </data>
+  <data name="Indiquez &lt;code&gt;{0}&lt;/code&gt; comme serveur DNS principal et laissez le serveur secondaire vide : un serveur public en secours permettrait de contourner le filtrage." xml:space="preserve">
+    <value>Geben Sie &lt;code&gt;{0}&lt;/code&gt; als primären DNS-Server ein und lassen Sie den sekundären Server leer: Ein öffentlicher Ausweichserver würde das Umgehen der Filterung ermöglichen.</value>
+  </data>
+  <data name="iOS et iPadOS. Le réglage s'applique à un réseau Wi-Fi : à refaire pour chaque réseau." xml:space="preserve">
+    <value>iOS und iPadOS. Die Einstellung gilt für ein WLAN: für jedes Netzwerk wiederholen.</value>
+  </data>
+  <data name="iPhone et iPad" xml:space="preserve">
+    <value>iPhone und iPad</value>
+  </data>
+  <data name="Le DNS non chiffré est refusé (page Chiffrement) : seules les configurations en DNS chiffré ci-dessous fonctionneront." xml:space="preserve">
+    <value>Unverschlüsseltes DNS wird abgelehnt (Seite Verschlüsselung): Nur die unten beschriebenen verschlüsselten DNS-Konfigurationen funktionieren.</value>
+  </data>
+  <data name="Les données mobiles ne sont pas couvertes : iOS ne permet d'y imposer un serveur DNS que par un profil de configuration." xml:space="preserve">
+    <value>Mobile Daten sind nicht abgedeckt: iOS erlaubt dort einen DNS-Server nur über ein Konfigurationsprofil.</value>
+  </data>
+  <data name="Linux n'est pas détaillé ici : la marche à suivre dépend du gestionnaire réseau de la distribution (NetworkManager, systemd-resolved…). Indiquez-y l'adresse de ce serveur comme serveur DNS, ou configurez le routeur." xml:space="preserve">
+    <value>Linux wird hier nicht beschrieben: Das Vorgehen hängt vom Netzwerkmanager der Distribution ab (NetworkManager, systemd-resolved…). Tragen Sie dort die Adresse dieses Servers als DNS-Server ein oder konfigurieren Sie den Router.</value>
+  </data>
+  <data name="macOS 13 Ventura et plus. Le réglage s'applique à une connexion : à refaire pour le Wi-Fi et l'Ethernet." xml:space="preserve">
+    <value>macOS 13 Ventura und höher. Die Einstellung gilt für eine Verbindung: für WLAN und Ethernet wiederholen.</value>
+  </data>
+  <data name="Ouvrez &lt;strong&gt;Paramètres › Réseau et Internet › DNS privé&lt;/strong&gt; (Samsung : &lt;strong&gt;Connexions › Autres paramètres de connexion › DNS privé&lt;/strong&gt;)." xml:space="preserve">
+    <value>Öffnen Sie &lt;strong&gt;Einstellungen › Netzwerk &amp;amp; Internet › Privates DNS&lt;/strong&gt; (Samsung: &lt;strong&gt;Verbindungen › Weitere Verbindungseinstellungen › Privates DNS&lt;/strong&gt;).</value>
+  </data>
+  <data name="Ouvrez &lt;strong&gt;Paramètres › Réseau et Internet&lt;/strong&gt;, puis &lt;strong&gt;Wi-Fi&lt;/strong&gt; ou &lt;strong&gt;Ethernet&lt;/strong&gt; et la connexion utilisée." xml:space="preserve">
+    <value>Öffnen Sie &lt;strong&gt;Einstellungen › Netzwerk und Internet&lt;/strong&gt;, dann &lt;strong&gt;WLAN&lt;/strong&gt; oder &lt;strong&gt;Ethernet&lt;/strong&gt; und die verwendete Verbindung.</value>
+  </data>
+  <data name="Ouvrez &lt;strong&gt;Paramètres › Wi-Fi&lt;/strong&gt;, appuyez longuement sur le réseau (ou sur l'icône des réglages) puis &lt;strong&gt;Modifier&lt;/strong&gt;." xml:space="preserve">
+    <value>Öffnen Sie &lt;strong&gt;Einstellungen › WLAN&lt;/strong&gt;, tippen Sie lange auf das Netzwerk (oder auf das Einstellungssymbol) und dann auf &lt;strong&gt;Ändern&lt;/strong&gt;.</value>
+  </data>
+  <data name="Ouvrez &lt;strong&gt;Réglages › Wi-Fi&lt;/strong&gt; et touchez l'icône d'information à droite du réseau." xml:space="preserve">
+    <value>Öffnen Sie &lt;strong&gt;Einstellungen › WLAN&lt;/strong&gt; und tippen Sie auf das Infosymbol rechts neben dem Netzwerk.</value>
+  </data>
+  <data name="Ouvrez &lt;strong&gt;Réglages Système › Réseau&lt;/strong&gt;, puis &lt;strong&gt;Wi-Fi&lt;/strong&gt; ou &lt;strong&gt;Ethernet&lt;/strong&gt;." xml:space="preserve">
+    <value>Öffnen Sie &lt;strong&gt;Systemeinstellungen › Netzwerk&lt;/strong&gt;, dann &lt;strong&gt;WLAN&lt;/strong&gt; oder &lt;strong&gt;Ethernet&lt;/strong&gt;.</value>
+  </data>
+  <data name="Ouvrez l'interface d'administration du routeur (souvent &lt;code&gt;192.168.1.1&lt;/code&gt; ou &lt;code&gt;192.168.0.1&lt;/code&gt;), puis les réglages &lt;strong&gt;DHCP&lt;/strong&gt; ou &lt;strong&gt;Réseau local (LAN)&lt;/strong&gt;." xml:space="preserve">
+    <value>Öffnen Sie die Verwaltungsoberfläche des Routers (oft &lt;code&gt;192.168.1.1&lt;/code&gt; oder &lt;code&gt;192.168.0.1&lt;/code&gt;), dann die Einstellungen &lt;strong&gt;DHCP&lt;/strong&gt; oder &lt;strong&gt;Heimnetz (LAN)&lt;/strong&gt;.</value>
+  </data>
+  <data name="port {0}" xml:space="preserve">
+    <value>Port {0}</value>
+  </data>
+  <data name="Recommandé : un seul réglage, et tous les appareils du réseau sont protégés, y compris ceux sans réglage DNS (télévisions, consoles, objets connectés)." xml:space="preserve">
+    <value>Empfohlen: eine einzige Einstellung, und alle Geräte im Netzwerk sind geschützt, auch solche ohne DNS-Einstellung (Fernseher, Konsolen, smarte Geräte).</value>
+  </data>
+  <data name="Réservez une adresse IP fixe à ce serveur dans les réglages DHCP du routeur (bail statique), pour que l'adresse ci-dessous ne change pas." xml:space="preserve">
+    <value>Reservieren Sie diesem Server in den DHCP-Einstellungen des Routers eine feste IP-Adresse (statische Lease), damit sich die Adresse unten nicht ändert.</value>
+  </data>
+  <data name="Rien n'apparaît ? Redémarrez la connexion de l'appareil : il peut garder l'ancien serveur DNS en cache quelques minutes." xml:space="preserve">
+    <value>Nichts zu sehen? Starten Sie die Verbindung des Geräts neu: Es kann den alten DNS-Server einige Minuten im Cache behalten.</value>
+  </data>
+  <data name="Routeur ou box" xml:space="preserve">
+    <value>Router</value>
+  </data>
+  <data name="S'assurer qu'un appareil passe bien par OnyxFilter." xml:space="preserve">
+    <value>Prüfen, ob ein Gerät wirklich über OnyxFilter läuft.</value>
+  </data>
+  <data name="Saisissez &lt;code&gt;{0}&lt;/code&gt; dans &lt;strong&gt;DNS 1&lt;/strong&gt;, laissez &lt;strong&gt;DNS 2&lt;/strong&gt; vide, puis enregistrez." xml:space="preserve">
+    <value>Geben Sie &lt;code&gt;{0}&lt;/code&gt; unter &lt;strong&gt;DNS 1&lt;/strong&gt; ein, lassen Sie &lt;strong&gt;DNS 2&lt;/strong&gt; leer und speichern Sie.</value>
+  </data>
+  <data name="Ses requêtes doivent apparaître, avec son adresse IP, dans le" xml:space="preserve">
+    <value>Seine Anfragen müssen mit seiner IP-Adresse erscheinen im</value>
+  </data>
+  <data name="Si le routeur distribue aussi des serveurs DNS IPv6, indiquez une adresse IPv6 de ce serveur ou désactivez cette distribution : sinon, les appareils pourront interroger le DNS du fournisseur d'accès." xml:space="preserve">
+    <value>Wenn der Router auch IPv6-DNS-Server verteilt, geben Sie eine IPv6-Adresse dieses Servers an oder deaktivieren Sie diese Verteilung: Sonst können die Geräte den DNS des Internetanbieters abfragen.</value>
+  </data>
+  <data name="Sous &lt;strong&gt;Serveurs DNS&lt;/strong&gt;, cliquez sur &lt;strong&gt;+&lt;/strong&gt; et saisissez &lt;code&gt;{0}&lt;/code&gt;. Retirez les autres serveurs avec &lt;strong&gt;−&lt;/strong&gt;." xml:space="preserve">
+    <value>Klicken Sie unter &lt;strong&gt;DNS-Server&lt;/strong&gt; auf &lt;strong&gt;+&lt;/strong&gt; und geben Sie &lt;code&gt;{0}&lt;/code&gt; ein. Entfernen Sie die anderen Server mit &lt;strong&gt;−&lt;/strong&gt;.</value>
+  </data>
+  <data name="Supprimez les serveurs existants, touchez &lt;strong&gt;Ajouter un serveur&lt;/strong&gt; et saisissez &lt;code&gt;{0}&lt;/code&gt;." xml:space="preserve">
+    <value>Löschen Sie die vorhandenen Server, tippen Sie auf &lt;strong&gt;Server hinzufügen&lt;/strong&gt; und geben Sie &lt;code&gt;{0}&lt;/code&gt; ein.</value>
+  </data>
+  <data name="Sur l'appareil configuré, ouvrez quelques sites web." xml:space="preserve">
+    <value>Öffnen Sie auf dem konfigurierten Gerät einige Websites.</value>
+  </data>
+  <data name="Touchez &lt;strong&gt;Configurer le DNS&lt;/strong&gt;, puis choisissez &lt;strong&gt;Manuel&lt;/strong&gt;." xml:space="preserve">
+    <value>Tippen Sie auf &lt;strong&gt;DNS konfigurieren&lt;/strong&gt; und wählen Sie &lt;strong&gt;Manuell&lt;/strong&gt;.</value>
+  </data>
+  <data name="Touchez &lt;strong&gt;Enregistrer&lt;/strong&gt;." xml:space="preserve">
+    <value>Tippen Sie auf &lt;strong&gt;Sichern&lt;/strong&gt;.</value>
+  </data>
+  <data name="Vérifier" xml:space="preserve">
+    <value>Prüfen</value>
+  </data>
+  <data name="Windows 10 et 11. Le réglage s'applique à une connexion : à refaire pour le Wi-Fi et l'Ethernet." xml:space="preserve">
+    <value>Windows 10 und 11. Die Einstellung gilt für eine Verbindung: für WLAN und Ethernet wiederholen.</value>
+  </data>
+  <data name="Windows 11 : pour chiffrer les requêtes, réglez &lt;strong&gt;DNS sur HTTPS&lt;/strong&gt; sur &lt;strong&gt;Activé (modèle manuel)&lt;/strong&gt; et saisissez &lt;code&gt;{0}&lt;/code&gt; comme modèle." xml:space="preserve">
+    <value>Windows 11: Um die Anfragen zu verschlüsseln, setzen Sie &lt;strong&gt;DNS über HTTPS&lt;/strong&gt; auf &lt;strong&gt;Ein (manuelle Vorlage)&lt;/strong&gt; und geben Sie &lt;code&gt;{0}&lt;/code&gt; als Vorlage ein.</value>
+  </data>
+</root>
