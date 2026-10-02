@@ -41,19 +41,50 @@ public partial class CountryFilter : ComponentBase
 
     private bool IsSaving { get; set; }
 
-    // Pays sélectionnés en premier, puis par nom ; filtrés par la recherche (nom ou code).
-    private IEnumerable<string> VisibleCountries
+    // Pays filtrés par la recherche (nom ou code), regroupés par continent (ordre de Continents.All) et
+    // triés par nom ; les continents sans pays visible sont omis.
+    private IEnumerable<(string Continent, List<string> Countries)> VisibleGroups
     {
         get
         {
             string search = SearchText.Trim();
 
-            return AllCountries
+            ILookup<string, string> byContinent = AllCountries
                 .Where(code => search.Length == 0
                     || NameOf(code).Contains(search, StringComparison.CurrentCultureIgnoreCase)
                     || code.Equals(search, StringComparison.OrdinalIgnoreCase))
-                .OrderBy(code => !SelectedCountries.Contains(code))
-                .ThenBy(NameOf, StringComparer.CurrentCultureIgnoreCase);
+                .OrderBy(NameOf, StringComparer.CurrentCultureIgnoreCase)
+                .ToLookup(Continents.Of);
+
+            return Continents.All
+                .Where(byContinent.Contains)
+                .Select(continent => (continent, byContinent[continent].ToList()));
+        }
+    }
+
+    private int SelectedCountOf(string continent)
+    {
+        return SelectedCountries.Count(code => Continents.Of(code) == continent);
+    }
+
+    private int TotalCountOf(string continent)
+    {
+        return AllCountries.Count(code => Continents.Of(code) == continent);
+    }
+
+    // Coche ou décoche tous les pays affichés d'un continent (ceux qui correspondent à la recherche).
+    private void ToggleAll(IEnumerable<string> countries, bool select)
+    {
+        foreach (string code in countries)
+        {
+            if (select)
+            {
+                SelectedCountries.Add(code);
+            }
+            else
+            {
+                SelectedCountries.Remove(code);
+            }
         }
     }
 

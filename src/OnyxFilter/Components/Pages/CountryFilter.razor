@@ -71,13 +71,36 @@
     }
     else
     {
-        <div class="chip-set">
-            @foreach (string countryCode in VisibleCountries)
-            {
-                string inputId = "country-" + countryCode;
-                <input class="btn-check" type="checkbox" id="@inputId" checked="@SelectedCountries.Contains(countryCode)" @onchange="e => ToggleCountry(countryCode, e)" />
-                <label class="chip-toggle" for="@inputId" title="@countryCode"><span class="client-flag">@FlagOf(countryCode)</span>@NameOf(countryCode)</label>
-            }
-        </div>
+        List<(string Continent, List<string> Countries)> groups = VisibleGroups.ToList();
+
+        @if (groups.Count == 0)
+        {
+            <p class="country-picker-empty">@L["Aucun pays ne correspond à la recherche."]</p>
+        }
+
+        @for (int groupIndex = 0; groupIndex < groups.Count; groupIndex++)
+        {
+            (string continent, List<string> countries) = groups[groupIndex];
+            bool allSelected = countries.All(SelectedCountries.Contains);
+            string headingId = "continent-" + groupIndex;
+            <section class="country-group" aria-labelledby="@headingId">
+                <header class="country-group-head">
+                    <h3 class="country-group-title" id="@headingId">
+                        @L[continent] <span class="country-picker-count">@SelectedCountOf(continent)/@TotalCountOf(continent)</span>
+                    </h3>
+                    <button type="button" class="btn btn-link btn-sm" @onclick="() => ToggleAll(countries, !allSelected)">
+                        @(allSelected ? L["Tout désélectionner"] : L["Tout sélectionner"])
+                    </button>
+                </header>
+                <div class="chip-set">
+                    @foreach (string countryCode in countries)
+                    {
+                        string inputId = "country-" + countryCode;
+                        <input class="btn-check" type="checkbox" id="@inputId" checked="@SelectedCountries.Contains(countryCode)" @onchange="e => ToggleCountry(countryCode, e)" />
+                        <label class="chip-toggle" for="@inputId" title="@countryCode"><span class="client-flag">@FlagOf(countryCode)</span>@NameOf(countryCode)</label>
+                    }
+                </div>
+            </section>
+        }
     }
 </section>

@@ -2448,4 +2448,34 @@
   <data name="Windows 11 : pour chiffrer les requêtes, réglez &lt;strong&gt;DNS sur HTTPS&lt;/strong&gt; sur &lt;strong&gt;Activé (modèle manuel)&lt;/strong&gt; et saisissez &lt;code&gt;{0}&lt;/code&gt; comme modèle." xml:space="preserve">
     <value>Windows 11: per cifrare le richieste, imposta &lt;strong&gt;DNS su HTTPS&lt;/strong&gt; su &lt;strong&gt;Attivato (modello manuale)&lt;/strong&gt; e inserisci &lt;code&gt;{0}&lt;/code&gt; come modello.</value>
   </data>
+  <data name="Afrique" xml:space="preserve">
+    <value>Africa</value>
+  </data>
+  <data name="Amérique du Nord" xml:space="preserve">
+    <value>America del Nord</value>
+  </data>
+  <data name="Amérique du Sud" xml:space="preserve">
+    <value>America del Sud</value>
+  </data>
+  <data name="Asie" xml:space="preserve">
+    <value>Asia</value>
+  </data>
+  <data name="Europe" xml:space="preserve">
+    <value>Europa</value>
+  </data>
+  <data name="Océanie" xml:space="preserve">
+    <value>Oceania</value>
+  </data>
+  <data name="Antarctique" xml:space="preserve">
+    <value>Antartide</value>
+  </data>
+  <data name="Autres" xml:space="preserve">
+    <value>Altri</value>
+  </data>
+  <data name="Tout sélectionner" xml:space="preserve">
+    <value>Seleziona tutto</value>
+  </data>
+  <data name="Aucun pays ne correspond à la recherche." xml:space="preserve">
+    <value>Nessun paese corrisponde alla ricerca.</value>
+  </data>
 </root>
