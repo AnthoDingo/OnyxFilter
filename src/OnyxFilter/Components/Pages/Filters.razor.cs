@@ -90,7 +90,7 @@ public partial class Filters : ComponentBase
             return L["Erreur"];
         }
 
-        return status.DomainCount.ToString("N0", CultureInfo.InvariantCulture);
+        return status.DomainCount.ToString("N0", DisplayCulture);
     }
 
     private string FormatLastUpdated(FilterListStatus? status)

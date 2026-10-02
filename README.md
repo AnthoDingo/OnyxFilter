@@ -6,6 +6,20 @@ de commande, le tout dans un seul binaire.
 
 Écrit en C# (.NET 10, ASP.NET Core Blazor), pensé pour tourner sur une petite machine (2 Go de RAM suffisent).
 
+## Aperçu
+
+![Vue d'ensemble : état de la protection, taux de blocage, activité horaire et classements](docs/screenshots/overview.png)
+
+| Journal des requêtes | Thème clair |
+| --- | --- |
+| ![Journal des requêtes](docs/screenshots/query-log.png) | ![Journal des requêtes en thème clair](docs/screenshots/query-log-light.png) |
+| **Listes de blocage** | **Services bloqués** |
+| ![Listes de blocage](docs/screenshots/blocklists.png) | ![Services bloqués](docs/screenshots/blocked-services.png) |
+
+<p align="center"><img src="docs/screenshots/mobile.png" alt="Vue d'ensemble sur mobile" width="260"></p>
+
+<sub>Captures réalisées sur une instance de démonstration (trafic fictif).</sub>
+
 ## Fonctionnalités
 
 - **Serveur DNS** en UDP/TCP (port 53), et en DNS chiffré : DNS-over-HTTPS, DNS-over-TLS et DNS-over-QUIC
@@ -19,7 +33,7 @@ de commande, le tout dans un seul binaire.
   rapide, avec serveurs de secours et d'amorçage, cache et limitation de débit.
 - **Supervision** : vue d'ensemble (activité horaire, taux de blocage, classements), journal des requêtes
   filtrable, suspension temporaire de la protection.
-- **Administration** : interface web en français (thèmes clair et sombre, mobile), connexion par mot de
+- **Administration** : interface web en français et en anglais (thèmes clair et sombre, mobile), connexion par mot de
   passe ou clé d'accès (passkey), API HTTP par jeton, commandes en ligne de commande.
 - **Mises à jour** en un clic depuis l'interface, à partir des publications GitHub.
 
