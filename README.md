@@ -211,3 +211,21 @@ installations existantes la proposent alors dans leur page « Mises à jour ».
   [AdguardTeam/HostlistsRegistry](https://github.com/AdguardTeam/HostlistsRegistry).
 - Interface construite avec [Bootstrap](https://getbootstrap.com/) (licence MIT) et
   [Spectre.Console](https://spectreconsole.net/) pour la ligne de commande.
+- QR codes générés avec [QRCoder](https://github.com/codebude/QRCoder) (licence MIT).
+- Drapeaux des pays : police « Twemoji Country Flags »
+  ([country-flag-emoji-polyfill](https://github.com/talkjs/country-flag-emoji-polyfill), MIT), graphismes
+  [Twemoji](https://github.com/jdecked/twemoji) © Twitter, Inc. et contributeurs, licence CC-BY 4.0.
+- Pays et fournisseurs d'accès des clients : base [iptoasn.com](https://iptoasn.com) (domaine public, PDDL).
+
+## Licence
+
+OnyxFilter est un logiciel libre : vous pouvez le redistribuer et le modifier selon les termes de la
+[GNU Affero General Public License](LICENSE) publiée par la Free Software Foundation, version 3 ou (à votre
+choix) toute version ultérieure (`AGPL-3.0-or-later`).
+
+Il est distribué dans l'espoir d'être utile, mais **sans aucune garantie**, ni explicite ni implicite, y
+compris de qualité marchande ou d'adéquation à un usage particulier. Voir le fichier [LICENSE](LICENSE).
+
+L'AGPL s'applique aussi à l'usage en réseau : si vous proposez une version modifiée d'OnyxFilter à des
+utilisateurs à travers un réseau (interface web, DNS), vous devez leur donner accès au code source de cette
+version.
