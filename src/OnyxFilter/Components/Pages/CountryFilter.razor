@@ -63,6 +63,22 @@
         </div>
     </header>
 
+    <div class="country-map @(Mode == CountryFilterMode.Disabled ? "is-disabled" : "")" @ref="mapContainer" role="group" aria-label="@L["Carte des pays"]">
+        <div class="country-map-canvas"></div>
+        <div class="country-map-tooltip" hidden>
+            <span class="client-flag"></span><span class="country-map-tooltip-name"></span><span class="country-map-tooltip-state"></span>
+        </div>
+    </div>
+    <p class="country-map-legend">
+        <span class="country-map-key is-allowed" aria-hidden="true"></span>@L["Autorisé"]
+        <span class="country-map-key is-blocked" aria-hidden="true"></span>@L["Bloqué"]
+        <span class="country-map-hint">
+            @(Mode == CountryFilterMode.Disabled
+                ? L["Filtrage désactivé : la carte montre un aperçu du mode « Bloquer les pays sélectionnés »."]
+                : L["Cliquez sur un pays de la carte pour l'autoriser ou l'interdire."])
+        </span>
+    </p>
+
     @if (AllCountries.Count == 0)
     {
         <p class="country-picker-empty">
