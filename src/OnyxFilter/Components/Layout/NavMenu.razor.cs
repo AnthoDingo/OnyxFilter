@@ -22,6 +22,16 @@ public partial class NavMenu : ComponentBase
 
     private static string AssemblyVersion => AppVersion.Display;
 
+    // Langues du sélecteur, chacune nommée dans sa propre langue (affichées en code court, nom en info-bulle).
+    private static readonly (string Culture, string Name)[] Languages =
+    [
+        ("fr", "Français"),
+        ("en", "English"),
+        ("de", "Deutsch"),
+        ("it", "Italiano"),
+        ("es", "Español"),
+    ];
+
     private string LanguageUrl(string culture)
     {
         string current = "/" + Navigation.ToBaseRelativePath(Navigation.Uri);

@@ -68,8 +68,10 @@
                 </button>
             </div>
             <div class="theme-toggle language-toggle" role="group" aria-label="@L["Langue de l'interface"]">
-                <a href="@LanguageUrl("fr")" class="theme-toggle-option" data-enhance-nav="false" hreflang="fr" lang="fr" aria-current="@IsCurrentLanguage("fr")"><span>Français</span></a>
-                <a href="@LanguageUrl("en")" class="theme-toggle-option" data-enhance-nav="false" hreflang="en" lang="en" aria-current="@IsCurrentLanguage("en")"><span>English</span></a>
+                @foreach ((string culture, string name) in Languages)
+                {
+                    <a href="@LanguageUrl(culture)" class="theme-toggle-option" data-enhance-nav="false" hreflang="@culture" lang="@culture" title="@name" aria-label="@name" aria-current="@IsCurrentLanguage(culture)"><span>@culture.ToUpperInvariant()</span></a>
+                }
             </div>
         </div>
 
