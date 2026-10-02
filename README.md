@@ -216,6 +216,7 @@ installations existantes la proposent alors dans leur page « Mises à jour ».
   ([country-flag-emoji-polyfill](https://github.com/talkjs/country-flag-emoji-polyfill), MIT), graphismes
   [Twemoji](https://github.com/jdecked/twemoji) © Twitter, Inc. et contributeurs, licence CC-BY 4.0.
 - Pays et fournisseurs d'accès des clients : base [iptoasn.com](https://iptoasn.com) (domaine public, PDDL).
+- Carte des pays : frontières [Natural Earth](https://www.naturalearthdata.com/) (domaine public).
 
 ## Licence
 
