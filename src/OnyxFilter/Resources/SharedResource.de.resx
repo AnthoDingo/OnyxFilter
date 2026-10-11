@@ -1881,6 +1881,9 @@
   <data name="Une adresse est-elle servie ? &lt;code&gt;?ip=192.168.1.50&lt;/code&gt; ; réponse : &lt;code&gt;allowed&lt;/code&gt;, et la règle en cause (&lt;code&gt;rule&lt;/code&gt;, &lt;code&gt;list&lt;/code&gt;)." xml:space="preserve">
     <value>Wird eine Adresse bedient? &lt;code&gt;?ip=192.168.1.50&lt;/code&gt;; Antwort: &lt;code&gt;allowed&lt;/code&gt; und die zutreffende Regel (&lt;code&gt;rule&lt;/code&gt;, &lt;code&gt;list&lt;/code&gt;).</value>
   </data>
+  <data name="Même réponse pour l'adresse de l'appelant, telle que la voit OnyxFilter (adresse publique d'un téléphone en données mobiles, par exemple)." xml:space="preserve">
+    <value>Gleiche Antwort für die Adresse des Aufrufers, wie OnyxFilter sie sieht (zum Beispiel die öffentliche Adresse eines Telefons im Mobilfunknetz).</value>
+  </data>
   <data name="Une erreur est survenue" xml:space="preserve">
     <value>Ein Fehler ist aufgetreten</value>
   </data>

@@ -29,6 +29,7 @@ namespace OnyxFilter.Services.Api;
 //   POST /api/v1/update/install       installe la nouvelle version puis redémarre (202, asynchrone)
 //   GET  /api/v1/access               listes d'accès des clients, mode en vigueur
 //   GET  /api/v1/access/check         une adresse IP est-elle servie par le DNS ?
+//   GET  /api/v1/access/me            même question pour l'appelant, avec son adresse vue par le serveur
 //   POST /api/v1/access/block         bloque une adresse IP ou un sous-réseau
 //   POST /api/v1/access/allow         autorise une adresse IP ou un sous-réseau
 // Authentification par jeton uniquement (ApiTokenAuthenticationHandler) ; la référence utilisateur est
@@ -57,6 +58,7 @@ public static class ApiEndpoints
         api.MapPost("/update/install", InstallUpdate);
         api.MapGet("/access", GetAccessAsync);
         api.MapGet("/access/check", CheckAccessAsync);
+        api.MapGet("/access/me", CheckCallerAccessAsync);
         api.MapPost("/access/block", BlockClientAsync);
         api.MapPost("/access/allow", AllowClientAsync);
 
@@ -311,9 +313,33 @@ public static class ApiEndpoints
             return Error(StatusCodes.Status400BadRequest, "invalid_ip", "ip doit être une adresse IPv4 ou IPv6 (ex. 192.168.1.50).");
         }
 
+        return Results.Ok(await EvaluateAccessAsync(accessControl, rule, address));
+    }
+
+    // Adresse de l'appelant telle que la voit le serveur (sans proxy : celle de la connexion), et décision du
+    // DNS pour elle : l'application mobile affiche ainsi l'adresse publique du téléphone, puis l'autorise.
+    private static async Task<IResult> CheckCallerAccessAsync(HttpContext context, IDnsAccessControl accessControl)
+    {
+        IPAddress? address = context.Connection.RemoteIpAddress;
+
+        if (address is { IsIPv4MappedToIPv6: true })
+        {
+            address = address.MapToIPv4();
+        }
+
+        if (address is null || !ClientAccessRule.TryParseStrict(address.ToString(), out ClientAccessRule rule))
+        {
+            return Error(StatusCodes.Status400BadRequest, "unknown_caller", "Adresse de l'appelant inconnue.");
+        }
+
+        return Results.Ok(await EvaluateAccessAsync(accessControl, rule, address));
+    }
+
+    private static async Task<ClientAccessCheckResponse> EvaluateAccessAsync(IDnsAccessControl accessControl, ClientAccessRule rule, IPAddress address)
+    {
         await accessControl.InitializeAsync();
         ClientAccessDecision decision = accessControl.Evaluate(address);
-        return Results.Ok(new ClientAccessCheckResponse(rule.ToString(), decision.Allowed, decision.Mode.ToString(), decision.Rule, decision.RuleList?.ToString()));
+        return new ClientAccessCheckResponse(rule.ToString(), decision.Allowed, decision.Mode.ToString(), decision.Rule, decision.RuleList?.ToString());
     }
 
     private static Task<IResult> BlockClientAsync(HttpRequest request, ILocalSettingsStore settingsStore, IDnsAccessControl accessControl)

@@ -162,6 +162,7 @@ L'API `/api/v1` permet d'automatiser OnyxFilter (domotique, scripts, supervision
 | `POST /api/v1/update/install` | Installe la nouvelle version puis redémarre. |
 | `GET /api/v1/access` | Accès des clients au DNS : mode et listes (autorisés, refusés, toujours autorisés). |
 | `GET /api/v1/access/check?ip=…` | Indique si une adresse est servie, et par quelle règle. |
+| `GET /api/v1/access/me` | Même réponse pour l'adresse de l'appelant, telle que la voit le serveur. |
 | `POST /api/v1/access/block` | Bloque une adresse IP ou un sous-réseau, `{"client": "192.168.1.50"}`. |
 | `POST /api/v1/access/allow` | Autorise une adresse IP ou un sous-réseau (même format). |
 

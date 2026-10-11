@@ -192,6 +192,10 @@
                             </dd>
                         </div>
                         <div class="endpoint">
+                            <dt><span class="http-method http-get">GET</span><code>/access/me</code></dt>
+                            <dd>@L["Même réponse pour l'adresse de l'appelant, telle que la voit OnyxFilter (adresse publique d'un téléphone en données mobiles, par exemple)."]</dd>
+                        </div>
+                        <div class="endpoint">
                             <dt><span class="http-method http-post">POST</span><code>/access/block</code></dt>
                             <dd>
                                 @((MarkupString)L["Bloque une adresse IP ou un sous-réseau : <code>{&quot;client&quot;: &quot;192.168.1.50&quot;}</code> (ou <code>?client=…</code>). Effet immédiat, visible dans Paramètres DNS. 409 si une règle autorisée plus large le couvre, ou si le blocage viderait la liste des clients autorisés."].Value)
