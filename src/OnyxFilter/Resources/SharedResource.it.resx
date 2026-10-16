@@ -2490,4 +2490,22 @@
   <data name="Filtrage désactivé : la carte montre un aperçu du mode « Bloquer les pays sélectionnés »." xml:space="preserve">
     <value>Filtraggio disattivato: la mappa mostra un'anteprima della modalità «Blocca i paesi selezionati».</value>
   </data>
+  <data name="Zoom de la carte" xml:space="preserve">
+    <value>Zoom della mappa</value>
+  </data>
+  <data name="Zoom arrière" xml:space="preserve">
+    <value>Riduci</value>
+  </data>
+  <data name="Niveau de zoom" xml:space="preserve">
+    <value>Livello di zoom</value>
+  </data>
+  <data name="Zoom avant" xml:space="preserve">
+    <value>Ingrandisci</value>
+  </data>
+  <data name="Réinitialiser le zoom" xml:space="preserve">
+    <value>Reimposta lo zoom</value>
+  </data>
+  <data name="Molette, pincement ou barre de zoom pour agrandir, glisser pour se déplacer." xml:space="preserve">
+    <value>Rotellina, pizzico o barra dello zoom per ingrandire, trascina per spostarti.</value>
+  </data>
 </root>

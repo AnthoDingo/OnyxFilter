@@ -68,6 +68,12 @@
         <div class="country-map-tooltip" hidden>
             <span class="client-flag"></span><span class="country-map-tooltip-name"></span><span class="country-map-tooltip-state"></span>
         </div>
+        <div class="country-map-zoom" role="group" aria-label="@L["Zoom de la carte"]">
+            <button type="button" class="country-map-zoom-btn" data-zoom="out" title="@L["Zoom arrière"]" aria-label="@L["Zoom arrière"]">−</button>
+            <input type="range" class="country-map-zoom-range" min="0" max="100" step="1" value="0" aria-label="@L["Niveau de zoom"]" />
+            <button type="button" class="country-map-zoom-btn" data-zoom="in" title="@L["Zoom avant"]" aria-label="@L["Zoom avant"]">+</button>
+            <button type="button" class="country-map-zoom-btn" data-zoom="reset" title="@L["Réinitialiser le zoom"]" aria-label="@L["Réinitialiser le zoom"]">⟲</button>
+        </div>
     </div>
     <p class="country-map-legend">
         <span class="country-map-key is-allowed" aria-hidden="true"></span>@L["Autorisé"]
@@ -76,6 +82,7 @@
             @(Mode == CountryFilterMode.Disabled
                 ? L["Filtrage désactivé : la carte montre un aperçu du mode « Bloquer les pays sélectionnés »."]
                 : L["Cliquez sur un pays de la carte pour l'autoriser ou l'interdire."])
+            @L["Molette, pincement ou barre de zoom pour agrandir, glisser pour se déplacer."]
         </span>
     </p>
 
