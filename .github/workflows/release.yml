@@ -1,6 +1,7 @@
 # Publication d'une version : pousser un tag « vMAJEUR.MINEUR.CORRECTIF » (ex. v1.4.0, ou v1.5.0-beta.1
 # pour une préversion) construit l'archive autonome linux-x64 et crée la publication GitHub que suit le
-# système de mise à jour intégré (src/OnyxFilter/Services/Updates).
+# système de mise à jour intégré (src/OnyxFilter/Services/Updates), puis publie l'image Docker
+# (linux/amd64, linux/arm64) sur le registre GitHub : ghcr.io/<propriétaire>/onyxfilter.
 name: Publication
 
 on:
@@ -14,6 +15,9 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      prerelease: ${{ steps.version.outputs.prerelease }}
 
     steps:
       - name: Récupérer les sources
@@ -88,3 +92,54 @@ jobs:
             --title "OnyxFilter $VERSION" \
             --generate-notes \
             "${FLAGS[@]}"
+
+  docker:
+    # Après la publication GitHub : le tag a été validé et la version compile.
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Récupérer les sources
+        uses: actions/checkout@v4
+
+      - name: Préparer l'émulation multi-architecture
+        uses: docker/setup-qemu-action@v3
+
+      - name: Préparer Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Se connecter au registre GitHub
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      # Version complète (1.4.0), puis pour une version stable : 1.4, 1 et latest. Une préversion
+      # (1.5.0-beta.1) n'est publiée que sous son numéro complet.
+      - name: Déterminer le nom et les étiquettes de l'image
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/onyxfilter
+          flavor: latest=false
+          tags: |
+            type=raw,value=${{ needs.release.outputs.version }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ needs.release.outputs.version }},enable=${{ needs.release.outputs.prerelease == 'false' }}
+            type=semver,pattern={{major}},value=${{ needs.release.outputs.version }},enable=${{ needs.release.outputs.prerelease == 'false' }}
+            type=raw,value=latest,enable=${{ needs.release.outputs.prerelease == 'false' }}
+
+      - name: Construire et publier l'image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          build-args: VERSION=${{ needs.release.outputs.version }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
