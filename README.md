@@ -77,6 +77,33 @@ DNSStubListener=no
 
 puis `sudo systemctl restart systemd-resolved && sudo systemctl restart onyxfilter`.
 
+### Docker
+
+Une image multi-architecture (linux/amd64, linux/arm64 : Raspberry Pi 3+ en 64 bits) est publiée à chaque
+version sur `ghcr.io/anthodingo/onyxfilter` (`latest`, `1`, `1.4`, `1.4.0`…). Le modèle
+[`docker-compose.yml`](docker-compose.yml) expose le DNS (53) et l'interface (8080), et conserve les données
+dans un volume :
+
+```sh
+curl -fsSLO https://raw.githubusercontent.com/AnthoDingo/OnyxFilter/main/docker-compose.yml
+docker compose up -d
+docker compose logs onyxfilter | grep -A3 'Compte administrateur'
+docker compose exec onyxfilter OnyxFilter user:reset-password admin   # administration
+```
+
+Sans Compose : `docker run -d --name onyxfilter -p 53:53/udp -p 53:53/tcp -p 8080:8080 -v onyxfilter-data:/data
+--restart unless-stopped ghcr.io/anthodingo/onyxfilter`. Pour construire l'image depuis les sources :
+`docker build -t onyxfilter .`.
+
+- Le conteneur tourne sous un compte non privilégié (UID 1654) : un dossier de l'hôte monté sur `/data` doit
+  lui appartenir (`sudo chown -R 1654 ./data`).
+- Les ports 443, 853 et 784/udp (DNS chiffré) et 80 (Let's Encrypt) sont à publier selon les fonctions
+  activées.
+- En mode réseau « bridge », les clients apparaissent tous avec l'adresse de la passerelle Docker ; utilisez
+  `network_mode: host` pour voir leurs vraies adresses.
+- La mise à jour intégrée est désactivée dans un conteneur : `docker compose pull && docker compose up -d`.
+- Le DNS-over-QUIC n'est pas disponible dans l'image (msquic absent).
+
 ### Installation manuelle
 
 1. Téléchargez `OnyxFilter-<version>-linux-x64.tar.gz` et `checksums.txt` depuis les
@@ -204,7 +231,8 @@ ainsi :
 - `Services/` : moteur DNS, filtrage, statistiques, journal, API (`Services/Api`), mises à jour
   (`Services/Updates`) ;
 - `Cli/` : commandes en ligne de commande ;
-- `deploy/` : service systemd et script d'installation ;
+- `deploy/` : service systemd, script d'installation et point d'entrée de l'image Docker ;
+- `Dockerfile`, `docker-compose.yml` : image Docker et modèle de déploiement ;
 - `.github/workflows/release.yml` : publication des versions.
 
 ## Publier une version
@@ -218,7 +246,10 @@ git push origin v1.4.0
 
 Le workflow « Publication » compile la version autonome linux-x64 avec ce numéro, crée
 `OnyxFilter-1.4.0-linux-x64.tar.gz`, `checksums.txt` et joint `install.sh` à une publication GitHub. Les
-installations existantes la proposent alors dans leur page « Mises à jour ».
+installations existantes la proposent alors dans leur page « Mises à jour ». Il publie ensuite l'image Docker
+(amd64 et arm64) sur `ghcr.io/anthodingo/onyxfilter` ; à la première publication, rendez le paquet public
+depuis ses réglages sur GitHub (Packages › onyxfilter › Package settings) pour qu'il soit téléchargeable sans
+authentification.
 
 ## Crédits
 

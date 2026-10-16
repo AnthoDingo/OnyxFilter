@@ -1,0 +1,15 @@
+# Contexte de build Docker : seules les sources sont nécessaires (voir Dockerfile).
+**/bin/
+**/obj/
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/appsettings.local.json
+**/appsettings.Development.json
+.git/
+.github/
+.vs/
+.vscode/
+.idea/
+dist/
+docs/
