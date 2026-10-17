@@ -85,6 +85,18 @@
         display: block;
         width: 100%;
         height: auto;
+        /* Molette, pincement et glissement sont gérés par CountryFilter.razor.js. */
+        touch-action: none;
+        user-select: none;
+    }
+
+    .country-map.is-zoomed ::deep svg {
+        cursor: grab;
+    }
+
+    .country-map.is-panning ::deep svg,
+    .country-map.is-panning ::deep path {
+        cursor: grabbing;
     }
 
     .country-map ::deep path {
@@ -92,6 +104,8 @@
         stroke: var(--of-surface);
         stroke-width: 0.5;
         stroke-linejoin: round;
+        /* Frontières de même épaisseur quel que soit le zoom. */
+        vector-effect: non-scaling-stroke;
         cursor: pointer;
         transition: fill 0.15s ease, opacity 0.15s ease;
     }
@@ -111,6 +125,51 @@
     .country-map.is-disabled ::deep svg {
         opacity: 0.55;
     }
+
+.country-map-zoom {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 50%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.3rem;
+    border: 1px solid var(--of-line);
+    border-radius: 999px;
+    background-color: color-mix(in srgb, var(--of-surface) 88%, transparent);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    transform: translateX(-50%);
+}
+
+.country-map-zoom-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--of-text-2);
+    font-size: 1rem;
+    line-height: 1;
+}
+
+    .country-map-zoom-btn:hover:not(:disabled) {
+        background-color: var(--of-surface-3);
+        color: var(--of-text);
+    }
+
+    .country-map-zoom-btn:disabled {
+        opacity: 0.4;
+    }
+
+.country-map-zoom-range {
+    width: 7rem;
+    accent-color: var(--of-accent);
+}
 
 .country-map-tooltip {
     position: absolute;
@@ -172,4 +231,10 @@
 .country-map-hint {
     margin-left: auto;
     color: var(--of-text-3);
+}
+
+@media (max-width: 575.98px) {
+    .country-map-zoom-range {
+        width: 4.5rem;
+    }
 }
