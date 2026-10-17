@@ -9,7 +9,6 @@
 services:
   onyxfilter:
     image: ghcr.io/anthodingo/onyxfilter:latest
-    # Ou, pour construire l'image depuis les sources : build: .
     container_name: onyxfilter
     restart: unless-stopped
     ports:
