@@ -1,0 +1,39 @@
+# Modèle de déploiement Docker Compose d'OnyxFilter.
+#
+#   docker compose up -f docker-compose.dev.yml -d
+#   docker compose logs onyxfilter | grep -A3 'Compte administrateur'   # identifiants du premier démarrage
+#   docker compose exec onyxfilter OnyxFilter --help                     # administration en ligne de commande
+#
+# Mise à jour : docker compose pull && docker compose up -f docker-compose.dev.yml -d (la mise à jour intégrée est désactivée dans un
+# conteneur). Les données sont conservées dans le volume « onyxfilter-data ».
+services:
+  onyxfilter:
+    image: onyxfilter:dev
+    build: .
+    pull_policy: build
+    container_name: onyxfilter
+    restart: unless-stopped
+    ports:
+      # DNS : le port 53 de l'hôte est souvent déjà pris par systemd-resolved (voir README).
+      - "53:53/udp"
+      - "53:53/tcp"
+      # Interface web et API.
+      - "8080:8080/tcp"
+      # À décommenter selon les fonctions activées dans Paramètres › Chiffrement :
+      # - "443:443/tcp"   # HTTPS de l'interface et DNS-over-HTTPS
+      # - "853:853/tcp"   # DNS-over-TLS
+      # - "784:784/udp"   # DNS-over-QUIC
+      # - "80:80/tcp"     # défi HTTP Let's Encrypt
+    volumes:
+      - onyxfilter-data:/data
+      # Ou un dossier de l'hôte, appartenant à l'UID 1654 (sudo chown -R 1654 ./data) :
+      # - ./data:/data
+    environment:
+      TZ: Europe/Paris
+    # Sans « network_mode: host », les clients apparaissent tous avec l'adresse de la passerelle Docker dans
+    # le journal des requêtes et les statistiques. Pour voir leurs vraies adresses, décommentez la ligne
+    # ci-dessous (Linux uniquement) et supprimez la section « ports ».
+    # network_mode: host
+
+volumes:
+  onyxfilter-data:

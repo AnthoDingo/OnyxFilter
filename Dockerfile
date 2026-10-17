@@ -18,9 +18,10 @@ COPY src/OnyxFilter/OnyxFilter.csproj src/OnyxFilter/
 RUN dotnet restore src/OnyxFilter/OnyxFilter.csproj -a "$TARGETARCH"
 
 COPY src/ src/
+# Pas de --no-restore : le paquet des scripts Blazor (_framework/blazor.web.js) n'est ajouté qu'en voyant les
+# composants .razor, absents lors de la restauration ci-dessus (csproj seul).
 RUN dotnet publish src/OnyxFilter/OnyxFilter.csproj \
         --configuration Release \
-        --no-restore \
         -a "$TARGETARCH" \
         --self-contained false \
         -p:Version="$VERSION" \

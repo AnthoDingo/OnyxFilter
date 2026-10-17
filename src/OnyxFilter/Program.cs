@@ -77,6 +77,10 @@ public class Program
         {
             Args = args,
             ContentRootPath = contentRoot,
+
+            // Fichiers statiques (CSS, JS) livrés avec l'exécutable, pas dans le dossier des données.
+            // Sans cela, --data-dir (ex. /data sous Docker) chercherait wwwroot dans ce dossier.
+            WebRootPath = Path.Combine(AppContext.BaseDirectory, "wwwroot"),
         });
 
         // Sans appsettings.json dans le dossier des données (ex. --data-dir vers un dossier vide), la base reste
