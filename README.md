@@ -92,8 +92,7 @@ docker compose exec onyxfilter OnyxFilter user:reset-password admin   # administ
 ```
 
 Sans Compose : `docker run -d --name onyxfilter -p 53:53/udp -p 53:53/tcp -p 8080:8080 -v onyxfilter-data:/data
---restart unless-stopped ghcr.io/anthodingo/onyxfilter`. Pour construire l'image depuis les sources :
-`docker build -t onyxfilter .`.
+--restart unless-stopped ghcr.io/anthodingo/onyxfilter`.
 
 - Le conteneur tourne sous un compte non privilégié (UID 1654) : un dossier de l'hôte monté sur `/data` doit
   lui appartenir (`sudo chown -R 1654 ./data`).
@@ -103,6 +102,28 @@ Sans Compose : `docker run -d --name onyxfilter -p 53:53/udp -p 53:53/tcp -p 808
   `network_mode: host` pour voir leurs vraies adresses.
 - La mise à jour intégrée est désactivée dans un conteneur : `docker compose pull && docker compose up -d`.
 - Le DNS-over-QUIC n'est pas disponible dans l'image (msquic absent).
+
+#### Construire l'image localement
+
+Depuis la racine du dépôt (seul Docker est nécessaire : la compilation se fait dans l'image du SDK .NET) :
+
+```sh
+git clone https://github.com/AnthoDingo/OnyxFilter.git && cd OnyxFilter
+docker build -t onyxfilter .
+docker build --build-arg VERSION=1.4.0 -t onyxfilter:1.4.0 .   # numéro de version affiché par l'application
+```
+
+Le modèle [`docker-compose.dev.yml`](docker-compose.dev.yml) construit l'image (`onyxfilter:dev`) à partir des
+sources puis la lance, avec les mêmes ports et le même volume que `docker-compose.yml` :
+
+```sh
+docker compose -f docker-compose.dev.yml up -d --build   # reconstruit après chaque modification
+docker compose -f docker-compose.dev.yml logs onyxfilter | grep -A3 'Compte administrateur'
+```
+
+Pour une image multi-architecture (comme celle publiée), utilisez Buildx :
+`docker buildx build --platform linux/amd64,linux/arm64 -t onyxfilter .` (ajoutez `--push` vers un registre,
+ou `--load` pour une seule plateforme).
 
 ### Installation manuelle
 
@@ -232,7 +253,8 @@ ainsi :
   (`Services/Updates`) ;
 - `Cli/` : commandes en ligne de commande ;
 - `deploy/` : service systemd, script d'installation et point d'entrée de l'image Docker ;
-- `Dockerfile`, `docker-compose.yml` : image Docker et modèle de déploiement ;
+- `Dockerfile`, `docker-compose.yml`, `docker-compose.dev.yml` : image Docker, modèle de déploiement et
+  modèle de construction locale ;
 - `.github/workflows/release.yml` : publication des versions.
 
 ## Publier une version

@@ -1,10 +1,10 @@
 # Modèle de déploiement Docker Compose d'OnyxFilter.
 #
-#   docker compose up -d
+#   docker compose up -f docker-compose.dev.yml -d
 #   docker compose logs onyxfilter | grep -A3 'Compte administrateur'   # identifiants du premier démarrage
 #   docker compose exec onyxfilter OnyxFilter --help                     # administration en ligne de commande
 #
-# Mise à jour : docker compose pull && docker compose up -d (la mise à jour intégrée est désactivée dans un
+# Mise à jour : docker compose pull && docker compose up -f docker-compose.dev.yml -d (la mise à jour intégrée est désactivée dans un
 # conteneur). Les données sont conservées dans le volume « onyxfilter-data ».
 services:
   onyxfilter:
