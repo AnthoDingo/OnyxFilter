@@ -56,7 +56,8 @@ RUN apt-get update \
 ENV ASPNETCORE_URLS=http://0.0.0.0:8080 \
     ASPNETCORE_HTTP_PORTS= \
     DOTNET_NOLOGO=1 \
-    TZ=Etc/UTC
+    TZ=Etc/UTC \
+    ONYXFILTER_DOCKER=true
 
 # Les commandes d'administration lancées par « docker exec » travaillent sur /data (dossier courant).
 WORKDIR /data

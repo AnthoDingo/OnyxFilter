@@ -209,7 +209,11 @@
     <section class="settings-section">
         <div class="settings-intro">
             <h2 class="settings-intro-title">@L["Retour arrière"]</h2>
-            <p class="settings-intro-text">@L["Les fichiers remplacés par la dernière mise à jour sont conservés sur le serveur."]</p>
+            <p class="settings-intro-text">
+                @(UpdateEnvironment.IsRunningInContainer
+                    ? L["Chaque version publiée reste disponible sous forme d'image Docker sur le registre de GitHub (ghcr.io)."]
+                    : L["Les fichiers remplacés par la dernière mise à jour sont conservés sur le serveur."])
+            </p>
         </div>
 
         <div class="card settings-panel">
@@ -217,13 +221,29 @@
                 <div class="setting-text">
                     <span class="setting-label">@L["Revenir à la version précédente"]</span>
                     <p class="setting-help">
-                        @((MarkupString)L["Données et réglages (base, <code>appsettings*.json</code>, caches) ne sont jamais touchés par une mise à jour. Pour restaurer les fichiers de l'application précédente :"].Value)
+                        @if (UpdateEnvironment.IsRunningInContainer)
+                        {
+                            @((MarkupString)L["Les données et réglages restent dans le volume <code>/data</code>. Dans <code>docker-compose.yml</code>, remplacez le tag de l'image (<code>latest</code> par défaut) par la version précédente, par exemple <code>ghcr.io/anthodingo/onyxfilter:X.Y.Z</code>, puis :"].Value)
+                        }
+                        else
+                        {
+                            @((MarkupString)L["Données et réglages (base, <code>appsettings*.json</code>, caches) ne sont jamais touchés par une mise à jour. Pour restaurer les fichiers de l'application précédente :"].Value)
+                        }
                     </p>
                 </div>
                 <div class="setting-nested">
-                    <pre class="code-block">sudo systemctl stop onyxfilter
+                    @if (UpdateEnvironment.IsRunningInContainer)
+                    {
+                        <pre class="code-block">cd @L["chemin_vers_docker_compose"]
+docker compose pull
+docker compose up -d</pre>
+                    }
+                    else
+                    {
+                        <pre class="code-block">sudo systemctl stop onyxfilter
 sudo cp -a @BackupDirectory/. @InstallDirectory/
 sudo systemctl start onyxfilter</pre>
+                    }
                 </div>
             </div>
         </div>
