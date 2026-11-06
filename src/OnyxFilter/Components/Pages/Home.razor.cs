@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Net;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Components.Shared;
+using OnyxFilter.Models.Settings;
+using OnyxFilter.Services;
 using OnyxFilter.Services.ClientLocation;
 using OnyxFilter.Services.DnsForwarding;
 using OnyxFilter.Services.Statistics;
@@ -30,6 +28,11 @@ public partial class Home : ComponentBase, IDisposable
 
     [Inject]
     public IClientLocationService ClientLocationService { get; set; } = default!;
+
+    [Inject]
+    public ILocalSettingsStore SettingsStore { get; set; } = default!;
+
+    private IReadOnlyList<PersistentClientEntry> PersistentClients { get; set; } = [];
 
     private sealed class ProtectionPauseOption
     {
@@ -97,12 +100,61 @@ public partial class Home : ComponentBase, IDisposable
     // (StateHasChanged sur un composant supprimé lèverait).
     private bool isDisposed;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
+        await LoadPersistentClientsAsync();
+
         ApplySnapshot(StatisticsService.GetSnapshot());
         SyncProtectionState();
+
         ProtectionState.Changed += OnProtectionStateChanged;
-        return Task.CompletedTask;
+        SettingsStore.SettingsChanged += OnSettingsChanged;
+    }
+
+    private async Task LoadPersistentClientsAsync()
+    {
+        AppLocalSettings settings = await SettingsStore.LoadAsync();
+
+        PersistentClients = settings.Clients.Clients;
+    }
+
+    private void OnSettingsChanged()
+    {
+        _ = InvokeAsync(async () =>
+        {
+            if (isDisposed)
+            {
+                return;
+            }
+
+            await LoadPersistentClientsAsync();
+
+            if (isDisposed)
+            {
+                return;
+            }
+
+            ApplySnapshot(StatisticsService.GetSnapshot());
+            StateHasChanged();
+        });
+    }
+
+    private string? ResolveClientName(string clientKey)
+    {
+        if (PersistentClients.Count == 0 || !IPAddress.TryParse(clientKey, out IPAddress? address))
+        {
+            return null;
+        }
+
+        foreach (PersistentClientEntry entry in PersistentClients)
+        {
+            if (ClientIdentifierMatcher.MatchesAny(address, entry.Identifiers))
+            {
+                return entry.Name;
+            }
+        }
+
+        return null;
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -163,7 +215,14 @@ public partial class Home : ComponentBase, IDisposable
         TopClients.Clear();
         foreach (DnsStatisticsEntry entry in snapshot.TopClients)
         {
-            TopClients.Add(new RankItem(entry.Label, entry.Count, ClientLocationService.Lookup(entry.Label)));
+            TopClients.Add(
+                new RankItem(
+                    entry.Label,
+                    entry.Count,
+                    ClientLocationService.Lookup(entry.Label),
+                    ResolveClientName(entry.Label)
+                )
+            );
         }
 
         FillRanking(TopSearchedDomains, snapshot.TopSearchedDomains);
@@ -275,7 +334,10 @@ public partial class Home : ComponentBase, IDisposable
     public void Dispose()
     {
         isDisposed = true;
+
         ProtectionState.Changed -= OnProtectionStateChanged;
+        SettingsStore.SettingsChanged -= OnSettingsChanged;
+
         StopAutoRefresh();
     }
 
