@@ -10,12 +10,18 @@ else
             RankItem item = Items[index];
             <li class="rank-row" style="--share: @ShareOf(item)">
                 <span class="rank-position">@(index + 1)</span>
-                <span class="rank-label" title="@(item.Location is null ? item.Label : $"{item.Label} — {item.Location.CountryCode} AS{item.Location.Asn} {item.Location.Description}")">
+
+                <span class="rank-label" title="@TooltipOf(item)">
                     @if (item.Location is not null)
                     {
-                        <span class="client-flag" aria-label="@item.Location.CountryCode">@item.Location.Flag</span>
+                        <span class="client-flag"
+                              aria-label="@item.Location.CountryCode">
+                            @item.Location.Flag
+                        </span>
                     }
-                    @item.Label
+
+                    @(item.DisplayName ?? item.Label)
+
                     @if (item.Location is not null)
                     {
                         <span class="rank-detail">@item.Location.Provider</span>
