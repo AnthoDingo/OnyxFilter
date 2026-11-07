@@ -1,6 +1,6 @@
 # OnyxFilter
 
-*[Version française](README.md) · English version*
+*[Version française](README.md) · English version · [Deutsche Version](README.de.md)*
 
 Self-hosted filtering DNS resolver: it blocks ads, trackers and unwanted domains for every device on the network, with
 a web admin interface, an automation API and a CLI tool, all in a single binary.
