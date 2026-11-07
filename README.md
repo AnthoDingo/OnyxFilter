@@ -1,5 +1,7 @@
 # OnyxFilter
 
+*Version française · [English version](README.en.md)*
+
 Résolveur DNS filtrant auto-hébergé : il bloque publicités, traqueurs et domaines indésirables pour tous les
 appareils du réseau, avec une interface web d'administration, une API d'automatisation et un outil en ligne
 de commande, le tout dans un seul binaire.
