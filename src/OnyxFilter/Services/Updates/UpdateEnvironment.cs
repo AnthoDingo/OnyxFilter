@@ -22,6 +22,12 @@ public static class UpdateEnvironment
 
     public static string RuntimeIdentifier => RuntimeInformation.RuntimeIdentifier;
 
+    public static bool IsRunningInContainer { get; } =
+        Environment.GetEnvironmentVariable("ONYXFILTER_DOCKER") == "true"
+        || Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true"
+        || File.Exists("/.dockerenv")
+        || File.Exists("/run/.containerenv");
+    
     // Retourne null si l'installation intégrée est possible, sinon la raison (affichée telle quelle dans
     // l'interface et l'API).
     public static string? GetInstallBlocker(UpdateOptions options)
@@ -31,7 +37,7 @@ public static class UpdateEnvironment
             return $"L'installation automatique n'est prise en charge que sous Linux x64 (plateforme actuelle : {RuntimeIdentifier}). Téléchargez la nouvelle version depuis GitHub.";
         }
 
-        if (File.Exists("/.dockerenv"))
+        if (IsRunningInContainer)
         {
             return "OnyxFilter s'exécute dans un conteneur : mettez à jour l'image plutôt que l'application.";
         }

@@ -163,6 +163,17 @@ sudo cp -a /opt/onyxfilter/.update/backup/. /opt/onyxfilter/
 sudo systemctl start onyxfilter
 ```
 
+Sous Docker, aucune sauvegarde n'est faite dans le conteneur : chaque version publiée reste disponible sur
+`ghcr.io` (tags `X.Y.Z`, `X.Y` et `X`). Dans `docker-compose.yml`, remplacez le tag de l'image (`latest` par
+défaut) par la version précédente, par exemple `image: ghcr.io/anthodingo/onyxfilter:X.Y.Z`, puis :
+
+```sh
+docker compose pull
+docker compose up -d
+```
+
+Les données du volume `/data` sont conservées.
+
 L'installation intégrée n'est proposée que pour une version publiée autonome linux-x64 lancée par systemd,
 dans un dossier accessible en écriture au compte du service. Ailleurs (compilation locale, conteneur, autre
 plateforme), la nouvelle version est seulement signalée. Les préversions (`v1.5.0-beta.1`…) peuvent être

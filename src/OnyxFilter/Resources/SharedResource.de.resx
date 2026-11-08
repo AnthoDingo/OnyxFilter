@@ -1467,6 +1467,15 @@
   <data name="Revenir à la version précédente" xml:space="preserve">
     <value>Zur vorherigen Version zurückkehren</value>
   </data>
+  <data name="chemin_vers_docker_compose" xml:space="preserve">
+    <value>pfad_zu_docker_compose</value>
+  </data>
+  <data name="Chaque version publiée reste disponible sous forme d'image Docker sur le registre de GitHub (ghcr.io)." xml:space="preserve">
+    <value>Jede veröffentlichte Version bleibt als Docker-Image in der GitHub-Registry (ghcr.io) verfügbar.</value>
+  </data>
+  <data name="Les données et réglages restent dans le volume &lt;code&gt;/data&lt;/code&gt;. Dans &lt;code&gt;docker-compose.yml&lt;/code&gt;, remplacez le tag de l'image (&lt;code&gt;latest&lt;/code&gt; par défaut) par la version précédente, par exemple &lt;code&gt;ghcr.io/anthodingo/onyxfilter:X.Y.Z&lt;/code&gt;, puis :" xml:space="preserve">
+    <value>Daten und Einstellungen bleiben im Volume &lt;code&gt;/data&lt;/code&gt;. Ersetzen Sie in &lt;code&gt;docker-compose.yml&lt;/code&gt; den Tag des Images (standardmäßig &lt;code&gt;latest&lt;/code&gt;) durch die vorherige Version, zum Beispiel &lt;code&gt;ghcr.io/anthodingo/onyxfilter:X.Y.Z&lt;/code&gt;, und führen Sie dann aus:</value>
+  </data>
   <data name="Rien n'a encore été observé dans les statistiques." xml:space="preserve">
     <value>In den Statistiken wurde noch nichts beobachtet.</value>
   </data>
