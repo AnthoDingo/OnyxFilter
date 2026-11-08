@@ -1,9 +1,19 @@
 #!/bin/bash
 # Vérifie que chaque texte d'interface L["..."] (ou Html("...") pour un texte avec balisage) a sa traduction dans chaque
 # SharedResource.<langue>.resx. Une clé manquante s'afficherait en français dans l'interface traduite.
-# Usage : bash src/OnyxFilter/Resources/check-translations.sh
+# Usage : bash src/OnyxFilter/Resources/check-translations.sh [--warn]
+#   --warn : n'échoue pas (code de sortie 0) et émet des annotations « ::warning:: » GitHub Actions (CI des PR).
 
 set -euo pipefail
+
+WARN=false
+[[ "${1:-}" = "--warn" ]] && WARN=true
+
+# Émet une annotation d'avertissement GitHub Actions en mode --warn.
+annotate() {
+    [[ "$WARN" = true ]] && echo "::warning file=src/OnyxFilter/Resources/$1::$2"
+    return 0
+}
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPONENTS="$(realpath "$SCRIPT_DIR/../Components")"
@@ -30,6 +40,7 @@ for lower in "${!COUNT[@]}"; do
         FAILED=true
 
         echo "Clés identiques à la casse près : ${GROUP[$lower]}"
+        annotate "SharedResource.resx" "Clés identiques à la casse près : ${GROUP[$lower]}"
     fi
 done
 
@@ -48,11 +59,17 @@ for resx in "$SCRIPT_DIR"/SharedResource.*.resx; do
 
         echo "${resx##*/} : ${#MISSING[@]} traduction(s) manquante(s)"
         printf '  %s\n' "${MISSING[@]}"
+
+        for key in "${MISSING[@]}"; do
+            annotate "${resx##*/}" "Traduction manquante : $key"
+        done
     fi
 done
 
-if [[ "$FAILED" = true ]]; then
+if [[ "$FAILED" = true && "$WARN" = false ]]; then
   exit 1
 fi
+
+[[ "$FAILED" = true ]] && exit 0
 
 echo "${#KEYS[@]} clés, toutes traduites."

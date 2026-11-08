@@ -1,6 +1,9 @@
 # Vérifie que chaque texte d'interface L["..."] (ou Html("...") pour un texte avec balisage) a sa traduction dans chaque SharedResource.<langue>.resx.
 # Une clé manquante s'afficherait en français dans l'interface traduite.
-# Usage : pwsh src/OnyxFilter/Resources/check-translations.ps1
+# Usage : pwsh src/OnyxFilter/Resources/check-translations.ps1 [-Warn]
+#   -Warn : n'échoue pas (code de sortie 0) et émet des annotations « ::warning:: » GitHub Actions (CI des PR).
+param([switch]$Warn)
+
 $components = Join-Path $PSScriptRoot '..' 'Components'
 $keys = Get-ChildItem $components -Recurse -Include *.razor, *.razor.cs |
     Select-String -Pattern '(?:L\[|Html\()"([^"]*)"' -AllMatches |
@@ -16,6 +19,10 @@ $collisions = $keys | Group-Object { $_.ToLowerInvariant() } | Where-Object Coun
 foreach ($group in $collisions) {
     $failed = $true
     Write-Output "Clés identiques à la casse près : $($group.Group -join ' | ')"
+    
+    if ($Warn) {
+        Write-Output "::warning file=src/OnyxFilter/Resources/SharedResource.resx::Clés identiques à la casse près : $($group.Group -join ' | ')"*
+    }
 }
 
 foreach ($resx in Get-ChildItem $PSScriptRoot -Filter 'SharedResource.*.resx') {
@@ -25,8 +32,21 @@ foreach ($resx in Get-ChildItem $PSScriptRoot -Filter 'SharedResource.*.resx') {
         $failed = $true
         Write-Output "$($resx.Name) : $(@($missing).Count) traduction(s) manquante(s)"
         $missing | ForEach-Object { Write-Output "  $_" }
+        
+        if ($Warn) {
+            $missing | ForEach-Object {
+                Write-Output "::warning file=src/OnyxFilter/Resources/$($resx.Name)::Traduction manquante : $_"
+            }
+        }
     }
 }
 
-if ($failed) { exit 1 }
+if ($failed) {
+    if ($Warn) {
+        exit 0
+    } else {
+        exit 1
+    }
+}
+
 Write-Output "$(@($keys).Count) clés, toutes traduites."
