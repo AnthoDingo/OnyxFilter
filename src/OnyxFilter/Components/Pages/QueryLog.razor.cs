@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Services.ClientLocation;
+using OnyxFilter.Services.LocalStorage;
 using OnyxFilter.Services.QueryLog;
 
 namespace OnyxFilter.Components.Pages;
@@ -20,6 +17,9 @@ public partial class QueryLog : ComponentBase, IDisposable
 
     [Inject]
     public IClientLocationService ClientLocationService { get; set; } = default!;
+
+    [Inject]
+    private LocalStorageService LocalStorageService { get; set; } = default!;
 
     private List<DnsQueryLogRecord> Entries { get; set; } = new List<DnsQueryLogRecord>();
 
@@ -76,6 +76,20 @@ public partial class QueryLog : ComponentBase, IDisposable
     protected override async Task OnInitializedAsync()
     {
         await LoadPageAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            AutoRefreshEnabled = await LocalStorageService.GetLiveState();
+            
+            if (AutoRefreshEnabled)
+            {
+                StartAutoRefresh();
+                StateHasChanged();
+            }
+        }
     }
 
     private async Task LoadPageAsync()
@@ -170,7 +184,7 @@ public partial class QueryLog : ComponentBase, IDisposable
         }
     }
 
-    private void OnAutoRefreshToggled(ChangeEventArgs e)
+    private async Task OnAutoRefreshToggled(ChangeEventArgs e)
     {
         AutoRefreshEnabled = e.Value is bool value && value;
 
@@ -182,12 +196,19 @@ public partial class QueryLog : ComponentBase, IDisposable
         {
             StopAutoRefresh();
         }
+        
+        await LocalStorageService.SetLiveState(AutoRefreshEnabled);
     }
 
     private void StartAutoRefresh()
     {
         StopAutoRefresh();
 
+        CreateAutoRefreshTimer();
+    }
+
+    private void CreateAutoRefreshTimer()
+    {
         CancellationTokenSource cts = new CancellationTokenSource();
         autoRefreshCts = cts;
         _ = AutoRefreshLoopAsync(cts.Token);

@@ -5,6 +5,7 @@ using OnyxFilter.Models.Settings;
 using OnyxFilter.Services;
 using OnyxFilter.Services.ClientLocation;
 using OnyxFilter.Services.DnsForwarding;
+using OnyxFilter.Services.LocalStorage;
 using OnyxFilter.Services.Statistics;
 
 namespace OnyxFilter.Components.Pages;
@@ -31,6 +32,9 @@ public partial class Home : ComponentBase, IDisposable
     [Inject]
     public ILocalSettingsStore SettingsStore { get; set; } = default!;
 
+    [Inject]
+    private LocalStorageService LocalStorageService { get; set; } = default!;
+    
     private IReadOnlyList<PersistentClientEntry> PersistentClients { get; set; } = [];
 
     private sealed class ProtectionPauseOption
@@ -169,15 +173,22 @@ public partial class Home : ComponentBase, IDisposable
         return string.IsNullOrWhiteSpace(name) ? null : name.Trim();
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            AutoRefreshEnabled = await LocalStorageService.GetLiveState();
+            
             // Un seul rafraîchissement automatique peu après l'affichage initial de la page, indépendant
             // du mode direct (désactivé par défaut) : couvre l'écart entre la donnée envoyée au
             // chargement (voir OnInitializedAsync) et l'état réel au moment où l'utilisateur consulte
             // effectivement la page.
-            _ = RefreshOnceAfterFirstRenderAsync();
+            await RefreshOnceAfterFirstRenderAsync();
+
+            if (AutoRefreshEnabled)
+            {
+                CreateAutoRefreshTimer();
+            }
         }
     }
 
@@ -294,7 +305,7 @@ public partial class Home : ComponentBase, IDisposable
         return Task.CompletedTask;
     }
 
-    private void OnAutoRefreshChanged(ChangeEventArgs args)
+    private async Task OnAutoRefreshChanged(ChangeEventArgs args)
     {
         bool enabled = args.Value is bool value && value;
         AutoRefreshEnabled = enabled;
@@ -307,6 +318,8 @@ public partial class Home : ComponentBase, IDisposable
         {
             StopAutoRefresh();
         }
+        
+        await LocalStorageService.SetLiveState(AutoRefreshEnabled);
     }
 
     private void StartAutoRefresh()
@@ -316,7 +329,13 @@ public partial class Home : ComponentBase, IDisposable
             return;
         }
 
+        CreateAutoRefreshTimer();
+    }
+
+    private void CreateAutoRefreshTimer()
+    {
         TimeSpan interval = TimeSpan.FromSeconds(AutoRefreshIntervalSeconds);
+
         AutoRefreshTimer = new Timer(OnAutoRefreshTick, null, interval, interval);
     }
 
