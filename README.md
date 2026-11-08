@@ -1,5 +1,7 @@
 # OnyxFilter
 
+*Version française · [English version](README.en.md) · [Deutsche Version](README.de.md)*
+
 Résolveur DNS filtrant auto-hébergé : il bloque publicités, traqueurs et domaines indésirables pour tous les
 appareils du réseau, avec une interface web d'administration, une API d'automatisation et un outil en ligne
 de commande, le tout dans un seul binaire.
@@ -33,8 +35,9 @@ de commande, le tout dans un seul binaire.
   rapide, avec serveurs de secours et d'amorçage, cache et limitation de débit.
 - **Supervision** : vue d'ensemble (activité horaire, taux de blocage, classements), journal des requêtes
   filtrable, suspension temporaire de la protection.
-- **Administration** : interface web en français et en anglais (thèmes clair et sombre, mobile), connexion par mot de
-  passe ou clé d'accès (passkey), API HTTP par jeton, commandes en ligne de commande.
+- **Administration** : interface web en français, anglais, allemand, espagnol et italien (thèmes clair et
+  sombre, mobile), connexion par mot de passe ou clé d'accès (passkey), API HTTP par jeton, commandes en ligne
+  de commande.
 - **Mises à jour** en un clic depuis l'interface, à partir des publications GitHub.
 
 ## Installation (Linux x64)
