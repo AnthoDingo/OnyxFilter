@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Net;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Components.Shared;
 using OnyxFilter.Models.Settings;
@@ -118,6 +117,10 @@ public partial class Home : ComponentBase, IDisposable
         PersistentClients = settings.Clients.Clients;
     }
 
+    // SettingsChanged est déclenché pour toute modification des paramètres (DNS, filtres, clients…) : on
+    // se contente ici de recalculer les noms affichés dans le classement des clients, sans relire les
+    // statistiques (le mode direct, s'il est désactivé, doit le rester). Pas de nouveau rendu si aucun
+    // nom n'a changé.
     private void OnSettingsChanged()
     {
         _ = InvokeAsync(async () =>
@@ -129,32 +132,41 @@ public partial class Home : ComponentBase, IDisposable
 
             await LoadPersistentClientsAsync();
 
-            if (isDisposed)
+            if (isDisposed || !RefreshClientNames())
             {
                 return;
             }
 
-            ApplySnapshot(StatisticsService.GetSnapshot());
             StateHasChanged();
         });
     }
 
-    private string? ResolveClientName(string clientKey)
+    // Retourne true si au moins un nom affiché a changé.
+    private bool RefreshClientNames()
     {
-        if (PersistentClients.Count == 0 || !IPAddress.TryParse(clientKey, out IPAddress? address))
-        {
-            return null;
-        }
+        bool changed = false;
 
-        foreach (PersistentClientEntry entry in PersistentClients)
+        for (int index = 0; index < TopClients.Count; index++)
         {
-            if (ClientIdentifierMatcher.MatchesAny(address, entry.Identifiers))
+            RankItem item = TopClients[index];
+            string? displayName = ResolveClientName(item.Label);
+
+            if (!string.Equals(item.DisplayName, displayName, StringComparison.Ordinal))
             {
-                return entry.Name;
+                TopClients[index] = item with { DisplayName = displayName };
+                changed = true;
             }
         }
 
-        return null;
+        return changed;
+    }
+
+    // Nom vide ou blanc (appsettings.local.json modifié à la main) : on garde l'adresse IP comme libellé.
+    private string? ResolveClientName(string clientKey)
+    {
+        string? name = ClientIdentifierMatcher.FindClient(clientKey, PersistentClients)?.Name;
+
+        return string.IsNullOrWhiteSpace(name) ? null : name.Trim();
     }
 
     protected override void OnAfterRender(bool firstRender)

@@ -5,6 +5,7 @@ using OnyxFilter.Services.ClientLocation;
 namespace OnyxFilter.Components.Shared;
 
 // "Location" : pays et fournisseur d'accès, renseignés uniquement pour le classement des clients.
+// "DisplayName" : nom du client persistant (/settings/client) correspondant, affiché à la place de "Label".
 public sealed record RankItem(
     string Label,
     long Count,
@@ -42,11 +43,11 @@ public partial class RankList : ComponentBase
     {
         string tooltip = item.DisplayName is null
             ? item.Label
-            : $"{item.DisplayName} - {item.Label}";
+            : $"{item.DisplayName} ({item.Label})";
 
         return item.Location is null
             ? tooltip
-            : $"{tooltip} - {item.Location.CountryCode} AS{item.Location.Asn} {item.Location.Description}";
+            : $"{tooltip} — {item.Location.CountryCode} AS{item.Location.Asn} {item.Location.Description}";
     }
 
     // Valeur de la propriété CSS --share, en culture invariante (voir ActivityChart.ToPercent).

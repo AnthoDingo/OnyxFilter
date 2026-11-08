@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using OnyxFilter.Models.Settings;
 
 namespace OnyxFilter.Services.DnsForwarding;
 
@@ -88,5 +89,26 @@ public static class ClientIdentifierMatcher
         }
 
         return false;
+    }
+
+    // Premier client persistant dont un identifiant (IP ou plage CIDR) couvre "clientKey", ou null si
+    // "clientKey" n'est pas une adresse IP (ex. "Inconnu") ou qu'aucun client ne correspond. En cas de
+    // plages qui se recouvrent, l'ordre de la liste (celui de /settings/client) fait foi.
+    public static PersistentClientEntry? FindClient(string clientKey, IReadOnlyList<PersistentClientEntry> clients)
+    {
+        if (clients.Count == 0 || !IPAddress.TryParse(clientKey, out IPAddress? address))
+        {
+            return null;
+        }
+
+        foreach (PersistentClientEntry entry in clients)
+        {
+            if (MatchesAny(address, entry.Identifiers))
+            {
+                return entry;
+            }
+        }
+
+        return null;
     }
 }
