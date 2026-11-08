@@ -115,24 +115,8 @@ public partial class ClientSettings : ComponentBase
         ClampRuntimePage();
     }
 
-    private bool IsCoveredByPersistentClient(string clientKey)
-    {
-        if (!IPAddress.TryParse(clientKey, out IPAddress? address))
-        {
-            // "Inconnu" (adresse non résolue) ou clé mal formée : jamais couvert par un client persistant.
-            return false;
-        }
-
-        foreach (PersistentClientEntry entry in Clients)
-        {
-            if (ClientIdentifierMatcher.MatchesAny(address, entry.Identifiers))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    // "Inconnu" (adresse non résolue) ou clé mal formée : jamais couvert par un client persistant.
+    private bool IsCoveredByPersistentClient(string clientKey) => ClientIdentifierMatcher.FindClient(clientKey, Clients) is not null;
 
     // Somme des requêtes de tous les clients de statistiques correspondant aux identifiants de "entry"
     // (une plage CIDR peut recouvrir plusieurs adresses observées séparément dans les statistiques).
