@@ -28,6 +28,9 @@ jobs:
         with:
           dotnet-version: "10.0.x"
 
+      - name: Vérifier les traductions
+        run: bash src/OnyxFilter/Resources/check-translations.sh
+
       - name: Lire la version du tag
         id: version
         env:
