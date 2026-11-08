@@ -72,10 +72,6 @@ out/
 .yarn/install-state.gz
 .pnp.*
 
-### OnyxFilter
-# Paramètres locaux (secrets/instance-specific : certificats, clients autorisés, etc.), non versionnés.
-appsettings.local.json
-
 ### Windows
 # Windows thumbnail cache files
 Thumbs.db
@@ -136,15 +132,48 @@ x86/
 # Built Visual Studio Code Extensions
 *.vsix
 
+### JetBrains Rider
+# Paramètres de l'IDE (dossier .idea/.idea.OnyxFilter/)
+.idea/*
+
+# Préférences personnelles de la solution (ex. OnyxFilter.sln.DotSettings.user)
+*.DotSettings.user
+
+### Claude Code
+# Paramètres et mémoire locale de l'assistant
 .claude
-.vs
-src/filterlists-cache
-src/OnyxFilter.db
-src/OnyxFilter.db-shm
-src/OnyxFilter.db-wal
-src/OnyxFilter/filterlists-cache
+
+### OnyxFilter
+# Paramètres locaux (secrets/instance-specific : certificats, clients autorisés, etc.), non versionnés.
+appsettings.local.json
+
+# Données d'exécution, créées dans le dossier des données (src/OnyxFilter/ en développement,
+# voir Services/DataDirectory.cs). Motifs sans chemin : ignorés quel que soit le dossier des données.
+
+# Base SQLite (comptes, paramètres, journal des requêtes, statistiques) et ses fichiers WAL/journal
+OnyxFilter.db
 *.db-shm
 *.db-wal
+*.db-journal
+
+# Caches des listes de filtrage et des listes d'autorisation téléchargées
+filterlists-cache/
+allowlists-cache/
+
+# Journal des requêtes de secours (.jsonl) écrit quand la base est indisponible
+query-log-fallback/
 
 # Base de localisation des clients (iptoasn.com), téléchargée au démarrage
 ip2asn-combined.tsv.gz*
+
+# Certificat Let's Encrypt, clé privée et comptes ACME : ne doivent JAMAIS être versionnés
+letsencrypt/
+
+# Certificats importés manuellement (Paramètres › Chiffrement)
+*.pfx
+
+# Dossier de travail de la mise à jour intégrée (téléchargement, staging, sauvegarde)
+.update/
+
+# Dossier de l'hôte monté en volume par docker-compose (./data:/data)
+/data/
