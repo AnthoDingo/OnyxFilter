@@ -269,6 +269,9 @@ ainsi :
 - `deploy/` : service systemd, script d'installation et point d'entrée de l'image Docker ;
 - `Dockerfile`, `docker-compose.yml`, `docker-compose.dev.yml` : image Docker, modèle de déploiement et
   modèle de construction locale ;
+- `Resources/` : traductions (`SharedResource.<langue>.resx`) et scripts `check-translations.sh` / `.ps1`, qui vérifient
+  que chaque texte d'interface a sa traduction (`--warn` / `-Warn` : avertissements sans échec) ;
+- `.github/workflows/ci.yml` : vérification des traductions sur les pull requests (avertissements) ;
 - `.github/workflows/release.yml` : publication des versions.
 
 ## Publier une version
@@ -280,12 +283,11 @@ git tag v1.4.0
 git push origin v1.4.0
 ```
 
-Le workflow « Publication » compile la version autonome linux-x64 avec ce numéro, crée
-`OnyxFilter-1.4.0-linux-x64.tar.gz`, `checksums.txt` et joint `install.sh` à une publication GitHub. Les
-installations existantes la proposent alors dans leur page « Mises à jour ». Il publie ensuite l'image Docker
-(amd64 et arm64) sur `ghcr.io/anthodingo/onyxfilter` ; à la première publication, rendez le paquet public
-depuis ses réglages sur GitHub (Packages › onyxfilter › Package settings) pour qu'il soit téléchargeable sans
-authentification.
+Le workflow « Publication » refuse la version si une traduction manque, puis compile la version autonome linux-x64 avec
+ce numéro, crée `OnyxFilter-1.4.0-linux-x64.tar.gz`, `checksums.txt` et joint `install.sh` à une publication GitHub. Les
+installations existantes la proposent alors dans leur page « Mises à jour ». Il publie ensuite l'image Docker (amd64 et
+arm64) sur `ghcr.io/anthodingo/onyxfilter` ; à la première publication, rendez le paquet public depuis ses réglages sur
+GitHub (Packages › onyxfilter › Package settings) pour qu'il soit téléchargeable sans authentification.
 
 ## Crédits
 
