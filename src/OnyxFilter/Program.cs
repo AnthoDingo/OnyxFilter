@@ -33,6 +33,7 @@ using OnyxFilter.Services.DnsForwarding;
 using OnyxFilter.Services.Encryption;
 using OnyxFilter.Services.Encryption.Acme;
 using OnyxFilter.Services.Filtering;
+using OnyxFilter.Services.LocalStorage;
 using OnyxFilter.Services.ParentalControl;
 using OnyxFilter.Services.Rewrites;
 using OnyxFilter.Services.SafeSearch;
@@ -336,6 +337,8 @@ public class Program
         builder.Services.AddSingleton<IHttpsEndpointService>(serviceProvider => serviceProvider.GetRequiredService<HttpsEndpointService>());
         builder.Services.AddHostedService(serviceProvider => serviceProvider.GetRequiredService<HttpsEndpointService>());
 
+        builder.Services.AddScoped<LocalStorageService>();
+        
         WebApplication app = builder.Build();
 
         // Adresses bannies par CrowdSec : refusées avant tout traitement (si "Protéger aussi l'interface
