@@ -2517,4 +2517,22 @@
   <data name="Molette, pincement ou barre de zoom pour agrandir, glisser pour se déplacer." xml:space="preserve">
     <value>Rueda, pellizco o barra de zoom para ampliar, arrastrar para desplazarse.</value>
   </data>
+  <data name="{0} bloqué." xml:space="preserve">
+    <value>{0} bloqueado.</value>
+  </data>
+  <data name="{0} autorisé." xml:space="preserve">
+    <value>{0} permitido.</value>
+  </data>
+  <data name="Tous les services sont bloqués." xml:space="preserve">
+    <value>Todos los servicios están bloqueados.</value>
+  </data>
+  <data name="Tous les services sont autorisés." xml:space="preserve">
+    <value>Todos los servicios están permitidos.</value>
+  </data>
+  <data name="Tous les services du groupe {0} sont autorisés." xml:space="preserve">
+    <value>Todos los servicios de {0} están permitidos.</value>
+  </data>
+  <data name="Tous les services du groupe {0} sont bloqués." xml:space="preserve">
+    <value>Todos los servicios de {0} están bloqueados.</value>
+  </data>
 </root>

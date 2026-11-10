@@ -29,8 +29,6 @@ public partial class BlockedServices : ComponentBase
 
     private BlockedServicesSchedule? Schedule { get; set; }
 
-    private bool IsSaving { get; set; }
-
     // Boîte de dialogue de l'horaire de suspension.
     private bool ShowScheduleDialog { get; set; }
 
@@ -75,34 +73,42 @@ public partial class BlockedServices : ComponentBase
         return BlockedServiceIds.Contains(serviceId);
     }
 
-    private void ToggleService(string serviceId, ChangeEventArgs e)
+    private async Task ToggleService(BlockedServiceDefinition service, ChangeEventArgs e)
     {
         bool isChecked = e.Value is bool value && value;
 
         if (isChecked)
         {
-            BlockedServiceIds.Add(serviceId);
+            BlockedServiceIds.Add(service.Id);
         }
         else
         {
-            BlockedServiceIds.Remove(serviceId);
+            BlockedServiceIds.Remove(service.Id);
         }
+
+        await SaveAsync(isChecked
+            ? L["{0} bloqué.", service.Name]
+            : L["{0} autorisé.", service.Name]);
     }
 
-    private void BlockAll()
+    private async Task BlockAll()
     {
         foreach (BlockedServiceDefinition service in Catalog.All)
         {
             BlockedServiceIds.Add(service.Id);
         }
+
+        await SaveAsync(L["Tous les services sont bloqués."]);
     }
 
-    private void UnblockAll()
+    private async Task UnblockAll()
     {
         BlockedServiceIds.Clear();
+
+        await SaveAsync(L["Tous les services sont autorisés."]);
     }
 
-    private void BlockAllInGroup(string groupId)
+    private async Task BlockAllInGroup(string groupId, string groupLabel)
     {
         foreach (BlockedServiceDefinition service in Catalog.All)
         {
@@ -111,9 +117,11 @@ public partial class BlockedServices : ComponentBase
                 BlockedServiceIds.Add(service.Id);
             }
         }
+
+        await SaveAsync(L["Tous les services du groupe {0} sont bloqués.", L[groupLabel].Value]);
     }
 
-    private void UnblockAllInGroup(string groupId)
+    private async Task UnblockAllInGroup(string groupId, string groupLabel)
     {
         foreach (BlockedServiceDefinition service in Catalog.All)
         {
@@ -122,27 +130,23 @@ public partial class BlockedServices : ComponentBase
                 BlockedServiceIds.Remove(service.Id);
             }
         }
+
+        await SaveAsync(L["Tous les services du groupe {0} sont autorisés.", L[groupLabel].Value]);
     }
 
-    private async Task SaveAsync()
+    private async Task SaveAsync(string successMessage)
     {
         List<string> idsSnapshot = BlockedServiceIds.ToList();
-
-        IsSaving = true;
 
         try
         {
             await SettingsStore.UpdateAsync(settings => settings.BlockedServices.BlockedServiceIds = idsSnapshot);
 
-            ToastService.Show(L["Services bloqués enregistrés."], ToastSeverity.Success);
+            ToastService.Show(successMessage, ToastSeverity.Success);
         }
         catch (Exception ex)
         {
             ToastService.Show(L["Erreur lors de l'enregistrement : {0}", ex.Message], ToastSeverity.Error);
-        }
-        finally
-        {
-            IsSaving = false;
         }
     }
 
