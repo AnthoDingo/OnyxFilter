@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 using OnyxFilter.Services.Filtering;
 
 namespace OnyxFilter.Components.Pages;
@@ -23,11 +24,11 @@ public partial class DnsAllowlists : ComponentBase
     [Inject]
     public IDnsAllowlistService AllowlistService { get; set; } = default!;
 
+    [Inject] private ToastService ToastService { get; set; } = null!;
+
     private List<FilterListEntry> Lists { get; set; } = new List<FilterListEntry>();
 
     private Dictionary<string, FilterListStatus> StatusById { get; set; } = new Dictionary<string, FilterListStatus>(StringComparer.Ordinal);
-
-    private string? StatusMessage { get; set; }
 
     private bool IsRefreshing { get; set; }
 
@@ -186,7 +187,7 @@ public partial class DnsAllowlists : ComponentBase
         }
         catch (Exception ex)
         {
-            StatusMessage = L["Erreur lors de la mise à jour : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de la mise à jour : {0}", ex.Message], ToastSeverity.Error);
         }
         finally
         {
@@ -238,11 +239,12 @@ public partial class DnsAllowlists : ComponentBase
         try
         {
             await SettingsStore.UpdateAsync(settings => settings.Allowlist.Lists = listsSnapshot);
-            StatusMessage = L["Abonnements enregistrés. La mise à jour des listes se fait en arrière-plan."];
+
+            ToastService.Show(L["Abonnements enregistrés. La mise à jour des listes se fait en arrière-plan."], ToastSeverity.Success);
         }
         catch (Exception ex)
         {
-            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de l'enregistrement : {0}", ex.Message], ToastSeverity.Error);
         }
     }
 
@@ -253,12 +255,14 @@ public partial class DnsAllowlists : ComponentBase
         try
         {
             await AllowlistService.RefreshAsync(CancellationToken.None);
+
             ApplySnapshot();
-            StatusMessage = L["Listes d'autorisation mises à jour."];
+
+            ToastService.Show(L["Listes d'autorisation mises à jour."], ToastSeverity.Success);
         }
         catch (Exception ex)
         {
-            StatusMessage = L["Erreur lors de la mise à jour : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de la mise à jour : {0}", ex.Message], ToastSeverity.Error);
         }
         finally
         {

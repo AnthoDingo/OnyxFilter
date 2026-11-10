@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 using OnyxFilter.Services.ClientLocation;
 
 namespace OnyxFilter.Components.Pages;
@@ -25,6 +26,8 @@ public partial class CountryFilter : ComponentBase, IAsyncDisposable
     [Inject]
     public NavigationManager Navigation { get; set; } = default!;
 
+    [Inject] private ToastService ToastService { get; set; } = null!;
+    
     // Carte interactive (CountryFilter.razor.js) : module chargé au premier rendu, puis état (mode et
     // pays sélectionnés) renvoyé à chaque rendu.
     private ElementReference mapContainer;
@@ -44,10 +47,6 @@ public partial class CountryFilter : ComponentBase, IAsyncDisposable
     private Dictionary<string, string> CountryNames { get; set; } = new Dictionary<string, string>(StringComparer.Ordinal);
 
     private string SearchText { get; set; } = string.Empty;
-
-    private string? StatusMessage { get; set; }
-
-    private bool StatusIsError { get; set; }
 
     private bool IsSaving { get; set; }
 
@@ -208,8 +207,7 @@ public partial class CountryFilter : ComponentBase, IAsyncDisposable
     {
         if (Mode == CountryFilterMode.Allowlist && SelectedCountries.Count == 0)
         {
-            StatusIsError = true;
-            StatusMessage = L["Sélectionnez au moins un pays à autoriser."];
+            ToastService.Show(L["Sélectionnez au moins un pays à autoriser."], ToastSeverity.Warning);
             return;
         }
 
@@ -225,13 +223,11 @@ public partial class CountryFilter : ComponentBase, IAsyncDisposable
                 Countries = countries,
             });
 
-            StatusIsError = false;
-            StatusMessage = L["Filtrage par pays enregistré."];
+            ToastService.Show(L["Filtrage par pays enregistré."], ToastSeverity.Success);
         }
         catch (Exception ex)
         {
-            StatusIsError = true;
-            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de l'enregistrement : {0}", ex.Message], ToastSeverity.Error);
         }
         finally
         {

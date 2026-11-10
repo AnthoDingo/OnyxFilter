@@ -17,11 +17,6 @@
     </div>
 </header>
 
-@if (!string.IsNullOrEmpty(StatusMessage))
-{
-    <div class="alert page-status @(StatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
-}
-
 <div class="rules-layout">
     <div class="card rules-editor">
         <div class="rules-editor-bar">

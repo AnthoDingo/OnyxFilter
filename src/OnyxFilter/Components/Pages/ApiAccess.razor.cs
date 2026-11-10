@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services.Api;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 using QRCoder;
 
 namespace OnyxFilter.Components.Pages;
@@ -30,6 +31,8 @@ public partial class ApiAccess : ComponentBase, IDisposable
     [Inject]
     public IJSRuntime JSRuntime { get; set; } = default!;
 
+    [Inject] private ToastService ToastService { get; set; } = null!;
+
     private IReadOnlyList<ApiTokenEntry> Tokens { get; set; } = Array.Empty<ApiTokenEntry>();
 
     private string NewTokenName { get; set; } = string.Empty;
@@ -42,8 +45,6 @@ public partial class ApiAccess : ComponentBase, IDisposable
     private string? CreatedTokenName { get; set; }
 
     private bool TokenCopied { get; set; }
-
-    private string? StatusMessage { get; set; }
 
     private ApiTokenEntry? TokenPendingRevocation { get; set; }
 
@@ -77,7 +78,6 @@ public partial class ApiAccess : ComponentBase, IDisposable
     private async Task CreateTokenAsync()
     {
         IsCreating = true;
-        StatusMessage = null;
         CreatedToken = null;
         TokenCopied = false;
 
@@ -91,11 +91,11 @@ public partial class ApiAccess : ComponentBase, IDisposable
         }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
         {
-            StatusMessage = L["Erreur : {0}", ex.Message];
+            ToastService.Show(L["Erreur : {0}", ex.Message], ToastSeverity.Error);
         }
         catch (Exception ex)
         {
-            StatusMessage = L["Erreur lors de l'enregistrement du jeton : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de l'enregistrement du jeton : {0}", ex.Message], ToastSeverity.Error);
         }
         finally
         {
@@ -119,7 +119,10 @@ public partial class ApiAccess : ComponentBase, IDisposable
         }
         catch (JSException)
         {
-            StatusMessage = L["Erreur : copie automatique indisponible (HTTPS requis). Sélectionnez le jeton et copiez-le manuellement."];
+            ToastService.Show(
+                L["Erreur : copie automatique indisponible (HTTPS requis). Sélectionnez le jeton et copiez-le manuellement."],
+                ToastSeverity.Error
+            );
         }
     }
 
@@ -152,14 +155,21 @@ public partial class ApiAccess : ComponentBase, IDisposable
         try
         {
             bool revoked = await TokenService.RevokeAsync(TokenPendingRevocation.Id);
-            StatusMessage = revoked
-                ? L["Jeton « {0} » révoqué : il ne donne plus accès à l'API.", name]
-                : L["Erreur : le jeton « {0} » n'existe plus.", name];
+
+            ToastService.Show(
+                revoked
+                    ? L["Jeton « {0} » révoqué : il ne donne plus accès à l'API.", name]
+                    : L["Erreur : le jeton « {0} » n'existe plus.", name],
+                revoked
+                    ? ToastSeverity.Success
+                    : ToastSeverity.Error
+            );
+
             Tokens = await TokenService.ListAsync();
         }
         catch (Exception ex)
         {
-            StatusMessage = L["Erreur lors de la révocation : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de la révocation : {0}", ex.Message], ToastSeverity.Error);
         }
         finally
         {
@@ -171,7 +181,10 @@ public partial class ApiAccess : ComponentBase, IDisposable
     {
         if (Tokens.Count >= ApiTokenService.MaxTokenCount)
         {
-            StatusMessage = L["Erreur : nombre maximal de jetons atteint ({0}). Révoquez-en un avant de connecter un smartphone.", ApiTokenService.MaxTokenCount];
+            ToastService.Show(
+                L["Erreur : nombre maximal de jetons atteint ({0}). Révoquez-en un avant de connecter un smartphone.", ApiTokenService.MaxTokenCount],
+                ToastSeverity.Error
+            );
             return;
         }
 
@@ -201,7 +214,12 @@ public partial class ApiAccess : ComponentBase, IDisposable
                     {
                         case PairingTokenState.Consumed:
                             ClosePairing();
-                            StatusMessage = L["Smartphone « {0} » connecté : son jeton figure dans la liste.", PairingDeviceName.Trim()];
+
+                            ToastService.Show(
+                                L["Smartphone « {0} » connecté : son jeton figure dans la liste.", PairingDeviceName.Trim()],
+                                ToastSeverity.Success
+                            );
+
                             Tokens = await TokenService.ListAsync();
                             await InvokeAsync(StateHasChanged);
                             return;

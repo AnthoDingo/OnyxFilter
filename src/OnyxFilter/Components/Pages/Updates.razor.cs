@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 using OnyxFilter.Services.Updates;
 
 namespace OnyxFilter.Components.Pages;
@@ -23,6 +24,8 @@ public partial class Updates : ComponentBase, IDisposable
     [Inject]
     public IOptions<UpdateOptions> UpdateOptions { get; set; } = default!;
 
+    [Inject] private ToastService ToastService { get; set; } = null!;
+
     private UpdateStatus Status { get; set; } = default!;
 
     private bool AutoCheck { get; set; } = true;
@@ -30,8 +33,6 @@ public partial class Updates : ComponentBase, IDisposable
     private bool IncludePreReleases { get; set; }
 
     private bool ShowInstallConfirm { get; set; }
-
-    private string? SettingsMessage { get; set; }
 
     private string ReleasesUrl => "https://github.com/" + UpdateOptions.Value.Repository + "/releases";
 
@@ -119,12 +120,15 @@ public partial class Updates : ComponentBase, IDisposable
                 settings.Updates.AutoCheck = AutoCheck;
                 settings.Updates.IncludePreReleases = IncludePreReleases;
             });
-            SettingsMessage = L["Préférences enregistrées."];
+
+            ToastService.Show(L["Préférences enregistrées."], ToastSeverity.Success);
+
             return true;
         }
         catch (Exception ex)
         {
-            SettingsMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de l'enregistrement : {0}", ex.Message], ToastSeverity.Error);
+
             return false;
         }
     }

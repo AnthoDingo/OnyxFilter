@@ -18,11 +18,6 @@
     </div>
 </header>
 
-@if (!string.IsNullOrEmpty(StatusMessage))
-{
-    <div class="alert page-status @(StatusIsError ? "alert-danger" : "alert-success")">@StatusMessage</div>
-}
-
 <div class="card settings-panel">
     <div class="setting setting-stacked">
         <div class="setting-text">
