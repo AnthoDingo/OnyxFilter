@@ -219,10 +219,6 @@
             <div class="settings-panel-footer">
                 <button type="button" class="btn btn-primary" @onclick="SaveEncryptionConfigurationAsync">@L["Enregistrer"]</button>
                 <button type="button" class="btn btn-outline-secondary" @onclick="ResetEncryptionSettingsAsync">@L["Réinitialiser"]</button>
-                @if (!string.IsNullOrEmpty(EncryptionStatusMessage))
-                {
-                    <div class="alert @(EncryptionStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@EncryptionStatusMessage</div>
-                }
             </div>
         </div>
     </section>
@@ -402,10 +398,6 @@
 
             <div class="settings-panel-footer">
                 <button type="button" class="btn btn-primary" @onclick="SaveLetsEncryptConfigurationAsync">@L["Enregistrer"]</button>
-                @if (!string.IsNullOrEmpty(LetsEncryptSaveMessage))
-                {
-                    <div class="alert @(LetsEncryptSaveMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@LetsEncryptSaveMessage</div>
-                }
             </div>
         </div>
     </section>
