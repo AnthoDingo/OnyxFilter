@@ -17,23 +17,13 @@ public partial class Toast : ComponentBase, IAsyncDisposable
     private string CssClass
         => Severity switch
         {
-            ToastSeverity.Warning => "text-bg-warning",
-            ToastSeverity.Error => "text-bg-danger",
-            ToastSeverity.Success => "text-bg-success",
-            ToastSeverity.Info => "text-bg-info",
-            _ => "text-bg-info"
+            ToastSeverity.Warning => "toast-warning",
+            ToastSeverity.Error => "toast-danger",
+            ToastSeverity.Success => "toast-success",
+            ToastSeverity.Info => "toast-info",
+            _ => "toast-info"
         };
 
-    private string BsTheme
-        => Severity switch
-        {
-            ToastSeverity.Error => "dark",
-            ToastSeverity.Success => "dark",
-            ToastSeverity.Info => "dark",
-            ToastSeverity.Warning => "dark",
-            _ => "light"
-        };
-    
     private IJSObjectReference? module;
     private DotNetObjectReference<Toast>? dotNetRef;
 
