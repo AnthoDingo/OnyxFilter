@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
-
 namespace OnyxFilter.Services.Encryption;
 
 // Point d'écoute HTTPS de Kestrel, sous forme de configuration « Kestrel:Endpoints » que Kestrel surveille :

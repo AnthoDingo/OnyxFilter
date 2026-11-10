@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Services.Encryption;

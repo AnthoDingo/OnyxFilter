@@ -1,4 +1,3 @@
-using System;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Services.Updates;
 

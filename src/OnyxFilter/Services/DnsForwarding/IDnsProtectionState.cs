@@ -1,5 +1,3 @@
-using System;
-
 namespace OnyxFilter.Services.DnsForwarding;
 
 // État "Protection" du tableau de bord (Home.razor) : arrêt temporaire volontaire de tout le filtrage

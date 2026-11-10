@@ -1,5 +1,3 @@
-using System;
-
 namespace OnyxFilter.Services.QueryLog;
 
 // Une ligne du journal des requêtes (page /query-log), en mémoire (file d'attente avant écriture) comme

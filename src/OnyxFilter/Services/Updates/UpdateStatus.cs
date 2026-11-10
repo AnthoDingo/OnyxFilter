@@ -1,5 +1,3 @@
-using System;
-
 namespace OnyxFilter.Services.Updates;
 
 public enum UpdateState

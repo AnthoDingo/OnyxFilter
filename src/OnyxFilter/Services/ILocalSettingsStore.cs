@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using OnyxFilter.Models.Settings;
 
 namespace OnyxFilter.Services;

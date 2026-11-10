@@ -1,6 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace OnyxFilter.Services.Filtering;
 
 // Applique la page "Règles de filtrage personnalisées" (/filters/custom-rules) : reproduit la syntaxe

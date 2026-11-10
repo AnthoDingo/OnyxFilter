@@ -1,5 +1,3 @@
-using System;
-
 namespace OnyxFilter.Models.Settings;
 
 // Horaire de suspension du blocage des services (/filters/blocked-services, "Suspendre le blocage des

@@ -1,7 +1,4 @@
-using System;
 using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 using OnyxFilter.Models.Settings;

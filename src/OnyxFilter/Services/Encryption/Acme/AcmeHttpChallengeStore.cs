@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Concurrent;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace OnyxFilter.Services.Encryption.Acme;
 

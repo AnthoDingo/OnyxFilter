@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace OnyxFilter.Models.Settings;
 
 // Catalogue des services pouvant être bloqués par client (sélection dans la boîte de dialogue "Ajouter

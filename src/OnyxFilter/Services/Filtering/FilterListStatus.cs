@@ -1,5 +1,3 @@
-using System;
-
 namespace OnyxFilter.Services.Filtering;
 
 // État d'un abonnement à une liste de domaines (blocage ou autorisation) après la dernière tentative de

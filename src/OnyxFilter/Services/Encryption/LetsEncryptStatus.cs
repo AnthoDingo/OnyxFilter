@@ -1,5 +1,3 @@
-using System;
-
 namespace OnyxFilter.Services.Encryption;
 
 public enum LetsEncryptState

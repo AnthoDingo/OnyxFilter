@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace OnyxFilter.Models.Settings;
 
 // Reflète les champs de la page "Services bloqués" (/filters/blocked-services).
