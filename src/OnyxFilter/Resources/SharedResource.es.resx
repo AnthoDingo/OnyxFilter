@@ -1659,9 +1659,6 @@
   <data name="Services bloqués" xml:space="preserve">
     <value>Servicios bloqueados</value>
   </data>
-  <data name="Services bloqués enregistrés." xml:space="preserve">
-    <value>Servicios bloqueados guardados.</value>
-  </data>
   <data name="Services de messagerie" xml:space="preserve">
     <value>Servicios de mensajería</value>
   </data>
