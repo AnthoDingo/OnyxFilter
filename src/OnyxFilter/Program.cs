@@ -26,6 +26,7 @@ using OnyxFilter.Models;
 using OnyxFilter.Services;
 using OnyxFilter.Services.Api;
 using OnyxFilter.Services.BlockedServices;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 using OnyxFilter.Services.BrowsingSecurity;
 using OnyxFilter.Services.ClientLocation;
 using OnyxFilter.Services.CrowdSec;
@@ -336,6 +337,9 @@ public class Program
         builder.Services.AddSingleton<IHttpsEndpointService>(serviceProvider => serviceProvider.GetRequiredService<HttpsEndpointService>());
         builder.Services.AddHostedService(serviceProvider => serviceProvider.GetRequiredService<HttpsEndpointService>());
 
+        // Bootstrap services
+        builder.Services.AddScoped<ToastService>();
+        
         WebApplication app = builder.Build();
 
         // Adresses bannies par CrowdSec : refusées avant tout traitement (si "Protéger aussi l'interface
