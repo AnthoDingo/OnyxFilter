@@ -3,6 +3,7 @@
     {
         <Toast Message="@toast.Message"
                Severity="@toast.Severity"
+               OnHidden="@(() => toasts.RemoveAll((t) => t.Id == toast.Id))"
                @key="toast.Id" />
     }
 </div>

@@ -10,6 +10,7 @@ public partial class Toast : ComponentBase, IAsyncDisposable
 
     [Parameter] [EditorRequired] public string Message { get; set; } = string.Empty;
     [Parameter] public ToastSeverity Severity { get; set; } = ToastSeverity.Info;
+    [Parameter] public EventCallback OnHidden { get; set; }
 
     private ElementReference ToastRef { get; set; }
 
@@ -34,6 +35,7 @@ public partial class Toast : ComponentBase, IAsyncDisposable
         };
     
     private IJSObjectReference? module;
+    private DotNetObjectReference<Toast>? dotNetRef;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -48,13 +50,22 @@ public partial class Toast : ComponentBase, IAsyncDisposable
             {
                 autohide = Severity != ToastSeverity.Error,
             };
+
+            dotNetRef = DotNetObjectReference.Create(this);
             
             await module.InvokeVoidAsync(
                 "displayToast",
                 ToastRef,
-                options
+                options,
+                dotNetRef
             );
         }
+    }
+
+    [JSInvokable]
+    public async Task HideAsync()
+    {
+        await OnHidden.InvokeAsync();
     }
 
     public async ValueTask DisposeAsync()
@@ -68,6 +79,11 @@ public partial class Toast : ComponentBase, IAsyncDisposable
         }
         catch (JSDisconnectedException)
         {
+        }
+        
+        if (dotNetRef != null)
+        {
+            dotNetRef.Dispose();
         }
     }
 }
