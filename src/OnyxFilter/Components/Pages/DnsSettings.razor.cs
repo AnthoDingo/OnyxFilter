@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 using OnyxFilter.Services.DnsForwarding;
 
 namespace OnyxFilter.Components.Pages;
@@ -16,6 +17,8 @@ public partial class DnsSettings : ComponentBase
 
     [Inject]
     public IDnsCache DnsCache { get; set; } = default!;
+
+    [Inject] private ToastService ToastService { get; set; } = null!;
 
     private string UpstreamServersText { get; set; } = string.Empty;
 
@@ -69,14 +72,6 @@ public partial class DnsSettings : ComponentBase
     private string AlwaysAllowedClientsText { get; set; } = string.Empty;
 
     private string DisallowedDomainsText { get; set; } = string.Empty;
-
-    private string? DnsServersStatusMessage { get; set; }
-
-    private string? ServerConfigStatusMessage { get; set; }
-
-    private string? CacheStatusMessage { get; set; }
-
-    private string? AccessStatusMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -159,17 +154,18 @@ public partial class DnsSettings : ComponentBase
         return string.Join('\n', lines);
     }
 
-    private async Task<string?> PersistAsync()
+    private async Task PersistAsync()
     {
         try
         {
             DnsSettingsData data = BuildData();
             await SettingsStore.UpdateAsync(settings => settings.Dns = data);
-            return L["Paramètres enregistrés."];
+            
+            ToastService.Show(L["Paramètres enregistrés."], ToastSeverity.Success);
         }
         catch (Exception ex)
         {
-            return L["Erreur lors de l'enregistrement : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de l'enregistrement : {0}", ex.Message], ToastSeverity.Error);
         }
     }
 
@@ -221,7 +217,7 @@ public partial class DnsSettings : ComponentBase
     private async Task ValidateDnsServerSettingsAsync()
     {
         // TODO : valider les serveurs en amont/repli/amorçage/inverses une fois le moteur DNS disponible.
-        DnsServersStatusMessage = await PersistAsync();
+        await PersistAsync();
     }
 
     private Task ResetDnsServerSettingsAsync()
@@ -241,25 +237,26 @@ public partial class DnsSettings : ComponentBase
     private async Task SaveDnsServerConfigurationAsync()
     {
         // TODO : appliquer la configuration au moteur DNS une fois disponible.
-        ServerConfigStatusMessage = await PersistAsync();
+        await PersistAsync();
     }
 
     private async Task SaveCacheConfigurationAsync()
     {
         // TODO : appliquer la configuration du cache au moteur DNS une fois disponible.
-        CacheStatusMessage = await PersistAsync();
+        await PersistAsync();
     }
 
     private Task ClearCacheAsync()
     {
         DnsCache.Clear();
-        CacheStatusMessage = L["Cache vidé."];
+        ToastService.Show(L["Cache vidé."], ToastSeverity.Info);
+
         return Task.CompletedTask;
     }
 
     private async Task SaveAccessSettingsAsync()
     {
         // L'enregistrement déclenche SettingsChanged : DnsAccessControl recharge aussitôt les règles.
-        AccessStatusMessage = await PersistAsync();
+        await PersistAsync();
     }
 }
