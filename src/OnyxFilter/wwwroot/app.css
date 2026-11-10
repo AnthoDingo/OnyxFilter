@@ -793,11 +793,6 @@ textarea.form-control {
     background-color: color-mix(in srgb, var(--of-surface-2) 55%, transparent);
 }
 
-    .settings-panel-footer .alert {
-        flex-basis: 100%;
-        margin: 0.25rem 0 0;
-    }
-
 /* Une ligne de réglage : texte à gauche, contrôle à droite. */
 .setting {
     display: grid;
