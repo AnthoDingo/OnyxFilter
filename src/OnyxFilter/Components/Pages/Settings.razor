@@ -58,12 +58,6 @@
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="use-browsing-security" checked="@UseBrowsingSecurity" @onchange="OnUseBrowsingSecurityChanged" />
                 </div>
-                @if (!string.IsNullOrEmpty(BrowsingSecurityStatusMessage))
-                {
-                    <div class="setting-nested">
-                        <div class="alert @(BrowsingSecurityStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@BrowsingSecurityStatusMessage</div>
-                    </div>
-                }
             </div>
 
             <div class="setting">
@@ -76,12 +70,6 @@
                 <div class="form-check form-switch setting-control">
                     <input class="form-check-input" type="checkbox" role="switch" id="use-parental-control" checked="@UseParentalControl" @onchange="OnUseParentalControlChanged" />
                 </div>
-                @if (!string.IsNullOrEmpty(ParentalControlStatusMessage))
-                {
-                    <div class="setting-nested">
-                        <div class="alert @(ParentalControlStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@ParentalControlStatusMessage</div>
-                    </div>
-                }
             </div>
 
             <div class="setting">
@@ -93,10 +81,6 @@
                     <input class="form-check-input" type="checkbox" role="switch" id="use-safe-search" checked="@UseSafeSearch" @onchange="OnUseSafeSearchChanged" />
                 </div>
                 <div class="setting-nested">
-                    @if (!string.IsNullOrEmpty(SafeSearchStatusMessage))
-                    {
-                        <div class="alert @(SafeSearchStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success") mb-3">@SafeSearchStatusMessage</div>
-                    }
                     <div class="chip-set" role="group" aria-label="@L["Moteurs concernés par la recherche sécurisée"]">
                         <input class="btn-check" type="checkbox" id="safe-search-bing" checked="@SafeSearchBing" disabled="@(!UseSafeSearch)" @onchange="e => OnSafeSearchEngineChanged(e, engine => SafeSearchBing = engine)" />
                         <label class="chip-toggle" for="safe-search-bing">Bing</label>
@@ -214,10 +198,6 @@
             <div class="settings-panel-footer">
                 <button type="button" class="btn btn-primary" @onclick="SaveQueryLogConfigurationAsync">@L["Enregistrer"]</button>
                 <button type="button" class="btn btn-outline-danger" @onclick="ClearQueryLogAsync">@L["Vider le journal"]</button>
-                @if (!string.IsNullOrEmpty(QueryLogStatusMessage))
-                {
-                    <div class="alert @(QueryLogStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@QueryLogStatusMessage</div>
-                }
             </div>
         </div>
     </section>
@@ -290,10 +270,6 @@
             <div class="settings-panel-footer">
                 <button type="button" class="btn btn-primary" @onclick="SaveStatisticsConfigurationAsync">@L["Enregistrer"]</button>
                 <button type="button" class="btn btn-outline-danger" @onclick="ClearStatisticsAsync">@L["Effacer les statistiques"]</button>
-                @if (!string.IsNullOrEmpty(StatisticsStatusMessage))
-                {
-                    <div class="alert @(StatisticsStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatisticsStatusMessage</div>
-                }
             </div>
         </div>
     </section>

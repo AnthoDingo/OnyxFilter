@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 using OnyxFilter.Services.QueryLog;
 using OnyxFilter.Services.Statistics;
 
@@ -18,6 +19,8 @@ public partial class Settings : ComponentBase
 
     [Inject]
     public IDnsQueryLogService QueryLogService { get; set; } = default!;
+
+    [Inject] private ToastService ToastService { get; set; } = null!;
 
     // Panneau "Bloquer les domaines / services intégrés".
     private bool BlockDomainsWithFilters { get; set; } = true;
@@ -73,16 +76,6 @@ public partial class Settings : ComponentBase
     private bool IgnoreDomainsInStatistics { get; set; }
 
     private string IgnoredStatisticsDomainsText { get; set; } = string.Empty;
-
-    private string? BrowsingSecurityStatusMessage { get; set; }
-
-    private string? ParentalControlStatusMessage { get; set; }
-
-    private string? SafeSearchStatusMessage { get; set; }
-
-    private string? QueryLogStatusMessage { get; set; }
-
-    private string? StatisticsStatusMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -149,17 +142,19 @@ public partial class Settings : ComponentBase
         };
     }
 
-    private async Task<string?> PersistAsync()
+    private async Task PersistAsync()
     {
         try
         {
             GeneralSettingsData data = BuildData();
+
             await SettingsStore.UpdateAsync(settings => settings.General = data);
-            return L["Paramètres enregistrés."];
+
+            ToastService.Show(L["Paramètres enregistrés."], ToastSeverity.Success);
         }
         catch (Exception ex)
         {
-            return L["Erreur lors de l'enregistrement : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de l'enregistrement : {0}", ex.Message], ToastSeverity.Error);
         }
     }
 
@@ -177,7 +172,7 @@ public partial class Settings : ComponentBase
         // Enregistré immédiatement (pas de bouton "Enregistrer" dédié pour ce panneau) : IBrowsingSecurityService
         // recharge sa configuration automatiquement via ILocalSettingsStore.SettingsChanged, déclenché par
         // PersistAsync ci-dessous, et prend donc effet sans redémarrage.
-        BrowsingSecurityStatusMessage = await PersistAsync();
+        await PersistAsync();
     }
 
     private async Task OnUseParentalControlChanged(ChangeEventArgs e)
@@ -187,7 +182,7 @@ public partial class Settings : ComponentBase
         // Enregistré immédiatement (pas de bouton "Enregistrer" dédié pour ce panneau) : IParentalControlService
         // recharge sa configuration automatiquement via ILocalSettingsStore.SettingsChanged, déclenché par
         // PersistAsync ci-dessous, et prend donc effet sans redémarrage.
-        ParentalControlStatusMessage = await PersistAsync();
+        await PersistAsync();
     }
 
     private async Task OnUseSafeSearchChanged(ChangeEventArgs e)
@@ -197,7 +192,7 @@ public partial class Settings : ComponentBase
         // Enregistré immédiatement (pas de bouton "Enregistrer" dédié pour ce panneau) : ISafeSearchService
         // recharge sa configuration automatiquement via ILocalSettingsStore.SettingsChanged, déclenché par
         // PersistAsync ci-dessous, et prend donc effet sans redémarrage.
-        SafeSearchStatusMessage = await PersistAsync();
+        await PersistAsync();
     }
 
     private async Task OnSafeSearchEngineChanged(ChangeEventArgs e, Action<bool> setter)
@@ -205,7 +200,7 @@ public partial class Settings : ComponentBase
         bool value = e.Value is bool isChecked && isChecked;
         setter(value);
 
-        SafeSearchStatusMessage = await PersistAsync();
+        await PersistAsync();
     }
 
     private void OnEnableQueryLogChanged(ChangeEventArgs e)
@@ -252,28 +247,35 @@ public partial class Settings : ComponentBase
     {
         // IDnsQueryLogService recharge sa configuration automatiquement via ILocalSettingsStore.SettingsChanged
         // (déclenché par PersistAsync ci-dessous) : aucun appel supplémentaire n'est nécessaire ici.
-        QueryLogStatusMessage = await PersistAsync();
+        await PersistAsync();
     }
 
     private async Task ClearQueryLogAsync()
     {
         bool cleared = await QueryLogService.ClearAsync();
-        QueryLogStatusMessage = cleared
-            ? L["Journal des requêtes effacé."]
-            : L["Erreur : la base est inaccessible, le journal en base n'a pas pu être effacé (il le sera une fois la base rétablie)."];
+
+        ToastService.Show(
+            cleared
+                ? L["Journal des requêtes effacé."]
+                : L["Erreur : la base est inaccessible, le journal en base n'a pas pu être effacé (il le sera une fois la base rétablie)."],
+            cleared
+                ? ToastSeverity.Success
+                : ToastSeverity.Warning
+        );
     }
 
     private async Task SaveStatisticsConfigurationAsync()
     {
         // IDnsStatisticsService recharge sa configuration automatiquement via ILocalSettingsStore.SettingsChanged
         // (déclenché par PersistAsync ci-dessous) : aucun appel supplémentaire n'est nécessaire ici.
-        StatisticsStatusMessage = await PersistAsync();
+        await PersistAsync();
     }
 
     private Task ClearStatisticsAsync()
     {
         StatisticsService.Clear();
-        StatisticsStatusMessage = L["Statistiques effacées."];
+        ToastService.Show(L["Statistiques effacées."], ToastSeverity.Info);
+
         return Task.CompletedTask;
     }
 }
