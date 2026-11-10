@@ -42,6 +42,21 @@ public partial class BlockedServices : ComponentBase
 
     private string? ScheduleDialogError { get; set; }
 
+    private bool AreAllBlocked => Catalog.All.All(s => IsBlocked(s.Id));
+
+    private bool AreAllAllowed => Catalog.All.All(s => !IsBlocked(s.Id));
+
+    private IEnumerable<BlockedServiceDefinition> ServicesInGroup(string groupId)
+    {
+        return Catalog.All.Where(s => string.Equals(s.Group, groupId, StringComparison.Ordinal));
+    }
+
+    private bool IsGroupFullyBlocked(string groupId)
+        => ServicesInGroup(groupId).All(s => IsBlocked(s.Id));
+
+    private bool IsGroupFullyAllowed(string groupId)
+        => ServicesInGroup(groupId).All(s => !IsBlocked(s.Id));
+
     protected override async Task OnInitializedAsync()
     {
         AppLocalSettings settings = await SettingsStore.LoadAsync();
@@ -93,6 +108,11 @@ public partial class BlockedServices : ComponentBase
 
     private async Task BlockAll()
     {
+        if (AreAllBlocked)
+        {
+            return;
+        }
+
         foreach (BlockedServiceDefinition service in Catalog.All)
         {
             BlockedServiceIds.Add(service.Id);
@@ -103,6 +123,11 @@ public partial class BlockedServices : ComponentBase
 
     private async Task UnblockAll()
     {
+        if (AreAllAllowed)
+        {
+            return;
+        }
+
         BlockedServiceIds.Clear();
 
         await SaveAsync(L["Tous les services sont autorisés."]);
@@ -110,12 +135,14 @@ public partial class BlockedServices : ComponentBase
 
     private async Task BlockAllInGroup(string groupId, string groupLabel)
     {
-        foreach (BlockedServiceDefinition service in Catalog.All)
+        if (IsGroupFullyBlocked(groupId))
         {
-            if (string.Equals(service.Group, groupId, StringComparison.Ordinal))
-            {
-                BlockedServiceIds.Add(service.Id);
-            }
+            return;
+        }
+
+        foreach (BlockedServiceDefinition service in ServicesInGroup(groupId))
+        {
+            BlockedServiceIds.Add(service.Id);
         }
 
         await SaveAsync(L["Tous les services du groupe {0} sont bloqués.", L[groupLabel].Value]);
@@ -123,12 +150,14 @@ public partial class BlockedServices : ComponentBase
 
     private async Task UnblockAllInGroup(string groupId, string groupLabel)
     {
-        foreach (BlockedServiceDefinition service in Catalog.All)
+        if (IsGroupFullyAllowed(groupId))
         {
-            if (string.Equals(service.Group, groupId, StringComparison.Ordinal))
-            {
-                BlockedServiceIds.Remove(service.Id);
-            }
+            return;
+        }
+
+        foreach (BlockedServiceDefinition service in ServicesInGroup(groupId))
+        {
+            BlockedServiceIds.Remove(service.Id);
         }
 
         await SaveAsync(L["Tous les services du groupe {0} sont autorisés.", L[groupLabel].Value]);

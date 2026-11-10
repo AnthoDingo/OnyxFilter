@@ -12,8 +12,19 @@
         <p class="page-lead">@L["Coupez l'accès à des plateformes entières en un geste, sans connaître leurs domaines."]</p>
     </div>
     <div class="page-actions">
-        <button type="button" class="btn btn-outline-success" @onclick="UnblockAll">@L["Tout autoriser"]</button>
-        <button type="button" class="btn btn-outline-danger" @onclick="BlockAll">@L["Tout bloquer"]</button>
+        <button type="button"
+                class="btn btn-outline-success"
+                disabled="@AreAllAllowed"
+                @onclick="UnblockAll">
+            @L["Tout autoriser"]
+        </button>
+
+        <button type="button"
+                class="btn btn-outline-danger"
+                disabled="@AreAllBlocked"
+                @onclick="BlockAll">
+            @L["Tout bloquer"]
+        </button>
     </div>
 </header>
 
@@ -29,12 +40,14 @@
                 <div class="service-group-actions">
                     <button type="button"
                             class="btn btn-link btn-sm"
+                            disabled="@IsGroupFullyAllowed(group.Id)"
                             @onclick="() => UnblockAllInGroup(group.Id, group.Label)">
                         @L["Tout autoriser"]
                     </button>
                     
                     <button type="button"
                             class="btn btn-link btn-sm text-danger"
+                            disabled="@IsGroupFullyBlocked(group.Id)"
                             @onclick="() => BlockAllInGroup(group.Id, group.Label)">
                         @L["Tout bloquer"]
                     </button>
