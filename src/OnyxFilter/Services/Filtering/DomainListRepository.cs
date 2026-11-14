@@ -1,14 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Net.Http;
 using OnyxFilter.Models.Settings;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace OnyxFilter.Services.Filtering;
 

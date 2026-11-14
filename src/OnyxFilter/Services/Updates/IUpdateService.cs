@@ -1,7 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace OnyxFilter.Services.Updates;
 
 // Mises à jour d'OnyxFilter depuis les publications GitHub : vérification (périodique et à la demande) et

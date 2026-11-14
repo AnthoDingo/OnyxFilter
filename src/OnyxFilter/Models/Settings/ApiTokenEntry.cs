@@ -1,5 +1,3 @@
-using System;
-
 namespace OnyxFilter.Models.Settings;
 
 // Un jeton d'accès à l'API HTTP (/api/v1, voir Services/Api/ApiEndpoints.cs), créé depuis la page

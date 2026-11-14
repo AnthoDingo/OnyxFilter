@@ -23,11 +23,6 @@
     </div>
 </header>
 
-@if (!string.IsNullOrEmpty(StatusMessage))
-{
-    <div class="alert page-status @(StatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
-}
-
 <div class="card table-panel">
     <div class="table-responsive">
         <table class="table align-middle">

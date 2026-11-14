@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace OnyxFilter.Models.Settings;
 
 // Section « Certificat Let's Encrypt » de la page "Paramètres de chiffrement" : certificat obtenu et renouvelé

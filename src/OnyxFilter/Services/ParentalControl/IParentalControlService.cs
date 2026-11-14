@@ -1,6 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace OnyxFilter.Services.ParentalControl;
 
 // Applique "Utiliser le contrôle parental d'OnyxFilter" (Paramètres généraux) : vérifie chaque domaine

@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 
 namespace OnyxFilter.Components.Pages;
 
@@ -16,11 +13,11 @@ public partial class DnsRewrites : ComponentBase
     [Inject]
     public ILocalSettingsStore SettingsStore { get; set; } = default!;
 
+    [Inject] private ToastService ToastService { get; set; } = null!;
+
     private List<DnsRewriteEntry> Entries { get; set; } = new List<DnsRewriteEntry>();
 
     private bool RewritesEnabled { get; set; } = true;
-
-    private string? StatusMessage { get; set; }
 
     // Pagination.
     private int PageSize { get; set; } = 10;
@@ -184,11 +181,12 @@ public partial class DnsRewrites : ComponentBase
                 settings.Rewrites.Entries = entriesSnapshot;
                 settings.Rewrites.Enabled = enabledSnapshot;
             });
-            StatusMessage = L["Réécritures DNS enregistrées."];
+
+            ToastService.Show(L["Réécritures DNS enregistrées."], ToastSeverity.Success);
         }
         catch (Exception ex)
         {
-            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de l'enregistrement : {0}", ex.Message], ToastSeverity.Error);
         }
     }
 

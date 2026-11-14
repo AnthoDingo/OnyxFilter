@@ -1,7 +1,3 @@
-using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-
 namespace OnyxFilter.Cli;
 
 // Accès des commandes d'administration aux services de l'application (base, réglages…), construits comme

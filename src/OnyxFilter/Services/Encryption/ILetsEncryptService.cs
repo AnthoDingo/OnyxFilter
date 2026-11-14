@@ -1,5 +1,3 @@
-using System;
-
 namespace OnyxFilter.Services.Encryption;
 
 // Certificat Let's Encrypt automatique (page « Chiffrement ») : vérification périodique, renouvellement

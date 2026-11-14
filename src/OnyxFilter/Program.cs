@@ -1,23 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using OnyxFilter.Cli;
 using OnyxFilter.Components;
 using OnyxFilter.Components.Account;
@@ -26,6 +12,7 @@ using OnyxFilter.Models;
 using OnyxFilter.Services;
 using OnyxFilter.Services.Api;
 using OnyxFilter.Services.BlockedServices;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 using OnyxFilter.Services.BrowsingSecurity;
 using OnyxFilter.Services.ClientLocation;
 using OnyxFilter.Services.CrowdSec;
@@ -338,6 +325,9 @@ public class Program
         builder.Services.AddHostedService(serviceProvider => serviceProvider.GetRequiredService<HttpsEndpointService>());
 
         builder.Services.AddScoped<LocalStorageService>();
+
+        // Bootstrap services
+        builder.Services.AddScoped<ToastService>();
         
         WebApplication app = builder.Build();
 

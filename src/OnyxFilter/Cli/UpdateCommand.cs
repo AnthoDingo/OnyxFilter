@@ -1,6 +1,3 @@
-using System.Linq;
-using System.Threading;
-using Microsoft.Extensions.DependencyInjection;
 using OnyxFilter.Services;
 using OnyxFilter.Services.Updates;
 using Spectre.Console;

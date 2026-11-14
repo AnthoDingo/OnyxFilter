@@ -1,6 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace OnyxFilter.Services.BlockedServices;
 
 // Applique la page "Services bloqués" (/filters/blocked-services) : bloque les domaines des services

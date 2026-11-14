@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-
 namespace OnyxFilter.Services.DnsForwarding;
 
 public interface IDnsCache

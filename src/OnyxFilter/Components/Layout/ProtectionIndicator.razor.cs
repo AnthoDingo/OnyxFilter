@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Services.DnsForwarding;
 

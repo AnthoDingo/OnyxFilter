@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using OnyxFilter.Services.BlockedServices;
 using OnyxFilter.Services.BrowsingSecurity;
 using OnyxFilter.Services.Filtering;

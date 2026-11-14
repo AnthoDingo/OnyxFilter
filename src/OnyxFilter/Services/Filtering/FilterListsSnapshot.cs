@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace OnyxFilter.Services.Filtering;
 
 // Instantané de l'état des listes de domaines, pour affichage sur /filters/blocklists (listes de

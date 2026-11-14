@@ -196,13 +196,6 @@
                     <input class="form-check-input" type="checkbox" role="switch" id="update-prereleases" checked="@IncludePreReleases" @onchange="OnIncludePreReleasesChanged" />
                 </div>
             </div>
-
-            @if (!string.IsNullOrEmpty(SettingsMessage))
-            {
-                <div class="settings-panel-footer">
-                    <div class="alert @(SettingsMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@SettingsMessage</div>
-                </div>
-            }
         </div>
     </section>
 
