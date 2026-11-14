@@ -1,7 +1,3 @@
-using System;
-using System.Threading;
-using Microsoft.Extensions.Logging;
-
 namespace OnyxFilter.Services.DnsForwarding;
 
 // Implémentation en mémoire de IDnsProtectionState : pas de persistance (redémarrer le serveur réactive

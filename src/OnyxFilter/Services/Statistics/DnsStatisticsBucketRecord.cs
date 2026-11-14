@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace OnyxFilter.Services.Statistics;
 
 // Représentation persistable d'une tranche horaire de statistiques DNS (table DnsStatisticsBuckets).

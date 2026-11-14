@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace OnyxFilter.Models.Settings;
 
 // Un client persistant (page "Paramètres du client", /settings/client) : un ensemble d'appareils

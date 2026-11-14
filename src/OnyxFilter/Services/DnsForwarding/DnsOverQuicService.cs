@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Quic;
 using System.Net.Security;
 using System.Security.Authentication;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services.Encryption;
 

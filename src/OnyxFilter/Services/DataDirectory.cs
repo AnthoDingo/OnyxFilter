@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
-
 namespace OnyxFilter.Services;
 
 // Dossier des données (base SQLite, appsettings*.json, caches des listes, fichiers de secours du journal).

@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-
 namespace OnyxFilter.Services.DnsForwarding;
 
 // Convertit les lignes saisies dans "Serveurs DNS upstream" (voir /settings/dns) en UpstreamServer.

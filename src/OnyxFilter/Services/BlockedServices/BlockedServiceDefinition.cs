@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace OnyxFilter.Services.BlockedServices;
 
 // Une entrée du catalogue des services pour "Services bloqués" (/filters/blocked-services), reprise

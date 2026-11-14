@@ -1,8 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using OnyxFilter.Models.Settings;
 
 namespace OnyxFilter.Services.Filtering;

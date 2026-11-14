@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace OnyxFilter.Services.Encryption.Acme;
 
 // Objets ACME (RFC 8555) utiles à l'émission d'un certificat. Les URL restent des chaînes, reprises telles

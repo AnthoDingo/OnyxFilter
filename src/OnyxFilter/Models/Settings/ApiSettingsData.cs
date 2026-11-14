@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace OnyxFilter.Models.Settings;
 
 // Réglages de la page « Accès API » (/settings/api).

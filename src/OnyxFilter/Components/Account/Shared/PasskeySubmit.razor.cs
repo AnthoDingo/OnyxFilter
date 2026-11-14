@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Http;
 
 namespace OnyxFilter.Components.Account.Shared;
 

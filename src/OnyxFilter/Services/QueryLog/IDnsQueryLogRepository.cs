@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace OnyxFilter.Services.QueryLog;
 
 // Persistance du journal des requêtes DNS : une ligne par requête traitée, pour que la page /query-log

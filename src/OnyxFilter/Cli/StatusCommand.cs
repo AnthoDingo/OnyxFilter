@@ -1,7 +1,4 @@
-using System.IO;
-using System.Linq;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OnyxFilter.Models;
 using OnyxFilter.Models.Settings;

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace OnyxFilter.Services.ClientLocation;
 
 // Continent de chaque pays (codes ISO 3166-1 alpha-2), selon le découpage de GeoNames : l'Amérique

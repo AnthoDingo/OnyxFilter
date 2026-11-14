@@ -1,6 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace OnyxFilter.Services.BrowsingSecurity;
 
 // Applique "Utilisez le service Sécurité de navigation d'OnyxFilter" (Paramètres généraux) : vérifie

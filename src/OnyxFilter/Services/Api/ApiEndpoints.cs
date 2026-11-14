@@ -1,14 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services.ClientLocation;
 using OnyxFilter.Services.DnsForwarding;
