@@ -2,11 +2,13 @@ using Microsoft.JSInterop;
 
 namespace OnyxFilter.Services.LocalStorage;
 
+// Préférences d'interface mémorisées dans le localStorage du navigateur. Simple confort : toute erreur
+// d'interop (stockage désactivé ou plein, navigation privée, circuit déconnecté) est ignorée plutôt que
+// de faire tomber le circuit Blazor.
 public sealed class LocalStorageService
 {
-    private const string GetItem = "localStorage.getItem";
-    private const string SetItem = "localStorage.setItem";
-    
+    private const string LiveKey = "onyxfilter.live";
+
     private readonly IJSRuntime jsRuntime;
 
     public LocalStorageService(IJSRuntime jsRuntime)
@@ -16,20 +18,32 @@ public sealed class LocalStorageService
 
     public async Task SetLiveState(bool state)
     {
-        await jsRuntime.InvokeVoidAsync(SetItem, "live", state);
+        try
+        {
+            await jsRuntime.InvokeVoidAsync("localStorage.setItem", LiveKey, state);
+        }
+        catch (JSException)
+        {
+        }
+        catch (JSDisconnectedException)
+        {
+        }
     }
 
     public async Task<bool> GetLiveState()
     {
-        string rawValue = await jsRuntime.InvokeAsync<string>(GetItem, "live");
-            
-        if (bool.TryParse(rawValue, out bool result))
+        try
         {
-            return result;
+            string? rawValue = await jsRuntime.InvokeAsync<string?>("localStorage.getItem", LiveKey);
+            return bool.TryParse(rawValue, out bool result) && result;
         }
-        else
+        catch (JSException)
         {
             return false;
-        }   
+        }
+        catch (JSDisconnectedException)
+        {
+            return false;
+        }
     }
 }

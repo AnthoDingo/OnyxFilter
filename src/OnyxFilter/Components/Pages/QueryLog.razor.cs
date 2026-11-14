@@ -56,6 +56,9 @@ public partial class QueryLog : ComponentBase, IDisposable
     // circuit Blazor Server.
     private CancellationTokenSource? autoRefreshCts;
 
+    // true une fois Dispose() appelé (voir OnAfterRenderAsync).
+    private bool isDisposed;
+
     // Première et dernière requête affichées sur la page courante (1-based), pour donner un repère utile
     // à l'utilisateur en l'absence de nombre total de pages.
     private string DisplayedRangeText
@@ -82,10 +85,12 @@ public partial class QueryLog : ComponentBase, IDisposable
     {
         if (firstRender)
         {
-            AutoRefreshEnabled = await LocalStorageService.GetLiveState();
-            
-            if (AutoRefreshEnabled)
+            // Garde isDisposed : l'utilisateur a pu quitter la page pendant l'aller-retour JS, une
+            // boucle lancée après Dispose() ne serait jamais annulée.
+            bool liveEnabled = await LocalStorageService.GetLiveState();
+            if (liveEnabled && !isDisposed)
             {
+                AutoRefreshEnabled = true;
                 StartAutoRefresh();
                 StateHasChanged();
             }
@@ -196,7 +201,7 @@ public partial class QueryLog : ComponentBase, IDisposable
         {
             StopAutoRefresh();
         }
-        
+
         await LocalStorageService.SetLiveState(AutoRefreshEnabled);
     }
 
@@ -204,11 +209,6 @@ public partial class QueryLog : ComponentBase, IDisposable
     {
         StopAutoRefresh();
 
-        CreateAutoRefreshTimer();
-    }
-
-    private void CreateAutoRefreshTimer()
-    {
         CancellationTokenSource cts = new CancellationTokenSource();
         autoRefreshCts = cts;
         _ = AutoRefreshLoopAsync(cts.Token);
@@ -262,6 +262,7 @@ public partial class QueryLog : ComponentBase, IDisposable
 
     public void Dispose()
     {
+        isDisposed = true;
         StopAutoRefresh();
     }
 }

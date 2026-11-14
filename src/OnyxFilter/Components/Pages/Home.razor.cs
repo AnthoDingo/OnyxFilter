@@ -177,17 +177,19 @@ public partial class Home : ComponentBase, IDisposable
     {
         if (firstRender)
         {
-            AutoRefreshEnabled = await LocalStorageService.GetLiveState();
-            
             // Un seul rafraîchissement automatique peu après l'affichage initial de la page, indépendant
-            // du mode direct (désactivé par défaut) : couvre l'écart entre la donnée envoyée au
-            // chargement (voir OnInitializedAsync) et l'état réel au moment où l'utilisateur consulte
-            // effectivement la page.
-            await RefreshOnceAfterFirstRenderAsync();
+            // du mode direct : couvre l'écart entre la donnée envoyée au chargement (voir
+            // OnInitializedAsync) et l'état réel au moment où l'utilisateur consulte effectivement la page.
+            _ = RefreshOnceAfterFirstRenderAsync();
 
-            if (AutoRefreshEnabled)
+            // Mode direct mémorisé dans le navigateur. Garde isDisposed : l'utilisateur a pu quitter la
+            // page pendant l'aller-retour JS, un Timer créé après Dispose() ne serait jamais libéré.
+            bool liveEnabled = await LocalStorageService.GetLiveState();
+            if (liveEnabled && !isDisposed)
             {
-                CreateAutoRefreshTimer();
+                AutoRefreshEnabled = true;
+                StartAutoRefresh();
+                StateHasChanged();
             }
         }
     }
@@ -318,7 +320,7 @@ public partial class Home : ComponentBase, IDisposable
         {
             StopAutoRefresh();
         }
-        
+
         await LocalStorageService.SetLiveState(AutoRefreshEnabled);
     }
 
@@ -329,13 +331,7 @@ public partial class Home : ComponentBase, IDisposable
             return;
         }
 
-        CreateAutoRefreshTimer();
-    }
-
-    private void CreateAutoRefreshTimer()
-    {
         TimeSpan interval = TimeSpan.FromSeconds(AutoRefreshIntervalSeconds);
-
         AutoRefreshTimer = new Timer(OnAutoRefreshTick, null, interval, interval);
     }
 
