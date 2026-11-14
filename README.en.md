@@ -244,6 +244,9 @@ Port 53 requires root privileges (or `CAP_NET_BIND_SERVICE` on Linux). The code 
 - `deploy/`: systemd service, installation script and Docker image entrypoint;
 - `Dockerfile`, `docker-compose.yml`, `docker-compose.dev.yml`: Docker image, deployment template and local build
   template;
+- `Resources/`: translations (`SharedResource.<language>.resx`) and the `check-translations.ps1` script, which checks
+  that every UI text has its translation (`-Warn`: warnings without failing);
+- `.github/workflows/ci.yml`: translation check on pull requests (warnings);
 - `.github/workflows/release.yml`: release publishing.
 
 ## Publishing a release
@@ -255,11 +258,11 @@ git tag v1.4.0
 git push origin v1.4.0
 ```
 
-The "Publication" workflow compiles the self-contained linux-x64 build with this version number, creates
-`OnyxFilter-1.4.0-linux-x64.tar.gz` and `checksums.txt`, and attaches them with `install.sh` to a GitHub release.
-Existing installations then offer it on their **Updates** page. It then publishes the Docker image (amd64 and arm64)
-to `ghcr.io/anthodingo/onyxfilter`; on the first release, make the package public from its settings on GitHub
-(Packages › onyxfilter › Package settings) so that it can be pulled without authentication.
+The "Publication" workflow rejects the release if a translation is missing, then compiles the self-contained linux-x64
+build with this version number, creates `OnyxFilter-1.4.0-linux-x64.tar.gz` and `checksums.txt`, and attaches them with
+`install.sh` to a GitHub release. Existing installations then offer it on their **Updates** page. It then publishes the
+Docker image (amd64 and arm64) to `ghcr.io/anthodingo/onyxfilter`; on the first release, make the package public from
+its settings on GitHub (Packages › onyxfilter › Package settings) so that it can be pulled without authentication.
 
 ## Credits
 
