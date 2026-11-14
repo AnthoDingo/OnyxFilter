@@ -12,10 +12,18 @@
         <p class="page-lead">@L["Coupez l'accès à des plateformes entières en un geste, sans connaître leurs domaines."]</p>
     </div>
     <div class="page-actions">
-        <button type="button" class="btn btn-outline-success" @onclick="UnblockAll">@L["Tout autoriser"]</button>
-        <button type="button" class="btn btn-outline-danger" @onclick="BlockAll">@L["Tout bloquer"]</button>
-        <button type="button" class="btn btn-primary" @onclick="SaveAsync" disabled="@IsSaving">
-            @(IsSaving ? L["Enregistrement…"] : L["Enregistrer"])
+        <button type="button"
+                class="btn btn-outline-success"
+                disabled="@AreAllAllowed"
+                @onclick="UnblockAll">
+            @L["Tout autoriser"]
+        </button>
+
+        <button type="button"
+                class="btn btn-outline-danger"
+                disabled="@AreAllBlocked"
+                @onclick="BlockAll">
+            @L["Tout bloquer"]
         </button>
     </div>
 </header>
@@ -25,10 +33,24 @@
     {
         <section class="service-group">
             <header class="service-group-head">
-                <h2 class="service-group-title">@L[group.Label] <span class="service-group-count">@group.Services.Count</span></h2>
+                <h2 class="service-group-title">
+                    @L[group.Label] <span class="service-group-count">@group.Services.Count</span>
+                </h2>
+                
                 <div class="service-group-actions">
-                    <button type="button" class="btn btn-link btn-sm" @onclick="() => UnblockAllInGroup(group.Id)">@L["Tout autoriser"]</button>
-                    <button type="button" class="btn btn-link btn-sm text-danger" @onclick="() => BlockAllInGroup(group.Id)">@L["Tout bloquer"]</button>
+                    <button type="button"
+                            class="btn btn-link btn-sm"
+                            disabled="@IsGroupFullyAllowed(group.Id)"
+                            @onclick="() => UnblockAllInGroup(group.Id, group.Label)">
+                        @L["Tout autoriser"]
+                    </button>
+                    
+                    <button type="button"
+                            class="btn btn-link btn-sm text-danger"
+                            disabled="@IsGroupFullyBlocked(group.Id)"
+                            @onclick="() => BlockAllInGroup(group.Id, group.Label)">
+                        @L["Tout bloquer"]
+                    </button>
                 </div>
             </header>
 
@@ -36,14 +58,35 @@
                 @foreach (BlockedServiceDefinition service in group.Services)
                 {
                     string inputId = "service-" + service.Id;
-                    <label class="service-tile @(IsBlocked(service.Id) ? "is-blocked" : "")" for="@inputId">
-                        <span class="service-icon" aria-hidden="true">@((MarkupString)service.Icon)</span>
-                        <span class="service-text">
-                            <span class="service-name">@service.Name</span>
-                            <span class="service-state">@(IsBlocked(service.Id) ? L["Bloqué"] : L["Autorisé"])</span>
+
+                    <label class="service-tile @(IsBlocked(service.Id) ? "is-blocked" : "")"
+                           for="@inputId">
+                        <span class="service-icon"
+                              aria-hidden="true">
+                            @((MarkupString)service.Icon)
                         </span>
+
+                        <span class="service-text">
+                            <span class="service-name">
+                                @service.Name
+                            </span>
+                            
+                            <span class="service-state">
+                                @(
+                                    IsBlocked(service.Id)
+                                        ? L["Bloqué"]
+                                        : L["Autorisé"]
+                                )
+                            </span>
+                        </span>
+
                         <span class="form-check form-switch cell-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="@inputId" checked="@IsBlocked(service.Id)" @onchange="e => ToggleService(service.Id, e)" />
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   role="switch"
+                                   id="@inputId"
+                                   checked="@IsBlocked(service.Id)"
+                                   @onchange="e => ToggleService(service, e)" />
                         </span>
                     </label>
                 }

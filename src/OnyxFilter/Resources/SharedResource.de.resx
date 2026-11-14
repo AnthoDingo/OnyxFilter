@@ -1659,9 +1659,6 @@
   <data name="Services bloqués" xml:space="preserve">
     <value>Blockierte Dienste</value>
   </data>
-  <data name="Services bloqués enregistrés." xml:space="preserve">
-    <value>Blockierte Dienste gespeichert.</value>
-  </data>
   <data name="Services de messagerie" xml:space="preserve">
     <value>Messaging-Dienste</value>
   </data>
@@ -2516,5 +2513,23 @@
   </data>
   <data name="Molette, pincement ou barre de zoom pour agrandir, glisser pour se déplacer." xml:space="preserve">
     <value>Mausrad, Zwei-Finger-Geste oder Zoomleiste zum Vergrößern, Ziehen zum Verschieben.</value>
+  </data>
+  <data name="{0} bloqué." xml:space="preserve">
+    <value>{0} blockiert.</value>
+  </data>
+  <data name="{0} autorisé." xml:space="preserve">
+    <value>{0} erlaubt.</value>
+  </data>
+  <data name="Tous les services sont bloqués." xml:space="preserve">
+    <value>Alle Dienste sind blockiert.</value>
+  </data>
+  <data name="Tous les services sont autorisés." xml:space="preserve">
+    <value>Alle Dienste sind erlaubt.</value>
+  </data>
+  <data name="Tous les services du groupe {0} sont autorisés." xml:space="preserve">
+    <value>Alle Dienste in {0} sind erlaubt.</value>
+  </data>
+  <data name="Tous les services du groupe {0} sont bloqués." xml:space="preserve">
+    <value>Alle Dienste in {0} sind blockiert.</value>
   </data>
 </root>
