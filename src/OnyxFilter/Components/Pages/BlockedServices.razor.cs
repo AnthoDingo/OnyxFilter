@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services;
 using OnyxFilter.Services.BlockedServices;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 
 namespace OnyxFilter.Components.Pages;
 
@@ -18,11 +19,11 @@ public partial class BlockedServices : ComponentBase
     [Inject]
     public IBlockedServicesCatalog Catalog { get; set; } = default!;
 
+    [Inject] private ToastService ToastService { get; set; } = null!;
+    
     private HashSet<string> BlockedServiceIds { get; set; } = new HashSet<string>(StringComparer.Ordinal);
 
     private BlockedServicesSchedule? Schedule { get; set; }
-
-    private string? StatusMessage { get; set; }
 
     private bool IsSaving { get; set; }
 
@@ -122,16 +123,18 @@ public partial class BlockedServices : ComponentBase
     private async Task SaveAsync()
     {
         List<string> idsSnapshot = BlockedServiceIds.ToList();
+
         IsSaving = true;
 
         try
         {
             await SettingsStore.UpdateAsync(settings => settings.BlockedServices.BlockedServiceIds = idsSnapshot);
-            StatusMessage = L["Services bloqués enregistrés."];
+
+            ToastService.Show(L["Services bloqués enregistrés."], ToastSeverity.Success);
         }
         catch (Exception ex)
         {
-            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de l'enregistrement : {0}", ex.Message], ToastSeverity.Error);
         }
         finally
         {
@@ -194,11 +197,12 @@ public partial class BlockedServices : ComponentBase
         try
         {
             await SettingsStore.UpdateAsync(settings => settings.BlockedServices.Schedule = scheduleSnapshot);
-            StatusMessage = L["Horaire de suspension enregistré."];
+            
+            ToastService.Show(L["Horaire de suspension enregistré."], ToastSeverity.Success);
         }
         catch (Exception ex)
         {
-            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de l'enregistrement : {0}", ex.Message], ToastSeverity.Error);
         }
 
         ShowScheduleDialog = false;

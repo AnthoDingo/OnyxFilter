@@ -20,11 +20,6 @@
     </div>
 </header>
 
-@if (!string.IsNullOrEmpty(StatusMessage))
-{
-    <div class="alert page-status @(StatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@StatusMessage</div>
-}
-
 <div class="service-groups">
     @foreach ((string Id, string Label, IReadOnlyList<BlockedServiceDefinition> Services) group in GroupedServices)
     {

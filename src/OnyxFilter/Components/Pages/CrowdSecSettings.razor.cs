@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 using OnyxFilter.Services.CrowdSec;
 
 namespace OnyxFilter.Components.Pages;
@@ -12,6 +13,8 @@ public partial class CrowdSecSettings : ComponentBase, IDisposable
 
     [Inject]
     public ICrowdSecBouncer Bouncer { get; set; } = default!;
+
+    [Inject] private ToastService ToastService { get; set; } = null!;
 
     private bool Enabled { get; set; }
 
@@ -27,10 +30,6 @@ public partial class CrowdSecSettings : ComponentBase, IDisposable
     private bool ProtectWebInterface { get; set; }
 
     private CrowdSecStatus Status { get; set; } = new CrowdSecStatus(false, false, 0, null, null);
-
-    private string? StatusMessage { get; set; }
-
-    private bool StatusIsError { get; set; }
 
     private bool IsSaving { get; set; }
 
@@ -87,7 +86,7 @@ public partial class CrowdSecSettings : ComponentBase, IDisposable
 
         if (error is not null)
         {
-            SetStatus(error, isError: true);
+            ToastService.Show(error, ToastSeverity.Error);
             return;
         }
 
@@ -97,7 +96,15 @@ public partial class CrowdSecSettings : ComponentBase, IDisposable
         {
             string key = string.IsNullOrWhiteSpace(ApiKey) ? (await SettingsStore.LoadAsync()).CrowdSec.ApiKey : ApiKey;
             string? failure = await Bouncer.TestConnectionAsync(LapiUrl, key, CancellationToken.None);
-            SetStatus(failure is null ? L["Connexion à CrowdSec réussie."] : L["Échec de la connexion à CrowdSec : {0}", failure], failure is not null);
+
+            ToastService.Show(
+                failure is null
+                    ? L["Connexion à CrowdSec réussie."]
+                    : L["Échec de la connexion à CrowdSec : {0}", failure],
+                failure is null
+                    ? ToastSeverity.Success
+                    : ToastSeverity.Error
+            );
         }
         finally
         {
@@ -111,7 +118,7 @@ public partial class CrowdSecSettings : ComponentBase, IDisposable
 
         if (error is not null)
         {
-            SetStatus(error, isError: true);
+            ToastService.Show(error, ToastSeverity.Error);
             return;
         }
 
@@ -139,22 +146,17 @@ public partial class CrowdSecSettings : ComponentBase, IDisposable
 
             HasSavedKey |= newKey is not null;
             ApiKey = string.Empty;
-            SetStatus(L["Paramètres CrowdSec enregistrés."], isError: false);
+
+            ToastService.Show(L["Paramètres CrowdSec enregistrés."], ToastSeverity.Success);
         }
         catch (Exception ex)
         {
-            SetStatus(L["Erreur lors de l'enregistrement : {0}", ex.Message], isError: true);
+            ToastService.Show(L["Erreur lors de l'enregistrement : {0}", ex.Message], ToastSeverity.Error);
         }
         finally
         {
             IsSaving = false;
         }
-    }
-
-    private void SetStatus(string message, bool isError)
-    {
-        StatusMessage = message;
-        StatusIsError = isError;
     }
 
     public void Dispose()

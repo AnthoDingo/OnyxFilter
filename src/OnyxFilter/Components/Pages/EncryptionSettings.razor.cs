@@ -2,6 +2,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 using OnyxFilter.Services.Encryption;
 
 namespace OnyxFilter.Components.Pages;
@@ -23,6 +24,8 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
 
     [Inject]
     public NavigationManager Navigation { get; set; } = default!;
+
+    [Inject] private ToastService ToastService { get; set; } = null!;
 
     private bool EnableEncryption { get; set; }
 
@@ -50,8 +53,6 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
 
     private string PrivateKeyContent { get; set; } = string.Empty;
 
-    private string? EncryptionStatusMessage { get; set; }
-
     // Section « Certificat Let's Encrypt ».
     private bool LetsEncryptEnabled { get; set; }
 
@@ -64,8 +65,6 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
     private bool LetsEncryptAcceptTerms { get; set; }
 
     private int LetsEncryptChallengePort { get; set; } = 80;
-
-    private string? LetsEncryptSaveMessage { get; set; }
 
     private LetsEncryptStatus LetsEncryptStatus { get; set; } = LetsEncryptStatus.Initial;
 
@@ -235,17 +234,17 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
 
     private async Task SaveEncryptionConfigurationAsync()
     {
-        EncryptionStatusMessage = await SaveAsync();
+        await SaveAsync();
     }
 
     private async Task SaveLetsEncryptConfigurationAsync()
     {
-        LetsEncryptSaveMessage = await SaveAsync();
+        await SaveAsync();
     }
 
     // Enregistre tout le formulaire ; le service Let's Encrypt réagit aussitôt à un changement de sa
     // configuration (obtention du certificat si nécessaire).
-    private async Task<string> SaveAsync()
+    private async Task SaveAsync()
     {
         try
         {
@@ -261,18 +260,18 @@ public partial class EncryptionSettings : ComponentBase, IDisposable
             });
 
             RefreshSavedState(saved ?? data);
-            return L["Paramètres enregistrés."];
+
+            ToastService.Show(L["Paramètres enregistrés."], ToastSeverity.Success);
         }
         catch (Exception ex)
         {
-            return L["Erreur lors de l'enregistrement : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de l'enregistrement : {0}", ex.Message], ToastSeverity.Error);
         }
     }
 
     private Task ResetEncryptionSettingsAsync()
     {
         ApplyData(new EncryptionSettingsData());
-        EncryptionStatusMessage = null;
 
         return Task.CompletedTask;
     }
