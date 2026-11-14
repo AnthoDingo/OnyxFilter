@@ -269,8 +269,8 @@ ainsi :
 - `deploy/` : service systemd, script d'installation et point d'entrée de l'image Docker ;
 - `Dockerfile`, `docker-compose.yml`, `docker-compose.dev.yml` : image Docker, modèle de déploiement et
   modèle de construction locale ;
-- `Resources/` : traductions (`SharedResource.<langue>.resx`) et scripts `check-translations.sh` / `.ps1`, qui vérifient
-  que chaque texte d'interface a sa traduction (`--warn` / `-Warn` : avertissements sans échec) ;
+- `Resources/` : traductions (`SharedResource.<langue>.resx`) et script `check-translations.ps1`, qui vérifie que
+  chaque texte d'interface a sa traduction (`-Warn` : avertissements sans échec) ;
 - `.github/workflows/ci.yml` : vérification des traductions sur les pull requests (avertissements) ;
 - `.github/workflows/release.yml` : publication des versions.
 

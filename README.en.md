@@ -244,8 +244,8 @@ Port 53 requires root privileges (or `CAP_NET_BIND_SERVICE` on Linux). The code 
 - `deploy/`: systemd service, installation script and Docker image entrypoint;
 - `Dockerfile`, `docker-compose.yml`, `docker-compose.dev.yml`: Docker image, deployment template and local build
   template;
-- `Resources/`: translations (`SharedResource.<language>.resx`) and the `check-translations.sh` / `.ps1` scripts, which
-  check that every UI text has its translation (`--warn` / `-Warn`: warnings without failing);
+- `Resources/`: translations (`SharedResource.<language>.resx`) and the `check-translations.ps1` script, which checks
+  that every UI text has its translation (`-Warn`: warnings without failing);
 - `.github/workflows/ci.yml`: translation check on pull requests (warnings);
 - `.github/workflows/release.yml`: release publishing.
 

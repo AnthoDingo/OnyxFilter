@@ -4,6 +4,15 @@
 #   -Warn : n'échoue pas (code de sortie 0) et émet des annotations « ::warning:: » GitHub Actions (CI des PR).
 param([switch]$Warn)
 
+# Annotation GitHub Actions (mode -Warn uniquement). Le message doit encoder %, CR et LF, sinon GitHub le tronque ou le
+# déforme (ex. une clé contenant « % »).
+function Write-Annotation([string]$file, [string]$message) {
+    if ($Warn) {
+        $escaped = $message.Replace('%', '%25').Replace("`r", '%0D').Replace("`n", '%0A')
+        Write-Output "::warning file=src/OnyxFilter/Resources/$($file)::$escaped"
+    }
+}
+
 $components = Join-Path $PSScriptRoot '..' 'Components'
 $keys = Get-ChildItem $components -Recurse -Include *.razor, *.razor.cs |
     Select-String -Pattern '(?:L\[|Html\()"([^"]*)"' -AllMatches |
@@ -19,10 +28,7 @@ $collisions = $keys | Group-Object { $_.ToLowerInvariant() } | Where-Object Coun
 foreach ($group in $collisions) {
     $failed = $true
     Write-Output "Clés identiques à la casse près : $($group.Group -join ' | ')"
-    
-    if ($Warn) {
-        Write-Output "::warning file=src/OnyxFilter/Resources/SharedResource.resx::Clés identiques à la casse près : $($group.Group -join ' | ')"*
-    }
+    Write-Annotation 'SharedResource.resx' "Clés identiques à la casse près : $($group.Group -join ' | ')"
 }
 
 foreach ($resx in Get-ChildItem $PSScriptRoot -Filter 'SharedResource.*.resx') {
@@ -31,22 +37,15 @@ foreach ($resx in Get-ChildItem $PSScriptRoot -Filter 'SharedResource.*.resx') {
     if ($missing) {
         $failed = $true
         Write-Output "$($resx.Name) : $(@($missing).Count) traduction(s) manquante(s)"
-        $missing | ForEach-Object { Write-Output "  $_" }
-        
-        if ($Warn) {
-            $missing | ForEach-Object {
-                Write-Output "::warning file=src/OnyxFilter/Resources/$($resx.Name)::Traduction manquante : $_"
-            }
+        $missing | ForEach-Object {
+            Write-Output "  $_"
+            Write-Annotation $resx.Name "Traduction manquante : $_"
         }
     }
 }
 
 if ($failed) {
-    if ($Warn) {
-        exit 0
-    } else {
-        exit 1
-    }
+    exit ($Warn ? 0 : 1)
 }
 
 Write-Output "$(@($keys).Count) clés, toutes traduites."

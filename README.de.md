@@ -255,8 +255,8 @@ organisiert:
 - `deploy/`: systemd-Dienst, Installationsskript und Einstiegspunkt des Docker-Images;
 - `Dockerfile`, `docker-compose.yml`, `docker-compose.dev.yml`: Docker-Image, Bereitstellungsvorlage und Vorlage für
   den lokalen Build;
-- `Resources/`: Übersetzungen (`SharedResource.<Sprache>.resx`) und die Skripte `check-translations.sh` / `.ps1`, die
-  prüfen, dass jeder Oberflächentext eine Übersetzung hat (`--warn` / `-Warn`: Warnungen ohne Fehlschlag);
+- `Resources/`: Übersetzungen (`SharedResource.<Sprache>.resx`) und das Skript `check-translations.ps1`, das prüft,
+  dass jeder Oberflächentext eine Übersetzung hat (`-Warn`: Warnungen ohne Fehlschlag);
 - `.github/workflows/ci.yml`: Prüfung der Übersetzungen bei Pull Requests (Warnungen);
 - `.github/workflows/release.yml`: Veröffentlichung der Versionen.
 

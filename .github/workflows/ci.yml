@@ -17,4 +17,5 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Vérifier les traductions
-        run: bash src/OnyxFilter/Resources/check-translations.sh --warn
+        shell: pwsh
+        run: ./src/OnyxFilter/Resources/check-translations.ps1 -Warn
