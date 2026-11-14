@@ -1,7 +1,3 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace OnyxFilter.Services.Statistics;
 
 // Persistance des statistiques DNS : une ligne par tranche horaire, pour que les compteurs du tableau

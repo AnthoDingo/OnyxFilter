@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace OnyxFilter.Services.Api;
 
 // Contrats JSON de l'API HTTP (/api/v1, voir ApiEndpoints). Sérialisés en camelCase ; les dates sont en

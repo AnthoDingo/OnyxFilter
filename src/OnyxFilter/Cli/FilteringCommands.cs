@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Extensions.DependencyInjection;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services;
 using Spectre.Console;

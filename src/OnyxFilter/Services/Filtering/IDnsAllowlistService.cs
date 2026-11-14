@@ -1,6 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace OnyxFilter.Services.Filtering;
 
 // Applique la page "Listes d'autorisation DNS" (/filters/allowlists) : un domaine figurant dans une

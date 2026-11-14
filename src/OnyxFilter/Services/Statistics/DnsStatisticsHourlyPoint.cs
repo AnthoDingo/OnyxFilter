@@ -1,5 +1,3 @@
-using System;
-
 namespace OnyxFilter.Services.Statistics;
 
 // Un point de la série horaire affichée par les graphiques du tableau de bord (Home.razor / ActivityChart) :

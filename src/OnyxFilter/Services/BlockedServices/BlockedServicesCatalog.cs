@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json;
 
@@ -30,6 +26,7 @@ public sealed class BlockedServicesCatalog : IBlockedServicesCatalog
         ("social_network", "Réseaux sociaux"),
         ("software", "Développement de logiciels"),
         ("streaming", "Services de streaming"),
+        ("adult", "Contenu pour adultes"),
     };
 
     public BlockedServicesCatalog()

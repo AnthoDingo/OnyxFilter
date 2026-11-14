@@ -1,12 +1,5 @@
-using System;
 using System.Buffers.Text;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace OnyxFilter.Services.DnsForwarding;
 

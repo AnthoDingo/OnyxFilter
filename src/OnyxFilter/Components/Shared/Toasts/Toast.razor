@@ -1,0 +1,19 @@
+<div
+    class="toast @CssClass"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+    @ref="ToastRef"
+>
+    <div class="d-flex">
+        <div class="toast-body">
+            @Message
+        </div>
+
+        <button type="button"
+                class="btn-close me-2 m-auto"
+                data-bs-dismiss="toast"
+                aria-label="@L["Fermer"]">
+        </button>
+    </div>
+</div>

@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace OnyxFilter.Services.DnsForwarding;
 
 // Indique si le service DNS-over-HTTPS (/dns-query) est actif, selon "Activer le chiffrement"

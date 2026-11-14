@@ -656,6 +656,66 @@ textarea.form-control {
     --bs-alert-link-color: var(--of-text);
 }
 
+/* ---------- Toasts ---------- */
+.toast-stack {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+}
+
+.toast {
+    --bs-toast-max-width: 380px;
+    --bs-toast-font-size: 0.875rem;
+    --bs-toast-border-radius: var(--of-radius-sm);
+    --of-toast-tint: transparent;
+    --of-toast-accent: var(--of-line-strong);
+    color: var(--of-text);
+    background: linear-gradient(var(--of-toast-tint), var(--of-toast-tint)), var(--of-surface-2);
+    border: 1px solid var(--of-line-strong);
+    border-left: 3px solid var(--of-toast-accent);
+    box-shadow: var(--of-shadow-pop);
+}
+
+.toast-success {
+    --of-toast-tint: var(--of-ok-soft);
+    --of-toast-accent: var(--of-ok);
+    color: var(--of-ok);
+}
+
+.toast-danger {
+    --of-toast-tint: var(--of-bad-soft);
+    --of-toast-accent: var(--of-bad);
+    color: var(--of-bad);
+}
+
+.toast-warning {
+    --of-toast-tint: var(--of-warn-soft);
+    --of-toast-accent: var(--of-warn);
+    color: var(--of-warn);
+}
+
+.toast-info {
+    --of-toast-tint: var(--of-info-soft);
+    --of-toast-accent: var(--of-info);
+    color: var(--of-info);
+}
+
+@media (max-width: 640px) {
+    .toast-stack {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        width: auto;
+        padding: 0.75rem;
+    }
+
+        .toast-stack .toast {
+            width: 100%;
+            max-width: none;
+        }
+}
+
 /* ==========================================================================
    Composants maison partagés
    ========================================================================== */
@@ -792,11 +852,6 @@ textarea.form-control {
     border-top: 1px solid var(--of-line);
     background-color: color-mix(in srgb, var(--of-surface-2) 55%, transparent);
 }
-
-    .settings-panel-footer .alert {
-        flex-basis: 100%;
-        margin: 0.25rem 0 0;
-    }
 
 /* Une ligne de réglage : texte à gauche, contrôle à droite. */
 .setting {

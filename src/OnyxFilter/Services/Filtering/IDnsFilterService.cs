@@ -1,6 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace OnyxFilter.Services.Filtering;
 
 // Applique "Bloquer les domaines à l'aide de filtres" (Paramètres généraux) : télécharge les listes de

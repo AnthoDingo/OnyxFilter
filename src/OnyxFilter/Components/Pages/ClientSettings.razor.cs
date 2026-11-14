@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Models.Settings;
 using OnyxFilter.Services;
+using OnyxFilter.Services.BootstrapServices.Toasts;
 using OnyxFilter.Services.DnsForwarding;
 using OnyxFilter.Services.Statistics;
 
@@ -26,12 +23,12 @@ public partial class ClientSettings : ComponentBase
     [Inject]
     public IDnsStatisticsService StatisticsService { get; set; } = default!;
 
+    [Inject] private ToastService ToastService { get; set; } = null!;
+
     // "Clients persistants".
     private List<PersistentClientEntry> Clients { get; set; } = new List<PersistentClientEntry>();
 
     private IReadOnlyList<DnsStatisticsEntry> AllClientStats { get; set; } = Array.Empty<DnsStatisticsEntry>();
-
-    private string? StatusMessage { get; set; }
 
     private int PageSize { get; set; } = 10;
 
@@ -311,11 +308,12 @@ public partial class ClientSettings : ComponentBase
         try
         {
             await SettingsStore.UpdateAsync(settings => settings.Clients.Clients = snapshot);
-            StatusMessage = L["Clients persistants enregistrés."];
+
+            ToastService.Show(L["Clients persistants enregistrés."], ToastSeverity.Success);
         }
         catch (Exception ex)
         {
-            StatusMessage = L["Erreur lors de l'enregistrement : {0}", ex.Message];
+            ToastService.Show(L["Erreur lors de l'enregistrement : {0}", ex.Message], ToastSeverity.Error);
         }
     }
 

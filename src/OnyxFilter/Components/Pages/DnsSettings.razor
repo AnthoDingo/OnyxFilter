@@ -158,10 +158,6 @@
                 <button type="button" class="btn btn-primary" @onclick="ValidateDnsServerSettingsAsync">@L["Enregistrer"]</button>
                 <button type="button" class="btn btn-secondary">@L["Tester les serveurs"]</button>
                 <button type="button" class="btn btn-outline-secondary" @onclick="ResetDnsServerSettingsAsync">@L["Réinitialiser"]</button>
-                @if (!string.IsNullOrEmpty(DnsServersStatusMessage))
-                {
-                    <div class="alert @(DnsServersStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@DnsServersStatusMessage</div>
-                }
             </div>
         </div>
     </section>
@@ -275,10 +271,6 @@
 
             <div class="settings-panel-footer">
                 <button type="button" class="btn btn-primary" @onclick="SaveDnsServerConfigurationAsync">@L["Enregistrer"]</button>
-                @if (!string.IsNullOrEmpty(ServerConfigStatusMessage))
-                {
-                    <div class="alert @(ServerConfigStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@ServerConfigStatusMessage</div>
-                }
             </div>
         </div>
     </section>
@@ -336,10 +328,6 @@
             <div class="settings-panel-footer">
                 <button type="button" class="btn btn-primary" @onclick="SaveCacheConfigurationAsync">@L["Enregistrer"]</button>
                 <button type="button" class="btn btn-outline-danger" @onclick="ClearCacheAsync">@L["Vider le cache"]</button>
-                @if (!string.IsNullOrEmpty(CacheStatusMessage))
-                {
-                    <div class="alert @(CacheStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@CacheStatusMessage</div>
-                }
             </div>
         </div>
     </section>
@@ -409,10 +397,6 @@
 
             <div class="settings-panel-footer">
                 <button type="button" class="btn btn-primary" @onclick="SaveAccessSettingsAsync">@L["Enregistrer"]</button>
-                @if (!string.IsNullOrEmpty(AccessStatusMessage))
-                {
-                    <div class="alert @(AccessStatusMessage.StartsWith(L["Erreur"], StringComparison.Ordinal) ? "alert-danger" : "alert-success")">@AccessStatusMessage</div>
-                }
             </div>
         </div>
     </section>

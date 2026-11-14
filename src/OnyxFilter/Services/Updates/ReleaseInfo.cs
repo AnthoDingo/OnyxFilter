@@ -1,5 +1,3 @@
-using System;
-
 namespace OnyxFilter.Services.Updates;
 
 // Une publication GitHub candidate à l'installation (voir GitHubReleaseClient).

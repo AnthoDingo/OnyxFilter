@@ -1,7 +1,6 @@
 @page "/filters/countries"
 @attribute [Authorize]
 @rendermode InteractiveServer
-@using OnyxFilter.Services.ClientLocation
 
 <PageTitle>@L["Filtrage par pays"] · OnyxFilter</PageTitle>
 
@@ -17,11 +16,6 @@
         </button>
     </div>
 </header>
-
-@if (!string.IsNullOrEmpty(StatusMessage))
-{
-    <div class="alert page-status @(StatusIsError ? "alert-danger" : "alert-success")">@StatusMessage</div>
-}
 
 <div class="card settings-panel">
     <div class="setting setting-stacked">

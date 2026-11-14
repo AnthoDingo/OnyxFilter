@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace OnyxFilter.Services.Statistics;
 
 // Photo instantanée des statistiques DNS sur la fenêtre glissante des dernières 24 heures (ou moins si

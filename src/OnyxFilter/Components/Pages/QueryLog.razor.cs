@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using OnyxFilter.Services.ClientLocation;
+using OnyxFilter.Services.LocalStorage;
 using OnyxFilter.Services.QueryLog;
 
 namespace OnyxFilter.Components.Pages;
@@ -20,6 +17,9 @@ public partial class QueryLog : ComponentBase, IDisposable
 
     [Inject]
     public IClientLocationService ClientLocationService { get; set; } = default!;
+
+    [Inject]
+    private LocalStorageService LocalStorageService { get; set; } = default!;
 
     private List<DnsQueryLogRecord> Entries { get; set; } = new List<DnsQueryLogRecord>();
 
@@ -56,6 +56,9 @@ public partial class QueryLog : ComponentBase, IDisposable
     // circuit Blazor Server.
     private CancellationTokenSource? autoRefreshCts;
 
+    // true une fois Dispose() appelé (voir OnAfterRenderAsync).
+    private bool isDisposed;
+
     // Première et dernière requête affichées sur la page courante (1-based), pour donner un repère utile
     // à l'utilisateur en l'absence de nombre total de pages.
     private string DisplayedRangeText
@@ -76,6 +79,22 @@ public partial class QueryLog : ComponentBase, IDisposable
     protected override async Task OnInitializedAsync()
     {
         await LoadPageAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Garde isDisposed : l'utilisateur a pu quitter la page pendant l'aller-retour JS, une
+            // boucle lancée après Dispose() ne serait jamais annulée.
+            bool liveEnabled = await LocalStorageService.GetLiveState();
+            if (liveEnabled && !isDisposed)
+            {
+                AutoRefreshEnabled = true;
+                StartAutoRefresh();
+                StateHasChanged();
+            }
+        }
     }
 
     private async Task LoadPageAsync()
@@ -170,7 +189,7 @@ public partial class QueryLog : ComponentBase, IDisposable
         }
     }
 
-    private void OnAutoRefreshToggled(ChangeEventArgs e)
+    private async Task OnAutoRefreshToggled(ChangeEventArgs e)
     {
         AutoRefreshEnabled = e.Value is bool value && value;
 
@@ -182,6 +201,8 @@ public partial class QueryLog : ComponentBase, IDisposable
         {
             StopAutoRefresh();
         }
+
+        await LocalStorageService.SetLiveState(AutoRefreshEnabled);
     }
 
     private void StartAutoRefresh()
@@ -241,6 +262,7 @@ public partial class QueryLog : ComponentBase, IDisposable
 
     public void Dispose()
     {
+        isDisposed = true;
         StopAutoRefresh();
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace OnyxFilter.Services.BlockedServices;
 
 // Catalogue statique des services proposés sur "Services bloqués" (/filters/blocked-services), chargé

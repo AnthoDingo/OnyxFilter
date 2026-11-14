@@ -1,7 +1,6 @@
 @page "/settings/crowdsec"
 @attribute [Authorize]
 @rendermode InteractiveServer
-@using OnyxFilter.Services.CrowdSec
 
 <PageTitle>CrowdSec · OnyxFilter</PageTitle>
 
@@ -20,11 +19,6 @@
         </button>
     </div>
 </header>
-
-@if (!string.IsNullOrEmpty(StatusMessage))
-{
-    <div class="alert page-status @(StatusIsError ? "alert-danger" : "alert-success")">@StatusMessage</div>
-}
 
 <div class="card settings-panel">
     <div class="setting">
