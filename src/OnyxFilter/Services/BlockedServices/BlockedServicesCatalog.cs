@@ -26,6 +26,7 @@ public sealed class BlockedServicesCatalog : IBlockedServicesCatalog
         ("social_network", "Réseaux sociaux"),
         ("software", "Développement de logiciels"),
         ("streaming", "Services de streaming"),
+        ("adult", "Contenu pour adultes"),
     };
 
     public BlockedServicesCatalog()
